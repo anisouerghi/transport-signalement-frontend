@@ -1,0 +1,118 @@
+@if (loading()) {
+  <section class="panel p-4" aria-busy="true" aria-live="polite">
+    <div class="skeleton mb-3" style="height: 1.5rem; width: 55%"></div>
+    <div class="skeleton mb-2" style="height: 6rem"></div>
+    <div class="skeleton mb-2" style="height: 3rem"></div>
+    <div class="skeleton" style="height: 8rem"></div>
+  </section>
+} @else if (invalidQr()) {
+  <section class="panel page-state">
+    <div class="icon-wrap error"><i class="bi bi-qr-code-scan" aria-hidden="true"></i></div>
+    <h1 class="h4">QR Code non reconnu</h1>
+    <p class="text-secondary mb-0">{{ errorMessage() }}</p>
+  </section>
+} @else if (support(); as currentSupport) {
+  <section class="mb-3">
+    <h1 class="h3 mb-1">Déposer un signalement</h1>
+    <p class="text-secondary mb-0">
+      Décrivez la situation rencontrée. Notre équipe traitera votre demande dans les meilleurs délais.
+    </p>
+  </section>
+
+  <app-support-summary [support]="currentSupport" />
+
+  <form class="panel p-3 p-md-4" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="mb-3">
+      <label class="form-label fw-semibold" for="reportTypeId">Type de signalement *</label>
+      <select
+        id="reportTypeId"
+        class="form-select"
+        formControlName="reportTypeId"
+        [class.is-invalid]="controlInvalid('reportTypeId')"
+      >
+        <option value="">Sélectionnez un type</option>
+        @for (type of reportTypes(); track type.reportTypeId) {
+          <option [value]="type.reportTypeId">{{ type.label }}</option>
+        }
+      </select>
+      @if (controlInvalid('reportTypeId')) {
+        <div class="invalid-feedback">Veuillez choisir un type de signalement.</div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-semibold" for="priority">Priorité (optionnelle)</label>
+      <select id="priority" class="form-select" formControlName="priority">
+        <option value="">Non précisée</option>
+        @for (p of priorities; track p.value) {
+          <option [value]="p.value">{{ p.label }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-semibold" for="description">Description *</label>
+      <textarea
+        id="description"
+        class="form-control"
+        rows="5"
+        formControlName="description"
+        maxlength="5000"
+        placeholder="Décrivez précisément le problème rencontré…"
+        [class.is-invalid]="controlInvalid('description')"
+      ></textarea>
+      @if (controlInvalid('description')) {
+        <div class="invalid-feedback">
+          La description doit contenir au moins 10 caractères.
+        </div>
+      }
+    </div>
+
+    <app-email-nudge />
+
+    <div class="row g-3 mb-3">
+      <div class="col-md-6">
+        <label class="form-label fw-semibold" for="name">Nom</label>
+        <input id="name" type="text" class="form-control" formControlName="name" autocomplete="name" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-semibold" for="phoneNumber">Téléphone</label>
+        <input
+          id="phoneNumber"
+          type="tel"
+          class="form-control"
+          formControlName="phoneNumber"
+          autocomplete="tel"
+          [class.is-invalid]="controlInvalid('phoneNumber')"
+        />
+        @if (controlInvalid('phoneNumber')) {
+          <div class="invalid-feedback">Numéro de téléphone invalide.</div>
+        }
+      </div>
+      <div class="col-12">
+        <label class="form-label fw-semibold" for="email">Adresse e-mail</label>
+        <input
+          id="email"
+          type="email"
+          class="form-control"
+          formControlName="email"
+          autocomplete="email"
+          placeholder="exemple&#64;domaine.com"
+          [class.is-invalid]="controlInvalid('email')"
+        />
+        @if (controlInvalid('email')) {
+          <div class="invalid-feedback">Adresse e-mail invalide.</div>
+        }
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-transtu w-100" [disabled]="submitting()">
+      @if (submitting()) {
+        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        Envoi en cours…
+      } @else {
+        Envoyer mon signalement
+      }
+    </button>
+  </form>
+}
