@@ -6,7 +6,7 @@ Interface publique voyageur — TRANSTU (Société des Transports de Tunis).
 
 - Node.js 20+ / 22+
 - Backend `transport-api` démarré sur `http://localhost:8080`
-- **Espace disque libre recommandé : ~1 Go** pour `npm install`
+- Espace disque libre recommandé : ~1 Go pour `npm install`
 
 ## Démarrage
 
@@ -18,15 +18,46 @@ npm start
 
 Application : [http://localhost:4200](http://localhost:4200)
 
+Script alternatif si le port 4200 est pris par l'admin : `npm run start:admin-alongside` (port **4300**).
+
 ## Parcours QR Code
 
 URL générée côté backend : `{app.qr.base-url}/report/{uuid}`
 
 Exemple local : `http://localhost:4200/report/{uuid}`
 
+## Fonctionnalités
+
+- Identification du support via UUID (QR)
+- Formulaire de signalement (Reactive Forms)
+- **Pièces jointes optionnelles** : multi-fichiers, drag & drop, aperçu, contrôles client alignés backend
+- Page de confirmation + copie de la référence
+- Suivi par référence
+
 ## Endpoints utilisés
 
-- `GET /api/public/supports/{uuid}`
-- `GET /api/public/report-types`
-- `POST /api/public/signalements`
-- `GET /api/public/suivi/{reference}`
+| Méthode | Endpoint | Contenu |
+|---------|----------|---------|
+| GET | `/api/public/supports/{uuid}` | Support |
+| GET | `/api/public/report-types` | Types actifs |
+| POST | `/api/public/signalements` | `multipart/form-data` (`report` + `files`) |
+| GET | `/api/public/suivi/{reference}` | Suivi |
+
+## Structure utile
+
+```
+src/app/features/report/
+├── pages/                 # Accueil, création, confirmation, suivi
+├── components/
+│   ├── attachment-picker  # Zone PJ
+│   ├── support-summary
+│   └── email-nudge
+├── services/
+└── models/
+```
+
+## Limites pièces jointes (UI + API)
+
+- 5 fichiers maximum
+- 10 Mo par fichier / 25 Mo au total
+- Formats : JPG, JPEG, PNG, WEBP, PDF

@@ -59,6 +59,17 @@ export interface ReportResponse {
   reportTypeLabel?: string;
   passenger?: PassengerResponse | null;
   status?: StatusInfo | null;
+  attachments?: AttachmentResponse[];
+}
+
+export interface AttachmentResponse {
+  attachmentId: number;
+  uuid?: string;
+  fileName: string;
+  fileType?: string;
+  fileSize?: number;
+  reportId?: number;
+  image?: boolean;
 }
 
 export interface ConfirmationState {

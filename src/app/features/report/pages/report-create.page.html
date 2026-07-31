@@ -70,6 +70,13 @@
 
     <app-email-nudge />
 
+    <div class="mb-3">
+      <app-attachment-picker
+        [disabled]="submitting()"
+        (filesChange)="onAttachmentsChange($event)"
+      />
+    </div>
+
     <div class="row g-3 mb-3">
       <div class="col-md-6">
         <label class="form-label fw-semibold" for="name">Nom</label>

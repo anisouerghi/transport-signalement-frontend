@@ -1,0 +1,65 @@
+<aside class="attachment-picker">
+  <div class="d-flex justify-content-between align-items-baseline gap-2 mb-2">
+    <label class="form-label fw-semibold mb-0">Pièces jointes (optionnel)</label>
+    <span class="small text-secondary">{{ countLabel }}</span>
+  </div>
+
+  <p class="small text-secondary mb-2">
+    Maximum {{ maxFiles }} fichiers · {{ maxFileMb }} Mo / fichier · total {{ maxTotalMb }} Mo ·
+    JPG, JPEG, PNG, WEBP, PDF
+  </p>
+
+  <div
+    class="dropzone"
+    [class.dropzone--active]="dragOver"
+    [class.dropzone--disabled]="disabled"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave()"
+    (drop)="onDrop($event)"
+  >
+    <i class="bi bi-cloud-arrow-up fs-3 d-block mb-2" aria-hidden="true"></i>
+    <p class="mb-2">Glissez-déposez vos fichiers ici ou</p>
+    <label class="btn btn-sm btn-outline-success mb-0">
+      Parcourir
+      <input
+        type="file"
+        class="d-none"
+        multiple
+        accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf"
+        [disabled]="disabled"
+        (change)="onFileInput($event)"
+      />
+    </label>
+  </div>
+
+  @if (error) {
+    <div class="text-danger small mt-2" role="alert">{{ error }}</div>
+  }
+
+  @if (items.length > 0) {
+    <ul class="list-unstyled mt-3 mb-0">
+      @for (item of items; track item.id) {
+        <li class="file-row">
+          @if (item.previewUrl) {
+            <img [src]="item.previewUrl" [alt]="item.file.name" class="file-thumb" />
+          } @else {
+            <div class="file-icon" aria-hidden="true"><i class="bi bi-file-earmark-pdf"></i></div>
+          }
+          <div class="flex-grow-1 min-w-0">
+            <div class="text-truncate fw-semibold">{{ item.file.name }}</div>
+            <div class="small text-secondary">{{ formatSize(item.file.size) }}</div>
+          </div>
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-danger"
+            [disabled]="disabled"
+            (click)="remove(item.id)"
+            [attr.aria-label]="'Retirer ' + item.file.name"
+          >
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+          </button>
+        </li>
+      }
+    </ul>
+  }
+</aside>

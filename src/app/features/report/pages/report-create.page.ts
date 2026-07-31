@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { NotificationService } from '../../../core/services/notification.service';
 import { EmailNudgeComponent } from '../components/email-nudge.component';
+import { AttachmentPickerComponent } from '../components/attachment-picker.component';
 import { SupportSummaryComponent } from '../components/support-summary.component';
 import {
   Priority,
@@ -22,7 +23,7 @@ const UUID_RE =
 @Component({
   selector: 'app-report-create-page',
   standalone: true,
-  imports: [ReactiveFormsModule, SupportSummaryComponent, EmailNudgeComponent],
+  imports: [ReactiveFormsModule, SupportSummaryComponent, EmailNudgeComponent, AttachmentPickerComponent],
   templateUrl: './report-create.page.html',
 })
 export class ReportCreatePage implements OnInit {
@@ -42,6 +43,7 @@ export class ReportCreatePage implements OnInit {
   readonly support = signal<TransportSupport | null>(null);
   readonly reportTypes = signal<ReportType[]>([]);
   readonly supportUuid = signal('');
+  readonly selectedFiles = signal<File[]>([]);
 
   readonly priorities: { value: Priority; label: string }[] = [
     { value: 'LOW', label: 'Basse' },
@@ -97,6 +99,10 @@ export class ReportCreatePage implements OnInit {
     });
   }
 
+  onAttachmentsChange(files: File[]): void {
+    this.selectedFiles.set(files);
+  }
+
   submit(): void {
     this.submitted.set(true);
     if (this.form.invalid || !this.support()) {
@@ -120,7 +126,7 @@ export class ReportCreatePage implements OnInit {
     }
 
     this.submitting.set(true);
-    this.reportService.create(payload).subscribe({
+    this.reportService.create(payload, this.selectedFiles()).subscribe({
       next: (report) => {
         this.submitting.set(false);
         this.notifications.success('Votre signalement a bien été enregistré.');
