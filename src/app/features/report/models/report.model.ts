@@ -73,6 +73,25 @@ export interface AttachmentResponse {
 
 export interface ConfirmationState {
   reference: string;
+  uuid?: string;
   email?: string;
   supportUuid?: string;
+}
+
+/** Suivi public sécurisé (API /api/public/suivi/{uuid}). */
+export interface PublicReportTracking {
+  uuid: string;
+  reference: string;
+  creationDate?: string;
+  description?: string;
+  reportTypeLabel?: string;
+  supportLabel?: string;
+  statusCode?: string;
+  statusLabel?: string;
+  replies?: PublicReplyView[];
+}
+
+export interface PublicReplyView {
+  message: string;
+  replyDate: string;
 }

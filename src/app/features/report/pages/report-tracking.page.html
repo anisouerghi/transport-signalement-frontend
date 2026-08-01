@@ -1,63 +1,68 @@
 <section class="mb-3">
   <h1 class="h3 mb-1">Suivi de signalement</h1>
-  <p class="text-secondary mb-0">Saisissez la référence reçue lors du dépôt de votre signalement.</p>
+  <p class="text-secondary mb-0">
+    Consultez l’état de votre demande et les réponses de notre équipe.
+  </p>
 </section>
 
-<form class="panel p-3 p-md-4 mb-3" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
-  <label class="form-label fw-semibold" for="reference">Référence</label>
-  <div class="input-group">
-    <input
-      id="reference"
-      class="form-control"
-      formControlName="reference"
-      placeholder="Ex. SIG-20260729-100001"
-      [class.is-invalid]="form.controls.reference.invalid && form.controls.reference.touched"
-    />
-    <button class="btn btn-transtu" type="submit" [disabled]="loading()">Rechercher</button>
-  </div>
-  @if (form.controls.reference.invalid && form.controls.reference.touched) {
-    <div class="invalid-feedback d-block">Veuillez saisir une référence valide.</div>
-  }
-</form>
-
-@if (loading()) {
+@if (invalidLink()) {
+  <section class="panel page-state">
+    <div class="icon-wrap error"><i class="bi bi-link-45deg" aria-hidden="true"></i></div>
+    <h2 class="h5">Lien de suivi invalide</h2>
+    <p class="text-secondary mb-0">
+      Utilisez le lien sécurisé reçu par e-mail pour consulter votre signalement.
+    </p>
+  </section>
+} @else if (loading()) {
   <div class="panel p-4 text-center text-secondary">
     <div class="spinner-border text-success mb-2" role="status"></div>
-    <div>Recherche en cours…</div>
+    <div>Chargement du suivi…</div>
   </div>
 } @else if (notFound()) {
   <section class="panel page-state">
     <div class="icon-wrap error"><i class="bi bi-search" aria-hidden="true"></i></div>
     <h2 class="h5">Aucun signalement trouvé</h2>
-    <p class="text-secondary mb-0">Vérifiez la référence et réessayez.</p>
+    <p class="text-secondary mb-0">Ce lien de suivi est invalide ou le signalement n’existe plus.</p>
   </section>
 } @else if (report(); as r) {
-  <section class="panel p-3 p-md-4">
+  <section class="panel p-3 p-md-4 mb-3">
     <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
       <div>
         <p class="small text-secondary mb-1">Référence</p>
         <div class="fw-bold fs-5" style="color: var(--transtu-blue-deep)">{{ r.reference }}</div>
       </div>
-      @if (r.status) {
-        <span class="support-chip">{{ r.status.label }}</span>
+      @if (r.statusLabel) {
+        <span class="support-chip">{{ r.statusLabel }}</span>
       }
     </div>
     <div class="gold-rule mb-3"></div>
     <dl class="row gy-2 mb-0">
       <dt class="col-5 text-secondary">Type</dt>
-      <dd class="col-7 mb-0">{{ r.reportTypeLabel || r.reportTypeCode || '—' }}</dd>
+      <dd class="col-7 mb-0">{{ r.reportTypeLabel || '—' }}</dd>
       <dt class="col-5 text-secondary">Créé le</dt>
       <dd class="col-7 mb-0">{{ r.creationDate | date: 'dd/MM/yyyy HH:mm' }}</dd>
       <dt class="col-5 text-secondary">Support</dt>
-      <dd class="col-7 mb-0">
-        {{ r.transportSupport?.label || r.transportSupport?.reference || '—' }}
-      </dd>
+      <dd class="col-7 mb-0">{{ r.supportLabel || '—' }}</dd>
       <dt class="col-5 text-secondary">Description</dt>
       <dd class="col-7 mb-0">{{ r.description }}</dd>
     </dl>
   </section>
-} @else if (searched()) {
-  <p class="text-secondary">Aucun résultat à afficher.</p>
+
+  <section class="panel p-3 p-md-4">
+    <h2 class="h5 mb-3">Réponses de l’administration</h2>
+    @if (r.replies?.length) {
+      @for (reply of r.replies; track reply.replyDate + reply.message) {
+        <article class="mb-3 p-3 border rounded-2">
+          <div class="small text-secondary mb-2">
+            {{ reply.replyDate | date: 'dd/MM/yyyy HH:mm' }}
+          </div>
+          <p class="mb-0" style="white-space: pre-wrap">{{ reply.message }}</p>
+        </article>
+      }
+    } @else {
+      <p class="text-secondary mb-0">Aucune réponse visible pour le moment.</p>
+    }
+  </section>
 }
 
 <p class="text-center mt-3 mb-0">

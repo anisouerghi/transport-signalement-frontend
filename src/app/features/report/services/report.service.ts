@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { API_CONFIG } from '../../../core/config/api.config';
 import { ApiResponse } from '../../../shared/models/api-response.model';
-import { ReportRequest, ReportResponse } from '../models/report.model';
+import { PublicReportTracking, ReportRequest, ReportResponse } from '../models/report.model';
 
 /**
  * Accès HTTP aux signalements côté interface publique voyageur.
@@ -30,10 +30,13 @@ export class ReportService {
       .pipe(map((res) => res.data));
   }
 
-  /** Consulte le suivi d'un signalement via sa référence publique. */
-  getByReference(reference: string): Observable<ReportResponse> {
+  /**
+   * Suivi sécurisé par UUID (lien e-mail).
+   * N'expose que les réponses visibles pour le voyageur.
+   */
+  getByUuid(uuid: string): Observable<PublicReportTracking> {
     return this.http
-      .get<ApiResponse<ReportResponse>>(`${API_CONFIG.public.suivi}/${encodeURIComponent(reference)}`)
+      .get<ApiResponse<PublicReportTracking>>(`${API_CONFIG.public.suivi}/${encodeURIComponent(uuid)}`)
       .pipe(map((res) => res.data));
   }
 }

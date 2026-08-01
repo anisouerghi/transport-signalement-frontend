@@ -23,7 +23,7 @@ export const routes: Routes = [
       import('./features/report/pages/report-tracking.page').then((m) => m.ReportTrackingPage),
   },
   {
-    path: 'suivi/:reference',
+    path: 'suivi/:uuid',
     loadComponent: () =>
       import('./features/report/pages/report-tracking.page').then((m) => m.ReportTrackingPage),
   },

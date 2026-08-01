@@ -43,9 +43,13 @@ import { NotificationService } from '../../../core/services/notification.service
             <i class="bi bi-clipboard me-1" aria-hidden="true"></i>
             Copier la référence
           </button>
-          <a class="btn btn-transtu-outline" [routerLink]="['/suivi', state()!.reference]">
-            Consulter le suivi
-          </a>
+          @if (state()!.uuid) {
+            <a class="btn btn-transtu-outline" [routerLink]="['/suivi', state()!.uuid]">
+              Consulter le suivi
+            </a>
+          } @else {
+            <a class="btn btn-transtu-outline" routerLink="/suivi">Consulter le suivi</a>
+          }
           @if (state()!.supportUuid) {
             <a class="btn btn-link" [routerLink]="['/report', state()!.supportUuid]">
               Créer un nouveau signalement
@@ -68,6 +72,7 @@ export class ReportConfirmationPage implements OnInit {
     if (fromHistory?.reference) {
       this.state.set({
         reference: fromHistory.reference,
+        uuid: fromHistory.uuid,
         email: fromHistory.email,
         supportUuid: fromHistory.supportUuid,
       });

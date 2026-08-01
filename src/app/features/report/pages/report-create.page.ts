@@ -121,6 +121,7 @@ export class ReportCreatePage implements OnInit {
         void this.router.navigate(['/confirmation'], {
           state: {
             reference: report.reference,
+            uuid: report.uuid,
             email: payload.passenger.email,
             supportUuid: this.supportUuid(),
           },
