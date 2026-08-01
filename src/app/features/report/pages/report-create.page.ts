@@ -8,7 +8,6 @@ import { EmailNudgeComponent } from '../components/email-nudge.component';
 import { AttachmentPickerComponent } from '../components/attachment-picker.component';
 import { SupportSummaryComponent } from '../components/support-summary.component';
 import {
-  Priority,
   ReportRequest,
   ReportType,
   TransportSupport,
@@ -45,16 +44,8 @@ export class ReportCreatePage implements OnInit {
   readonly supportUuid = signal('');
   readonly selectedFiles = signal<File[]>([]);
 
-  readonly priorities: { value: Priority; label: string }[] = [
-    { value: 'LOW', label: 'Basse' },
-    { value: 'MEDIUM', label: 'Moyenne' },
-    { value: 'HIGH', label: 'Haute' },
-    { value: 'CRITICAL', label: 'Critique' },
-  ];
-
   readonly form = this.fb.nonNullable.group({
     reportTypeId: ['', Validators.required],
-    priority: ['' as '' | Priority],
     description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(5000)]],
     name: ['', Validators.maxLength(150)],
     phoneNumber: ['', [Validators.maxLength(30), Validators.pattern(/^[+0-9\s().-]{0,30}$/)]],
@@ -121,9 +112,6 @@ export class ReportCreatePage implements OnInit {
         phoneNumber: raw.phoneNumber.trim() || undefined,
       },
     };
-    if (raw.priority) {
-      payload.priority = raw.priority;
-    }
 
     this.submitting.set(true);
     this.reportService.create(payload, this.selectedFiles()).subscribe({

@@ -41,16 +41,6 @@
     </div>
 
     <div class="mb-3">
-      <label class="form-label fw-semibold" for="priority">Priorité (optionnelle)</label>
-      <select id="priority" class="form-select" formControlName="priority">
-        <option value="">Non précisée</option>
-        @for (p of priorities; track p.value) {
-          <option [value]="p.value">{{ p.label }}</option>
-        }
-      </select>
-    </div>
-
-    <div class="mb-3">
       <label class="form-label fw-semibold" for="description">Description *</label>
       <textarea
         id="description"

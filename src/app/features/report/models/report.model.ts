@@ -27,7 +27,6 @@ export interface PassengerRequest {
 export interface ReportRequest {
   supportUuid: string;
   reportTypeId: number;
-  priority?: Priority;
   description: string;
   passenger: PassengerRequest;
 }
