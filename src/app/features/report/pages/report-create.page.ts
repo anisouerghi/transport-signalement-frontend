@@ -1,8 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { EmailNudgeComponent } from '../components/email-nudge.component';
 import { AttachmentPickerComponent } from '../components/attachment-picker.component';
@@ -22,7 +23,7 @@ const UUID_RE =
 @Component({
   selector: 'app-report-create-page',
   standalone: true,
-  imports: [ReactiveFormsModule, SupportSummaryComponent, EmailNudgeComponent, AttachmentPickerComponent],
+  imports: [ReactiveFormsModule, RouterLink, SupportSummaryComponent, EmailNudgeComponent, AttachmentPickerComponent],
   templateUrl: './report-create.page.html',
 })
 export class ReportCreatePage implements OnInit {
@@ -33,6 +34,7 @@ export class ReportCreatePage implements OnInit {
   private readonly reportTypeService = inject(ReportTypeService);
   private readonly reportService = inject(ReportService);
   private readonly notifications = inject(NotificationService);
+  private readonly auth = inject(AuthService);
 
   readonly loading = signal(true);
   readonly submitting = signal(false);
@@ -72,6 +74,7 @@ export class ReportCreatePage implements OnInit {
       next: ({ support, types }) => {
         this.support.set(support);
         this.reportTypes.set(types);
+        this.prefillFromSession();
         this.loading.set(false);
       },
       error: (err: HttpErrorResponse) => {
@@ -134,5 +137,18 @@ export class ReportCreatePage implements OnInit {
   controlInvalid(name: keyof typeof this.form.controls): boolean {
     const c = this.form.controls[name];
     return c.invalid && (c.touched || this.submitted());
+  }
+
+  /** Préremplit nom / e-mail / téléphone si le voyageur est connecté. */
+  private prefillFromSession(): void {
+    const user = this.auth.currentUser();
+    if (!user) {
+      return;
+    }
+    this.form.patchValue({
+      name: user.name ?? '',
+      email: user.email ?? '',
+      phoneNumber: user.phoneNumber ?? '',
+    });
   }
 }

@@ -10,7 +10,22 @@ export const routes: Routes = [
   {
     path: 'report/:uuid',
     loadComponent: () =>
+      import('./features/report/pages/report-welcome.page').then((m) => m.ReportWelcomePage),
+  },
+  {
+    path: 'report/:uuid/signaler',
+    loadComponent: () =>
       import('./features/report/pages/report-create.page').then((m) => m.ReportCreatePage),
+  },
+  {
+    path: 'connexion',
+    loadComponent: () =>
+      import('./features/report/pages/passenger-login.page').then((m) => m.PassengerLoginPage),
+  },
+  {
+    path: 'inscription',
+    loadComponent: () =>
+      import('./features/report/pages/passenger-register.page').then((m) => m.PassengerRegisterPage),
   },
   {
     path: 'confirmation',

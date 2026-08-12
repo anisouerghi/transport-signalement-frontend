@@ -8,5 +8,6 @@ export const API_CONFIG = {
     reportTypes: `${environment.apiBaseUrl}/api/public/report-types`,
     signalements: `${environment.apiBaseUrl}/api/public/signalements`,
     suivi: `${environment.apiBaseUrl}/api/public/suivi`,
+    auth: `${environment.apiBaseUrl}/api/public/auth`,
   },
 } as const;

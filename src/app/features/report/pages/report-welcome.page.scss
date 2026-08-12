@@ -1,0 +1,78 @@
+.welcome__logo {
+  height: clamp(56px, 14vw, 72px);
+  width: auto;
+}
+
+.welcome__intro {
+  font-size: 1.05rem;
+  line-height: 1.55;
+  max-width: 32rem;
+  margin-inline: auto;
+}
+
+.welcome__greeting {
+  font-size: 1.15rem;
+}
+
+.welcome__benefits {
+  padding-left: 1.15rem;
+  color: var(--transtu-ink);
+
+  li + li {
+    margin-top: 0.35rem;
+  }
+}
+
+.welcome__account-hint {
+  background: var(--transtu-green-soft);
+  border-radius: 0.85rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(11, 138, 62, 0.15);
+}
+
+.welcome__anonymous-info {
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.welcome__divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--transtu-muted);
+  font-size: 0.875rem;
+  margin: 0.5rem 0 1rem;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--transtu-border);
+  }
+}
+
+.welcome__anonymous {
+  font-weight: 700;
+  color: var(--transtu-blue);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--transtu-blue-deep);
+    text-decoration: underline;
+  }
+}
+
+.welcome__profile {
+  background: var(--transtu-surface);
+  border-radius: 0.85rem;
+  border: 1px solid var(--transtu-border);
+}
+
+.welcome__connected {
+  border-left: 4px solid var(--transtu-green);
+}
+
+.btn-lg {
+  min-height: 3.25rem;
+  font-size: 1.05rem;
+}

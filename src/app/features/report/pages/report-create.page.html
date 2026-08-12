@@ -13,7 +13,10 @@
   </section>
 } @else if (support(); as currentSupport) {
   <section class="mb-3">
-    <h1 class="h3 mb-1">Déposer un signalement</h1>
+    <a class="small text-decoration-none" [routerLink]="['/report', supportUuid()]">
+      ← Retour
+    </a>
+    <h1 class="h3 mb-1 mt-2">Déposer un signalement</h1>
     <p class="text-secondary mb-0">
       Décrivez la situation rencontrée. Notre équipe traitera votre demande dans les meilleurs délais.
     </p>
