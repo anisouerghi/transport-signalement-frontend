@@ -1,9 +1,11 @@
 import { Component, inject } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { NotificationService } from '../../core/services/notification.service';
 
 @Component({
   selector: 'app-public-footer',
   standalone: true,
+  imports: [TranslatePipe],
   template: `
     @if (notifications.message(); as msg) {
       <div
@@ -14,13 +16,18 @@ import { NotificationService } from '../../core/services/notification.service';
         aria-live="polite"
       >
         <span>{{ msg }}</span>
-        <button type="button" class="btn-close btn-close-white btn-sm" aria-label="Fermer" (click)="notifications.clear()"></button>
+        <button
+          type="button"
+          class="btn-close btn-close-white btn-sm"
+          [attr.aria-label]="'common.close' | translate"
+          (click)="notifications.clear()"
+        ></button>
       </div>
     }
     <footer class="public-footer">
       <div class="public-footer__inner">
-        <strong>TRANSTU</strong>
-        <span>Société des Transports de Tunis — Signalement voyageur</span>
+        <strong>{{ 'common.brand' | translate }}</strong>
+        <span>{{ 'footer.tagline' | translate }}</span>
       </div>
     </footer>
   `,

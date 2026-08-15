@@ -1,14 +1,12 @@
 <section class="panel p-4">
   <div class="text-center mb-4">
-    <h1 class="h3 mb-2">Créer un compte</h1>
-    <p class="text-secondary mb-0">
-      Facultatif — retrouvez vos signalements et suivez vos demandes en toute simplicité.
-    </p>
+    <h1 class="h3 mb-2">{{ 'auth.registerTitle' | translate }}</h1>
+    <p class="text-secondary mb-0">{{ 'auth.registerSubtitle' | translate }}</p>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
     <div class="mb-3">
-      <label class="form-label fw-semibold" for="reg-name">Nom</label>
+      <label class="form-label fw-semibold" for="reg-name">{{ 'common.name' | translate }}</label>
       <input
         id="reg-name"
         type="text"
@@ -19,7 +17,7 @@
     </div>
 
     <div class="mb-3">
-      <label class="form-label fw-semibold" for="reg-email">Adresse e-mail *</label>
+      <label class="form-label fw-semibold" for="reg-email">{{ 'auth.emailRequired' | translate }}</label>
       <input
         id="reg-email"
         type="email"
@@ -29,12 +27,12 @@
         [class.is-invalid]="form.controls.email.touched && form.controls.email.invalid"
       />
       @if (form.controls.email.touched && form.controls.email.invalid) {
-        <div class="invalid-feedback">Adresse e-mail invalide.</div>
+        <div class="invalid-feedback">{{ 'auth.emailInvalid' | translate }}</div>
       }
     </div>
 
     <div class="mb-3">
-      <label class="form-label fw-semibold" for="reg-phone">Téléphone</label>
+      <label class="form-label fw-semibold" for="reg-phone">{{ 'common.phone' | translate }}</label>
       <input
         id="reg-phone"
         type="tel"
@@ -44,12 +42,12 @@
         [class.is-invalid]="form.controls.phoneNumber.touched && form.controls.phoneNumber.invalid"
       />
       @if (form.controls.phoneNumber.touched && form.controls.phoneNumber.invalid) {
-        <div class="invalid-feedback">Numéro de téléphone invalide.</div>
+        <div class="invalid-feedback">{{ 'auth.phoneInvalid' | translate }}</div>
       }
     </div>
 
     <div class="mb-4">
-      <label class="form-label fw-semibold" for="reg-password">Mot de passe *</label>
+      <label class="form-label fw-semibold" for="reg-password">{{ 'auth.passwordRequiredLabel' | translate }}</label>
       <input
         id="reg-password"
         type="password"
@@ -59,28 +57,28 @@
         [class.is-invalid]="form.controls.password.touched && form.controls.password.invalid"
       />
       @if (form.controls.password.touched && form.controls.password.invalid) {
-        <div class="invalid-feedback">8 caractères minimum.</div>
+        <div class="invalid-feedback">{{ 'auth.passwordMin' | translate }}</div>
       }
     </div>
 
     <button type="submit" class="btn btn-transtu btn-lg w-100 mb-3" [disabled]="submitting()">
       @if (submitting()) {
         <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-        Création…
+        {{ 'auth.registerSubmitting' | translate }}
       } @else {
-        Créer mon compte
+        {{ 'auth.registerSubmit' | translate }}
       }
     </button>
   </form>
 
   <p class="text-center mb-0">
-    Déjà un compte ?
+    {{ 'auth.hasAccount' | translate }}
     <a
       [routerLink]="['/connexion']"
       [queryParams]="{ returnUrl: returnUrl() }"
       class="fw-semibold"
     >
-      Se connecter
+      {{ 'auth.signInLink' | translate }}
     </a>
   </p>
 </section>

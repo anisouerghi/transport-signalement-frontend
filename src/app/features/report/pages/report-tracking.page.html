@@ -1,34 +1,30 @@
 <section class="mb-3">
-  <h1 class="h3 mb-1">Votre signalement</h1>
-  <p class="text-secondary mb-0">
-    Consultez l'état de votre demande et les réponses de TRANSTU.
-  </p>
+  <h1 class="h3 mb-1">{{ 'followUp.title' | translate }}</h1>
+  <p class="text-secondary mb-0">{{ 'followUp.subtitle' | translate }}</p>
 </section>
 
 @if (invalidLink()) {
   <section class="panel page-state">
     <div class="icon-wrap error"><i class="bi bi-link-45deg" aria-hidden="true"></i></div>
-    <h2 class="h5">Lien de suivi invalide</h2>
-    <p class="text-secondary mb-0">
-      Utilisez le lien sécurisé reçu par e-mail pour consulter votre signalement.
-    </p>
+    <h2 class="h5">{{ 'followUp.invalidLinkTitle' | translate }}</h2>
+    <p class="text-secondary mb-0">{{ 'followUp.invalidLinkBody' | translate }}</p>
   </section>
 } @else if (loading()) {
   <div class="panel p-4 text-center text-secondary">
     <div class="spinner-border text-success mb-2" role="status"></div>
-    <div>Chargement du suivi…</div>
+    <div>{{ 'followUp.loading' | translate }}</div>
   </div>
 } @else if (notFound()) {
   <section class="panel page-state">
     <div class="icon-wrap error"><i class="bi bi-search" aria-hidden="true"></i></div>
-    <h2 class="h5">Aucun signalement trouvé</h2>
-    <p class="text-secondary mb-0">Ce lien de suivi est invalide ou le signalement n'existe plus.</p>
+    <h2 class="h5">{{ 'followUp.notFoundTitle' | translate }}</h2>
+    <p class="text-secondary mb-0">{{ 'followUp.notFoundBody' | translate }}</p>
   </section>
 } @else if (report(); as r) {
   <section class="panel p-3 p-md-4 mb-3">
     <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
       <div>
-        <p class="small text-secondary mb-1">Référence</p>
+        <p class="small text-secondary mb-1">{{ 'common.reference' | translate }}</p>
         <div class="fw-bold fs-5" style="color: var(--transtu-blue-deep)">{{ r.reference }}</div>
       </div>
       @if (r.statusLabel) {
@@ -37,23 +33,23 @@
     </div>
     <div class="gold-rule mb-3"></div>
     <dl class="row gy-2 mb-0">
-      <dt class="col-5 text-secondary">Statut</dt>
-      <dd class="col-7 mb-0">{{ r.statusLabel || '—' }}</dd>
-      <dt class="col-5 text-secondary">Type</dt>
-      <dd class="col-7 mb-0">{{ r.reportTypeLabel || '—' }}</dd>
-      <dt class="col-5 text-secondary">Créé le</dt>
+      <dt class="col-5 text-secondary">{{ 'common.status' | translate }}</dt>
+      <dd class="col-7 mb-0">{{ r.statusLabel || ('common.dash' | translate) }}</dd>
+      <dt class="col-5 text-secondary">{{ 'common.type' | translate }}</dt>
+      <dd class="col-7 mb-0">{{ r.reportTypeLabel || ('common.dash' | translate) }}</dd>
+      <dt class="col-5 text-secondary">{{ 'followUp.createdAt' | translate }}</dt>
       <dd class="col-7 mb-0">{{ r.creationDate | date: 'dd/MM/yyyy HH:mm' }}</dd>
-      <dt class="col-5 text-secondary">Support</dt>
-      <dd class="col-7 mb-0">{{ r.supportLabel || '—' }}</dd>
+      <dt class="col-5 text-secondary">{{ 'common.support' | translate }}</dt>
+      <dd class="col-7 mb-0">{{ r.supportLabel || ('common.dash' | translate) }}</dd>
     </dl>
   </section>
 
   <section class="panel p-3 p-md-4">
-    <h2 class="h5 mb-3">Réponses de TRANSTU</h2>
+    <h2 class="h5 mb-3">{{ 'followUp.repliesTitle' | translate }}</h2>
     @if (r.replies?.length) {
       @for (reply of r.replies; track reply.replyDate + reply.message) {
         <article class="mb-3 p-3 border rounded-2">
-          <div class="small text-secondary mb-1 fw-semibold">Réponse de TRANSTU</div>
+          <div class="small text-secondary mb-1 fw-semibold">{{ 'followUp.replyFrom' | translate }}</div>
           <div class="small text-secondary mb-2">
             {{ reply.replyDate | date: 'dd/MM/yyyy – HH:mm' }}
           </div>
@@ -61,11 +57,11 @@
         </article>
       }
     } @else {
-      <p class="text-secondary mb-0">Aucune réponse visible pour le moment.</p>
+      <p class="text-secondary mb-0">{{ 'followUp.noReplies' | translate }}</p>
     }
   </section>
 }
 
 <p class="text-center mt-3 mb-0">
-  <a routerLink="/accueil">Retour à l'accueil</a>
+  <a routerLink="/accueil">{{ 'common.backHome' | translate }}</a>
 </p>

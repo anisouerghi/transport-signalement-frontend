@@ -1,32 +1,49 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from '../../core/services/auth.service';
+import { AppLanguage, LanguageService } from '../../core/services/language.service';
 
 @Component({
   selector: 'app-public-header',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, TranslatePipe],
   template: `
     <header class="public-header">
       <div class="public-header__inner">
-        <a routerLink="/accueil" class="brand" aria-label="TRANSTU — Accueil">
+        <a routerLink="/accueil" class="brand" [attr.aria-label]="'common.brandAria' | translate">
           <img
             src="assets/images/transtu_logo.png"
-            alt="Logo TRANSTU"
+            [attr.alt]="'common.logoAlt' | translate"
             class="brand__logo"
             width="160"
             height="48"
           />
         </a>
-        <nav class="public-header__nav" aria-label="Navigation principale">
+        <nav class="public-header__nav" [attr.aria-label]="'common.navMain' | translate">
+          <div class="lang-switch" role="group" [attr.aria-label]="'header.language' | translate">
+            @for (opt of language.options; track opt.code) {
+              <button
+                type="button"
+                class="lang-btn"
+                [class.lang-btn--active]="language.currentLang() === opt.code"
+                [attr.aria-pressed]="language.currentLang() === opt.code"
+                (click)="onLang(opt.code)"
+              >
+                {{ opt.label }}
+              </button>
+            }
+          </div>
           @if (auth.isAuthenticated()) {
-            <span class="nav-user" title="{{ auth.currentUser()?.email }}">
+            <span class="nav-user" [attr.title]="auth.currentUser()?.email">
               <i class="bi bi-person-check-fill" aria-hidden="true"></i>
               {{ displayName() }}
             </span>
-            <button type="button" class="nav-btn" (click)="logout()">Déconnexion</button>
+            <button type="button" class="nav-btn" (click)="logout()">
+              {{ 'header.logout' | translate }}
+            </button>
           } @else {
-            <a routerLink="/connexion" class="nav-link-muted">Connexion</a>
+            <a routerLink="/connexion" class="nav-link-muted">{{ 'header.login' | translate }}</a>
           }
         </nav>
       </div>
@@ -65,6 +82,34 @@ import { AuthService } from '../../core/services/auth.service';
         gap: 0.75rem;
         flex-wrap: wrap;
         justify-content: flex-end;
+      }
+      .lang-switch {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.15rem;
+        padding: 0.15rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.1);
+      }
+      .lang-btn {
+        background: transparent;
+        border: none;
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        padding: 0.28rem 0.45rem;
+        border-radius: 999px;
+        cursor: pointer;
+        line-height: 1.2;
+      }
+      .lang-btn:hover {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.12);
+      }
+      .lang-btn--active {
+        background: #fff;
+        color: #0f2758;
       }
       .nav-link-muted {
         color: rgba(255, 255, 255, 0.9);
@@ -110,6 +155,7 @@ import { AuthService } from '../../core/services/auth.service';
 })
 export class PublicHeaderComponent {
   readonly auth = inject(AuthService);
+  readonly language = inject(LanguageService);
 
   displayName(): string {
     const user = this.auth.currentUser();
@@ -121,5 +167,9 @@ export class PublicHeaderComponent {
 
   logout(): void {
     this.auth.logout();
+  }
+
+  onLang(code: AppLanguage): void {
+    void this.language.setLanguage(code);
   }
 }

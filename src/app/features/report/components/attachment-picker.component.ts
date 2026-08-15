@@ -1,10 +1,9 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output, inject } from '@angular/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
-/** Fichier sélectionné côté client, avec aperçu optionnel pour les images. */
 export interface SelectedAttachment {
   id: string;
   file: File;
-  /** Object URL révoquée à la destruction du composant. */
   previewUrl?: string;
 }
 
@@ -14,22 +13,17 @@ const MAX_TOTAL_BYTES = 25 * 1024 * 1024;
 const ALLOWED_EXT = new Set(['jpg', 'jpeg', 'png', 'webp', 'pdf']);
 const ALLOWED_MIME = new Set(['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'application/pdf']);
 
-/**
- * Zone de sélection des pièces jointes (optionnelles) du formulaire voyageur.
- *
- * Propose multi-sélection, glisser-déposer, aperçu image, compteur et contrôles
- * alignés sur les règles backend (formats, 5 fichiers, 10 Mo / 25 Mo).
- */
 @Component({
   selector: 'app-attachment-picker',
   standalone: true,
+  imports: [TranslatePipe],
   templateUrl: './attachment-picker.component.html',
   styleUrl: './attachment-picker.component.scss',
 })
 export class AttachmentPickerComponent implements OnDestroy {
-  /** Désactive l'interaction pendant l'envoi du formulaire. */
+  private readonly translate = inject(TranslateService);
+
   @Input() disabled = false;
-  /** Émet la liste courante des fichiers retenus. */
   @Output() filesChange = new EventEmitter<File[]>();
 
   readonly items: SelectedAttachment[] = [];
@@ -40,12 +34,10 @@ export class AttachmentPickerComponent implements OnDestroy {
   readonly maxFileMb = 10;
   readonly maxTotalMb = 25;
 
-  /** Libellé du compteur affiché (ex. {@code 2 / 5}). */
   get countLabel(): string {
     return `${this.items.length} / ${MAX_FILES}`;
   }
 
-  /** Ajoute les fichiers choisis via l'input natif. */
   onFileInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files?.length) {
@@ -54,7 +46,6 @@ export class AttachmentPickerComponent implements OnDestroy {
     }
   }
 
-  /** Ajoute les fichiers issus d'un glisser-déposer. */
   onDrop(event: DragEvent): void {
     event.preventDefault();
     this.dragOver = false;
@@ -78,7 +69,6 @@ export class AttachmentPickerComponent implements OnDestroy {
     this.dragOver = false;
   }
 
-  /** Retire un fichier de la sélection et libère son aperçu. */
   remove(id: string): void {
     const idx = this.items.findIndex((i) => i.id === id);
     if (idx < 0) {
@@ -92,15 +82,14 @@ export class AttachmentPickerComponent implements OnDestroy {
     this.emit();
   }
 
-  /** Formate une taille en octets pour l'affichage utilisateur. */
   formatSize(bytes: number): string {
     if (bytes < 1024) {
-      return `${bytes} o`;
+      return this.translate.instant('attachments.unitB', { n: bytes });
     }
     if (bytes < 1024 * 1024) {
-      return `${(bytes / 1024).toFixed(1)} Ko`;
+      return this.translate.instant('attachments.unitKb', { n: (bytes / 1024).toFixed(1) });
     }
-    return `${(bytes / (1024 * 1024)).toFixed(1)} Mo`;
+    return this.translate.instant('attachments.unitMb', { n: (bytes / (1024 * 1024)).toFixed(1) });
   }
 
   ngOnDestroy(): void {
@@ -111,14 +100,13 @@ export class AttachmentPickerComponent implements OnDestroy {
     }
   }
 
-  /** Applique les règles de validation puis met à jour la sélection. */
   private addFiles(files: File[]): void {
     this.error = null;
     const next = [...this.items];
 
     for (const file of files) {
       if (next.length >= MAX_FILES) {
-        this.error = `Maximum ${MAX_FILES} pièces jointes autorisées.`;
+        this.error = this.translate.instant('attachments.maxFiles', { count: MAX_FILES });
         break;
       }
       const validationError = this.validateFile(file, next);
@@ -140,27 +128,23 @@ export class AttachmentPickerComponent implements OnDestroy {
     this.emit();
   }
 
-  /**
-   * Vérifie extension, MIME, taille unitaire et cumul avant acceptation.
-   * @returns message d'erreur utilisateur, ou {@code null} si le fichier est valide
-   */
   private validateFile(file: File, current: SelectedAttachment[]): string | null {
     const ext = file.name.includes('.')
       ? file.name.substring(file.name.lastIndexOf('.') + 1).toLowerCase()
       : '';
     if (!ALLOWED_EXT.has(ext)) {
-      return `Format non autorisé (${file.name}). Formats : JPG, JPEG, PNG, WEBP, PDF.`;
+      return this.translate.instant('attachments.badFormat', { name: file.name });
     }
     const mime = (file.type || '').toLowerCase();
     if (mime && !ALLOWED_MIME.has(mime)) {
-      return `Type MIME non autorisé (${file.name}).`;
+      return this.translate.instant('attachments.badMime', { name: file.name });
     }
     if (file.size > MAX_FILE_BYTES) {
-      return `Le fichier ${file.name} dépasse 10 Mo.`;
+      return this.translate.instant('attachments.fileTooBig', { name: file.name });
     }
     const total = current.reduce((sum, i) => sum + i.file.size, 0) + file.size;
     if (total > MAX_TOTAL_BYTES) {
-      return 'La taille totale des pièces jointes ne doit pas dépasser 25 Mo.';
+      return this.translate.instant('attachments.totalTooBig');
     }
     return null;
   }

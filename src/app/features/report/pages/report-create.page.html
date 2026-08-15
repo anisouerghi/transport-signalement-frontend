@@ -8,56 +8,52 @@
 } @else if (invalidQr()) {
   <section class="panel page-state">
     <div class="icon-wrap error"><i class="bi bi-qr-code-scan" aria-hidden="true"></i></div>
-    <h1 class="h4">QR Code non reconnu</h1>
+    <h1 class="h4">{{ 'report.invalidQr' | translate }}</h1>
     <p class="text-secondary mb-0">{{ errorMessage() }}</p>
   </section>
 } @else if (support(); as currentSupport) {
   <section class="mb-3">
     <a class="small text-decoration-none" [routerLink]="['/report', supportUuid()]">
-      ← Retour
+      ← {{ 'common.back' | translate }}
     </a>
-    <h1 class="h3 mb-1 mt-2">Déposer un signalement</h1>
-    <p class="text-secondary mb-0">
-      Décrivez la situation rencontrée. Notre équipe traitera votre demande dans les meilleurs délais.
-    </p>
+    <h1 class="h3 mb-1 mt-2">{{ 'report.title' | translate }}</h1>
+    <p class="text-secondary mb-0">{{ 'report.subtitle' | translate }}</p>
   </section>
 
   <app-support-summary [support]="currentSupport" />
 
   <form class="panel p-3 p-md-4" [formGroup]="form" (ngSubmit)="submit()" novalidate>
     <div class="mb-3">
-      <label class="form-label fw-semibold" for="reportTypeId">Type de signalement *</label>
+      <label class="form-label fw-semibold" for="reportTypeId">{{ 'report.typeLabel' | translate }}</label>
       <select
         id="reportTypeId"
         class="form-select"
         formControlName="reportTypeId"
         [class.is-invalid]="controlInvalid('reportTypeId')"
       >
-        <option value="">Sélectionnez un type</option>
+        <option value="">{{ 'report.typePlaceholder' | translate }}</option>
         @for (type of reportTypes(); track type.reportTypeId) {
           <option [value]="type.reportTypeId">{{ type.label }}</option>
         }
       </select>
       @if (controlInvalid('reportTypeId')) {
-        <div class="invalid-feedback">Veuillez choisir un type de signalement.</div>
+        <div class="invalid-feedback">{{ 'report.typeRequired' | translate }}</div>
       }
     </div>
 
     <div class="mb-3">
-      <label class="form-label fw-semibold" for="description">Description *</label>
+      <label class="form-label fw-semibold" for="description">{{ 'report.descriptionLabel' | translate }}</label>
       <textarea
         id="description"
         class="form-control"
         rows="5"
         formControlName="description"
         maxlength="5000"
-        placeholder="Décrivez précisément le problème rencontré…"
+        [attr.placeholder]="'report.descriptionPlaceholder' | translate"
         [class.is-invalid]="controlInvalid('description')"
       ></textarea>
       @if (controlInvalid('description')) {
-        <div class="invalid-feedback">
-          La description doit contenir au moins 10 caractères.
-        </div>
+        <div class="invalid-feedback">{{ 'report.descriptionRequired' | translate }}</div>
       }
     </div>
 
@@ -72,11 +68,11 @@
 
     <div class="row g-3 mb-3">
       <div class="col-md-6">
-        <label class="form-label fw-semibold" for="name">Nom</label>
+        <label class="form-label fw-semibold" for="name">{{ 'common.name' | translate }}</label>
         <input id="name" type="text" class="form-control" formControlName="name" autocomplete="name" />
       </div>
       <div class="col-md-6">
-        <label class="form-label fw-semibold" for="phoneNumber">Téléphone</label>
+        <label class="form-label fw-semibold" for="phoneNumber">{{ 'common.phone' | translate }}</label>
         <input
           id="phoneNumber"
           type="tel"
@@ -86,22 +82,22 @@
           [class.is-invalid]="controlInvalid('phoneNumber')"
         />
         @if (controlInvalid('phoneNumber')) {
-          <div class="invalid-feedback">Numéro de téléphone invalide.</div>
+          <div class="invalid-feedback">{{ 'report.phoneInvalid' | translate }}</div>
         }
       </div>
       <div class="col-12">
-        <label class="form-label fw-semibold" for="email">Adresse e-mail</label>
+        <label class="form-label fw-semibold" for="email">{{ 'common.email' | translate }}</label>
         <input
           id="email"
           type="email"
           class="form-control"
           formControlName="email"
           autocomplete="email"
-          placeholder="exemple&#64;domaine.com"
+          [attr.placeholder]="'report.emailPlaceholder' | translate"
           [class.is-invalid]="controlInvalid('email')"
         />
         @if (controlInvalid('email')) {
-          <div class="invalid-feedback">Adresse e-mail invalide.</div>
+          <div class="invalid-feedback">{{ 'report.emailInvalid' | translate }}</div>
         }
       </div>
     </div>
@@ -109,9 +105,9 @@
     <button type="submit" class="btn btn-transtu w-100" [disabled]="submitting()">
       @if (submitting()) {
         <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-        Envoi en cours…
+        {{ 'report.submitting' | translate }}
       } @else {
-        Envoyer mon signalement
+        {{ 'report.submit' | translate }}
       }
     </button>
   </form>

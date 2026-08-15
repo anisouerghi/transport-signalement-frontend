@@ -1,0 +1,172 @@
+{
+  "common": {
+    "brand": "TRANSTU",
+    "brandAria": "TRANSTU — Home",
+    "logoAlt": "TRANSTU logo",
+    "backHome": "Back to home",
+    "back": "Back",
+    "or": "or",
+    "close": "Close",
+    "loading": "Loading…",
+    "reference": "Reference",
+    "label": "Label",
+    "name": "Name",
+    "email": "Email address",
+    "phone": "Phone",
+    "password": "Password",
+    "status": "Status",
+    "type": "Type",
+    "support": "Support",
+    "dash": "—",
+    "navMain": "Main navigation",
+    "traveler": "Traveler"
+  },
+  "header": {
+    "login": "Sign in",
+    "logout": "Sign out",
+    "language": "Language"
+  },
+  "footer": {
+    "tagline": "Tunis Transport Company — Traveler reporting"
+  },
+  "home": {
+    "title": "Traveler reporting",
+    "intro": "Scan the QR code on your transport support to submit a report quickly and securely.",
+    "followHint": "You can track replies via the secure link emailed when our team responds."
+  },
+  "welcome": {
+    "title": "Your feedback matters",
+    "intro": "Easily report a problem or situation on the TRANSTU network.",
+    "greeting": "Welcome,",
+    "connected": "You are signed in.",
+    "whatNext": "What would you like to do?",
+    "reportProblem": "Report a problem",
+    "trackReports": "Track my reports",
+    "myInfo": "My details",
+    "signOut": "Sign out",
+    "withAccount": "With an account, you can:",
+    "benefit1": "Easily find your reports",
+    "benefit2": "View team replies",
+    "benefit3": "Follow the progress of your complaints",
+    "benefit4": "Avoid re-entering your details",
+    "benefit5": "Receive available notifications",
+    "signIn": "Sign in",
+    "createAccount": "Create an account",
+    "continueAnonymous": "Continue anonymously",
+    "anonymousHint": "You can submit a report without an account. Registration is never required.",
+    "withoutAccount": "Without an account, you can still:",
+    "anon1": "Create a report and stay anonymous",
+    "anon2": "Provide your email to receive a reply",
+    "anon3": "Use the tracking link received after submission",
+    "invalidQr": "Unrecognized QR code"
+  },
+  "support": {
+    "title": "Related support",
+    "fallbackType": "Support"
+  },
+  "report": {
+    "title": "Submit a report",
+    "subtitle": "Describe the situation. Our team will handle your request as soon as possible.",
+    "typeLabel": "Report type *",
+    "typePlaceholder": "Select a type",
+    "typeRequired": "Please choose a report type.",
+    "descriptionLabel": "Description *",
+    "descriptionPlaceholder": "Describe the problem precisely…",
+    "descriptionRequired": "The description must contain at least 10 characters.",
+    "emailPlaceholder": "example@domain.com",
+    "emailInvalid": "Invalid email address.",
+    "phoneInvalid": "Invalid phone number.",
+    "submit": "Send my report",
+    "submitting": "Sending…",
+    "success": "Your report has been recorded.",
+    "invalidQr": "Unrecognized QR code"
+  },
+  "emailNudge": {
+    "title": "Why provide your email?",
+    "body": "You can submit your report anonymously. However, if you provide your email address, you will be automatically informed of progress and receive our team's reply by email."
+  },
+  "attachments": {
+    "title": "Attachments (optional)",
+    "limits": "Maximum {{maxFiles}} files · {{maxFileMb}} MB / file · {{maxTotalMb}} MB total · JPG, JPEG, PNG, WEBP, PDF",
+    "dropHint": "Drag and drop your files here or",
+    "browse": "Browse",
+    "removeAria": "Remove {{name}}",
+    "maxFiles": "Maximum {{count}} attachments allowed.",
+    "badFormat": "Format not allowed ({{name}}). Formats: JPG, JPEG, PNG, WEBP, PDF.",
+    "badMime": "MIME type not allowed ({{name}}).",
+    "fileTooBig": "File {{name}} exceeds 10 MB.",
+    "totalTooBig": "Total attachment size must not exceed 25 MB.",
+    "unitB": "{{n}} B",
+    "unitKb": "{{n}} KB",
+    "unitMb": "{{n}} MB"
+  },
+  "auth": {
+    "loginTitle": "Sign in",
+    "loginSubtitle": "Access your reports and track your requests.",
+    "loginSubmit": "Sign in",
+    "loginSubmitting": "Signing in…",
+    "loginSuccess": "Signed in successfully.",
+    "passwordRequired": "Password required (minimum 8 characters).",
+    "noAccount": "No account yet?",
+    "createAccountLink": "Create an account",
+    "registerTitle": "Create an account",
+    "registerSubtitle": "Optional — find your reports and track requests easily.",
+    "emailRequired": "Email address *",
+    "passwordRequiredLabel": "Password *",
+    "passwordMin": "Minimum 8 characters.",
+    "registerSubmit": "Create my account",
+    "registerSubmitting": "Creating…",
+    "hasAccount": "Already have an account?",
+    "signInLink": "Sign in",
+    "registerSuccess": "Account created. You are signed in.",
+    "emailInvalid": "Invalid email address.",
+    "phoneInvalid": "Invalid phone number."
+  },
+  "confirmation": {
+    "emptyTitle": "No confirmation available",
+    "emptyBody": "Please submit a report via a QR code first.",
+    "title": "Your report has been recorded",
+    "copy": "Copy reference",
+    "keepRef": "Keep this reference for your exchanges with TRANSTU.",
+    "aboutFollowUp": "About follow-up",
+    "emailSent": "A secure tracking link was sent to {{email}} (also check spam). A new email will be sent when our team replies.",
+    "noEmail": "No email is linked to this report. Keep the reference for your exchanges with TRANSTU.",
+    "notifyTo": "Notifications will be sent to {{email}}.",
+    "backSupport": "Back to support home",
+    "copied": "Reference copied to clipboard.",
+    "copyFailed": "Unable to copy automatically. Please select the reference manually."
+  },
+  "followUp": {
+    "title": "Your report",
+    "subtitle": "Check the status of your request and TRANSTU replies.",
+    "invalidLinkTitle": "Invalid tracking link",
+    "invalidLinkBody": "Use the secure link received by email to view your report.",
+    "loading": "Loading follow-up…",
+    "notFoundTitle": "No report found",
+    "notFoundBody": "This tracking link is invalid or the report no longer exists.",
+    "createdAt": "Created on",
+    "repliesTitle": "TRANSTU replies",
+    "replyFrom": "Reply from TRANSTU",
+    "noReplies": "No visible reply yet."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "This address does not exist. Scan a TRANSTU QR code or follow an existing report."
+  },
+  "errors": {
+    "offline": "Unable to reach the server. Check your Internet connection.",
+    "unavailable": "The service is temporarily unavailable. Please try again shortly.",
+    "server": "A technical error occurred. Please try again later.",
+    "invalidForm": "Some form information is invalid.",
+    "notFound": "The requested resource was not found.",
+    "generic": "An error occurred. Please try again.",
+    "invalidQr": "This QR code is invalid. Make sure it is an official TRANSTU QR code.",
+    "supportMissing": "This transport support was not found or is no longer active. The QR code may be obsolete.",
+    "supportLoadFailed": "Unable to load support information. Please try again shortly."
+  },
+  "gps": {
+    "unavailable": "GPS location is not available on this device.",
+    "denied": "Location permission denied.",
+    "failed": "Unable to get GPS position."
+  }
+}

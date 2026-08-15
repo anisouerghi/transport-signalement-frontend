@@ -11,7 +11,7 @@
 } @else if (invalidQr()) {
   <section class="panel page-state">
     <div class="icon-wrap error"><i class="bi bi-qr-code-scan" aria-hidden="true"></i></div>
-    <h1 class="h4">QR Code non reconnu</h1>
+    <h1 class="h4">{{ 'welcome.invalidQr' | translate }}</h1>
     <p class="text-secondary mb-0">{{ errorMessage() }}</p>
   </section>
 } @else if (support(); as currentSupport) {
@@ -19,35 +19,33 @@
     <header class="welcome__hero text-center panel p-4 mb-3">
       <img
         src="assets/images/transtu_logo.png"
-        alt="TRANSTU"
+        [attr.alt]="'common.brand' | translate"
         class="welcome__logo mb-3"
         height="64"
       />
       <div class="gold-rule mx-auto mb-3"></div>
-      <h1 class="h3 mb-2">Votre avis nous intéresse</h1>
-      <p class="text-secondary mb-0 welcome__intro">
-        Signalez facilement un problème ou une situation rencontrée dans le réseau TRANSTU.
-      </p>
+      <h1 class="h3 mb-2">{{ 'welcome.title' | translate }}</h1>
+      <p class="text-secondary mb-0 welcome__intro">{{ 'welcome.intro' | translate }}</p>
     </header>
 
     @if (auth.isAuthenticated()) {
       <section class="panel p-4 mb-3 welcome__connected" aria-live="polite">
         <p class="welcome__greeting mb-1">
-          Bienvenue, <strong>{{ displayName() }}</strong>
+          {{ 'welcome.greeting' | translate }} <strong>{{ displayName() }}</strong>
         </p>
-        <p class="text-secondary small mb-3">Vous êtes connecté.</p>
+        <p class="text-secondary small mb-3">{{ 'welcome.connected' | translate }}</p>
 
         <app-support-summary [support]="currentSupport" />
 
-        <p class="fw-semibold mb-3 mt-2">Que souhaitez-vous faire ?</p>
+        <p class="fw-semibold mb-3 mt-2">{{ 'welcome.whatNext' | translate }}</p>
         <div class="d-grid gap-2">
           <button type="button" class="btn btn-transtu btn-lg" (click)="goToForm()">
             <i class="bi bi-exclamation-circle me-2" aria-hidden="true"></i>
-            Signaler un problème
+            {{ 'welcome.reportProblem' | translate }}
           </button>
           <button type="button" class="btn btn-transtu-outline btn-lg" (click)="goTracking()">
             <i class="bi bi-search me-2" aria-hidden="true"></i>
-            Suivre mes signalements
+            {{ 'welcome.trackReports' | translate }}
           </button>
           <button
             type="button"
@@ -56,22 +54,22 @@
             [attr.aria-expanded]="showProfile()"
           >
             <i class="bi bi-person-circle me-2" aria-hidden="true"></i>
-            Mes informations
+            {{ 'welcome.myInfo' | translate }}
           </button>
           <button type="button" class="btn btn-link text-danger" (click)="logout()">
-            Se déconnecter
+            {{ 'welcome.signOut' | translate }}
           </button>
         </div>
 
         @if (showProfile()) {
           <div class="welcome__profile mt-3 p-3">
             <dl class="row mb-0 gy-2 small">
-              <dt class="col-4 text-secondary">Nom</dt>
-              <dd class="col-8 mb-0">{{ auth.currentUser()?.name || '—' }}</dd>
-              <dt class="col-4 text-secondary">E-mail</dt>
+              <dt class="col-4 text-secondary">{{ 'common.name' | translate }}</dt>
+              <dd class="col-8 mb-0">{{ auth.currentUser()?.name || ('common.dash' | translate) }}</dd>
+              <dt class="col-4 text-secondary">{{ 'common.email' | translate }}</dt>
               <dd class="col-8 mb-0">{{ auth.currentUser()?.email }}</dd>
-              <dt class="col-4 text-secondary">Téléphone</dt>
-              <dd class="col-8 mb-0">{{ auth.currentUser()?.phoneNumber || '—' }}</dd>
+              <dt class="col-4 text-secondary">{{ 'common.phone' | translate }}</dt>
+              <dd class="col-8 mb-0">{{ auth.currentUser()?.phoneNumber || ('common.dash' | translate) }}</dd>
             </dl>
           </div>
         }
@@ -82,45 +80,45 @@
       <section class="panel p-4 mb-3">
         <button type="button" class="btn btn-transtu btn-lg w-100 mb-4" (click)="goToForm()">
           <i class="bi bi-exclamation-circle me-2" aria-hidden="true"></i>
-          Signaler un problème
+          {{ 'welcome.reportProblem' | translate }}
         </button>
 
         <div class="welcome__account-hint mb-4">
-          <p class="fw-semibold mb-2">Avec un compte, vous pouvez :</p>
+          <p class="fw-semibold mb-2">{{ 'welcome.withAccount' | translate }}</p>
           <ul class="welcome__benefits mb-0">
-            <li>Retrouver facilement vos signalements</li>
-            <li>Consulter les réponses de l'équipe</li>
-            <li>Suivre l'évolution de vos réclamations</li>
-            <li>Éviter de ressaisir vos informations</li>
-            <li>Recevoir les notifications disponibles</li>
+            <li>{{ 'welcome.benefit1' | translate }}</li>
+            <li>{{ 'welcome.benefit2' | translate }}</li>
+            <li>{{ 'welcome.benefit3' | translate }}</li>
+            <li>{{ 'welcome.benefit4' | translate }}</li>
+            <li>{{ 'welcome.benefit5' | translate }}</li>
           </ul>
         </div>
 
         <div class="d-grid gap-2 mb-3">
           <button type="button" class="btn btn-transtu-outline btn-lg" (click)="goLogin()">
-            Se connecter
+            {{ 'welcome.signIn' | translate }}
           </button>
           <button type="button" class="btn btn-outline-secondary btn-lg" (click)="goRegister()">
-            Créer un compte
+            {{ 'welcome.createAccount' | translate }}
           </button>
         </div>
 
-        <div class="welcome__divider" role="separator"><span>ou</span></div>
+        <div class="welcome__divider" role="separator"><span>{{ 'common.or' | translate }}</span></div>
 
         <button type="button" class="btn btn-link w-100 welcome__anonymous" (click)="goToForm()">
-          Continuer anonymement
+          {{ 'welcome.continueAnonymous' | translate }}
         </button>
         <p class="text-secondary small text-center mt-2 mb-0">
-          Vous pouvez déposer un signalement sans compte. L'inscription n'est jamais obligatoire.
+          {{ 'welcome.anonymousHint' | translate }}
         </p>
       </section>
 
       <section class="panel p-3 welcome__anonymous-info">
-        <p class="small fw-semibold mb-2">Sans compte, vous pouvez quand même :</p>
+        <p class="small fw-semibold mb-2">{{ 'welcome.withoutAccount' | translate }}</p>
         <ul class="small text-secondary mb-0 ps-3">
-          <li>Créer un signalement et rester anonyme</li>
-          <li>Fournir votre e-mail pour recevoir une réponse</li>
-          <li>Utiliser le lien de suivi reçu après envoi</li>
+          <li>{{ 'welcome.anon1' | translate }}</li>
+          <li>{{ 'welcome.anon2' | translate }}</li>
+          <li>{{ 'welcome.anon3' | translate }}</li>
         </ul>
       </section>
     }

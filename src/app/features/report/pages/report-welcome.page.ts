@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { SupportSummaryComponent } from '../components/support-summary.component';
 import { TransportSupport } from '../models/report.model';
@@ -16,7 +17,7 @@ const UUID_RE =
 @Component({
   selector: 'app-report-welcome-page',
   standalone: true,
-  imports: [SupportSummaryComponent],
+  imports: [SupportSummaryComponent, TranslatePipe],
   templateUrl: './report-welcome.page.html',
   styleUrl: './report-welcome.page.scss',
 })
@@ -24,6 +25,7 @@ export class ReportWelcomePage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly supportService = inject(SupportService);
+  private readonly translate = inject(TranslateService);
   readonly auth = inject(AuthService);
 
   readonly loading = signal(true);
@@ -40,9 +42,7 @@ export class ReportWelcomePage implements OnInit {
     if (!UUID_RE.test(uuid)) {
       this.invalidQr.set(true);
       this.loading.set(false);
-      this.errorMessage.set(
-        "Ce QR Code est invalide. Vérifiez qu'il s'agit bien d'un QR Code TRANSTU officiel.",
-      );
+      this.errorMessage.set(this.translate.instant('errors.invalidQr'));
       return;
     }
 
@@ -55,13 +55,9 @@ export class ReportWelcomePage implements OnInit {
         this.loading.set(false);
         this.invalidQr.set(true);
         if (err.status === 404) {
-          this.errorMessage.set(
-            "Ce support de transport est introuvable ou n'est plus actif. Le QR Code peut être obsolète.",
-          );
+          this.errorMessage.set(this.translate.instant('errors.supportMissing'));
         } else {
-          this.errorMessage.set(
-            'Impossible de charger les informations du support. Réessayez dans quelques instants.',
-          );
+          this.errorMessage.set(this.translate.instant('errors.supportLoadFailed'));
         }
       },
     });
@@ -100,7 +96,7 @@ export class ReportWelcomePage implements OnInit {
   displayName(): string {
     const user = this.auth.currentUser();
     if (!user?.name?.trim()) {
-      return user?.email?.split('@')[0] ?? 'Voyageur';
+      return user?.email?.split('@')[0] ?? this.translate.instant('common.traveler');
     }
     return user.name;
   }

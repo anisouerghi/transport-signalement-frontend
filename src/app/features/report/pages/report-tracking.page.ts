@@ -3,20 +3,17 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { PublicReportTracking } from '../models/report.model';
 import { ReportService } from '../services/report.service';
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-/**
- * Page de suivi public sécurisé : /report-followup/:uuid
- * Accès sans authentification via le lien e-mail (UUID).
- */
 @Component({
   selector: 'app-report-tracking-page',
   standalone: true,
-  imports: [RouterLink, DatePipe],
+  imports: [RouterLink, DatePipe, TranslatePipe],
   templateUrl: './report-tracking.page.html',
 })
 export class ReportTrackingPage implements OnInit {

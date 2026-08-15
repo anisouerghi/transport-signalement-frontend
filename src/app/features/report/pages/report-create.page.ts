@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
@@ -23,7 +24,14 @@ const UUID_RE =
 @Component({
   selector: 'app-report-create-page',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, SupportSummaryComponent, EmailNudgeComponent, AttachmentPickerComponent],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    SupportSummaryComponent,
+    EmailNudgeComponent,
+    AttachmentPickerComponent,
+    TranslatePipe,
+  ],
   templateUrl: './report-create.page.html',
 })
 export class ReportCreatePage implements OnInit {
@@ -35,6 +43,7 @@ export class ReportCreatePage implements OnInit {
   private readonly reportService = inject(ReportService);
   private readonly notifications = inject(NotificationService);
   private readonly auth = inject(AuthService);
+  private readonly translate = inject(TranslateService);
 
   readonly loading = signal(true);
   readonly submitting = signal(false);
@@ -61,9 +70,7 @@ export class ReportCreatePage implements OnInit {
     if (!UUID_RE.test(uuid)) {
       this.invalidQr.set(true);
       this.loading.set(false);
-      this.errorMessage.set(
-        'Ce QR Code est invalide. Vérifiez qu’il s’agit bien d’un QR Code TRANSTU officiel.',
-      );
+      this.errorMessage.set(this.translate.instant('errors.invalidQr'));
       return;
     }
 
@@ -81,13 +88,9 @@ export class ReportCreatePage implements OnInit {
         this.loading.set(false);
         this.invalidQr.set(true);
         if (err.status === 404) {
-          this.errorMessage.set(
-            'Ce support de transport est introuvable ou n’est plus actif. Le QR Code peut être obsolète.',
-          );
+          this.errorMessage.set(this.translate.instant('errors.supportMissing'));
         } else {
-          this.errorMessage.set(
-            'Impossible de charger les informations du support. Réessayez dans quelques instants.',
-          );
+          this.errorMessage.set(this.translate.instant('errors.supportLoadFailed'));
         }
       },
     });
@@ -120,7 +123,7 @@ export class ReportCreatePage implements OnInit {
     this.reportService.create(payload, this.selectedFiles()).subscribe({
       next: (report) => {
         this.submitting.set(false);
-        this.notifications.success('Votre signalement a bien été enregistré.');
+        this.notifications.success(this.translate.instant('report.success'));
         void this.router.navigate(['/confirmation'], {
           state: {
             reference: report.reference,

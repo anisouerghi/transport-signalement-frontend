@@ -1,70 +1,60 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ConfirmationState } from '../models/report.model';
 import { NotificationService } from '../../../core/services/notification.service';
 
-/**
- * Confirmation après création : référence informative uniquement.
- * Le suivi des réponses passe par le lien sécurisé envoyé par e-mail.
- */
 @Component({
   selector: 'app-report-confirmation-page',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, TranslatePipe],
   template: `
     @if (!state()) {
       <section class="panel page-state">
         <div class="icon-wrap info"><i class="bi bi-info-circle" aria-hidden="true"></i></div>
-        <h1 class="h4">Aucune confirmation disponible</h1>
-        <p class="text-secondary mb-4">Déposez d'abord un signalement via un QR Code.</p>
-        <a routerLink="/accueil" class="btn btn-transtu">Retour à l'accueil</a>
+        <h1 class="h4">{{ 'confirmation.emptyTitle' | translate }}</h1>
+        <p class="text-secondary mb-4">{{ 'confirmation.emptyBody' | translate }}</p>
+        <a routerLink="/accueil" class="btn btn-transtu">{{ 'common.backHome' | translate }}</a>
       </section>
     } @else {
       <section class="panel page-state">
         <div class="icon-wrap success"><i class="bi bi-check2-circle" aria-hidden="true"></i></div>
-        <h1 class="h3">Votre signalement a bien été enregistré</h1>
+        <h1 class="h3">{{ 'confirmation.title' | translate }}</h1>
 
-        <p class="small text-secondary mb-1 mt-4">Référence</p>
+        <p class="small text-secondary mb-1 mt-4">{{ 'common.reference' | translate }}</p>
         <div class="ref-box mb-3" id="report-ref">{{ state()!.reference }}</div>
 
         <button type="button" class="btn btn-transtu mb-4" (click)="copyReference()">
           <i class="bi bi-clipboard me-1" aria-hidden="true"></i>
-          Copier la référence
+          {{ 'confirmation.copy' | translate }}
         </button>
 
-        <p class="text-secondary small mb-3 px-1">
-          Conservez cette référence pour vos échanges avec TRANSTU.
-        </p>
+        <p class="text-secondary small mb-3 px-1">{{ 'confirmation.keepRef' | translate }}</p>
 
         <div class="email-nudge text-start mb-4 mx-1">
-          <p class="mb-2 fw-semibold">À propos du suivi</p>
+          <p class="mb-2 fw-semibold">{{ 'confirmation.aboutFollowUp' | translate }}</p>
           @if (state()!.email) {
             <p class="small mb-0">
-              Un <strong>lien de suivi sécurisé</strong> a été envoyé à
-              <strong>{{ state()!.email }}</strong> (vérifiez aussi les indésirables).
-              Un nouvel e-mail partira lorsque notre équipe vous répondra.
+              {{ 'confirmation.emailSent' | translate: { email: state()!.email } }}
             </p>
           } @else {
-            <p class="small mb-0">
-              Aucun e-mail n'est associé à ce signalement. Conservez la référence pour vos
-              échanges avec TRANSTU.
-            </p>
+            <p class="small mb-0">{{ 'confirmation.noEmail' | translate }}</p>
           }
         </div>
 
         @if (state()!.email) {
           <p class="small text-secondary mb-4 px-1">
-            Les notifications seront envoyées à <strong>{{ state()!.email }}</strong>.
+            {{ 'confirmation.notifyTo' | translate: { email: state()!.email } }}
           </p>
         }
 
         <div class="d-grid gap-2 col-md-10 mx-auto">
           @if (state()!.supportUuid) {
             <a class="btn btn-transtu-outline" [routerLink]="['/report', state()!.supportUuid]">
-              Retour à l'accueil du support
+              {{ 'confirmation.backSupport' | translate }}
             </a>
           }
-          <a class="btn btn-link" routerLink="/accueil">Retour à l'accueil</a>
+          <a class="btn btn-link" routerLink="/accueil">{{ 'common.backHome' | translate }}</a>
         </div>
       </section>
     }
@@ -72,6 +62,7 @@ import { NotificationService } from '../../../core/services/notification.service
 })
 export class ReportConfirmationPage implements OnInit {
   private readonly notifications = inject(NotificationService);
+  private readonly translate = inject(TranslateService);
 
   readonly state = signal<ConfirmationState | null>(null);
 
@@ -93,11 +84,9 @@ export class ReportConfirmationPage implements OnInit {
     }
     try {
       await navigator.clipboard.writeText(ref);
-      this.notifications.success('Référence copiée dans le presse-papiers.');
+      this.notifications.success(this.translate.instant('confirmation.copied'));
     } catch {
-      this.notifications.error(
-        'Impossible de copier automatiquement. Sélectionnez la référence manuellement.',
-      );
+      this.notifications.error(this.translate.instant('confirmation.copyFailed'));
     }
   }
 }

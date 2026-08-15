@@ -1,14 +1,14 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
-/** Connexion voyageur — redirige vers returnUrl après succès (souvent /report/{uuid}). */
 @Component({
   selector: 'app-passenger-login-page',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, TranslatePipe],
   templateUrl: './passenger-login.page.html',
 })
 export class PassengerLoginPage implements OnInit {
@@ -17,6 +17,7 @@ export class PassengerLoginPage implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly notifications = inject(NotificationService);
+  private readonly translate = inject(TranslateService);
 
   readonly submitting = signal(false);
   readonly returnUrl = signal('/accueil');
@@ -43,7 +44,7 @@ export class PassengerLoginPage implements OnInit {
     this.auth.login({ email: email.trim(), password }).subscribe({
       next: () => {
         this.submitting.set(false);
-        this.notifications.success('Connexion réussie.');
+        this.notifications.success(this.translate.instant('auth.loginSuccess'));
         void this.router.navigateByUrl(this.returnUrl());
       },
       error: () => this.submitting.set(false),

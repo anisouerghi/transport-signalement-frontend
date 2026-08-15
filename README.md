@@ -33,6 +33,7 @@ Exemple local : `http://localhost:4200/report/{uuid}`
 - **Pièces jointes optionnelles** : multi-fichiers, drag & drop, aperçu, contrôles client alignés backend
 - Page de confirmation + copie de la référence
 - Suivi par référence
+- **Multilingue** FR (défaut) / AR (RTL) / EN — voir [documentation/i18n-public.md](./documentation/i18n-public.md)
 
 ## Endpoints utilisés
 

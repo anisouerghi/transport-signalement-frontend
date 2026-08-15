@@ -1,12 +1,15 @@
 <aside class="attachment-picker">
   <div class="d-flex justify-content-between align-items-baseline gap-2 mb-2">
-    <label class="form-label fw-semibold mb-0">Pièces jointes (optionnel)</label>
+    <label class="form-label fw-semibold mb-0">{{ 'attachments.title' | translate }}</label>
     <span class="small text-secondary">{{ countLabel }}</span>
   </div>
 
   <p class="small text-secondary mb-2">
-    Maximum {{ maxFiles }} fichiers · {{ maxFileMb }} Mo / fichier · total {{ maxTotalMb }} Mo ·
-    JPG, JPEG, PNG, WEBP, PDF
+    {{
+      'attachments.limits'
+        | translate
+          : { maxFiles: maxFiles, maxFileMb: maxFileMb, maxTotalMb: maxTotalMb }
+    }}
   </p>
 
   <div
@@ -18,9 +21,9 @@
     (drop)="onDrop($event)"
   >
     <i class="bi bi-cloud-arrow-up fs-3 d-block mb-2" aria-hidden="true"></i>
-    <p class="mb-2">Glissez-déposez vos fichiers ici ou</p>
+    <p class="mb-2">{{ 'attachments.dropHint' | translate }}</p>
     <label class="btn btn-sm btn-outline-success mb-0">
-      Parcourir
+      {{ 'attachments.browse' | translate }}
       <input
         type="file"
         class="d-none"
@@ -54,7 +57,7 @@
             class="btn btn-sm btn-outline-danger"
             [disabled]="disabled"
             (click)="remove(item.id)"
-            [attr.aria-label]="'Retirer ' + item.file.name"
+            [attr.aria-label]="'attachments.removeAria' | translate: { name: item.file.name }"
           >
             <i class="bi bi-x-lg" aria-hidden="true"></i>
           </button>

@@ -1,5 +1,7 @@
 # Parcours voyageur après scan QR
 
+Internationalisation FR / AR (RTL) / EN : voir [i18n-public.md](./i18n-public.md).
+
 ## Flux
 
 ```text

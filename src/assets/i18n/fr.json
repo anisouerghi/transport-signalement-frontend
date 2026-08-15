@@ -1,0 +1,172 @@
+{
+  "common": {
+    "brand": "TRANSTU",
+    "brandAria": "TRANSTU — Accueil",
+    "logoAlt": "Logo TRANSTU",
+    "backHome": "Retour à l'accueil",
+    "back": "Retour",
+    "or": "ou",
+    "close": "Fermer",
+    "loading": "Chargement…",
+    "reference": "Référence",
+    "label": "Libellé",
+    "name": "Nom",
+    "email": "Adresse e-mail",
+    "phone": "Téléphone",
+    "password": "Mot de passe",
+    "status": "Statut",
+    "type": "Type",
+    "support": "Support",
+    "dash": "—",
+    "navMain": "Navigation principale",
+    "traveler": "Voyageur"
+  },
+  "header": {
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "language": "Langue"
+  },
+  "footer": {
+    "tagline": "Société des Transports de Tunis — Signalement voyageur"
+  },
+  "home": {
+    "title": "Signalement voyageur",
+    "intro": "Scannez le QR Code présent sur votre support de transport pour déposer un signalement rapidement et en toute sécurité.",
+    "followHint": "Le suivi des réponses s'effectue via le lien sécurisé envoyé par e-mail lorsque notre équipe vous répond."
+  },
+  "welcome": {
+    "title": "Votre avis nous intéresse",
+    "intro": "Signalez facilement un problème ou une situation rencontrée dans le réseau TRANSTU.",
+    "greeting": "Bienvenue,",
+    "connected": "Vous êtes connecté.",
+    "whatNext": "Que souhaitez-vous faire ?",
+    "reportProblem": "Signaler un problème",
+    "trackReports": "Suivre mes signalements",
+    "myInfo": "Mes informations",
+    "signOut": "Se déconnecter",
+    "withAccount": "Avec un compte, vous pouvez :",
+    "benefit1": "Retrouver facilement vos signalements",
+    "benefit2": "Consulter les réponses de l'équipe",
+    "benefit3": "Suivre l'évolution de vos réclamations",
+    "benefit4": "Éviter de ressaisir vos informations",
+    "benefit5": "Recevoir les notifications disponibles",
+    "signIn": "Se connecter",
+    "createAccount": "Créer un compte",
+    "continueAnonymous": "Continuer anonymement",
+    "anonymousHint": "Vous pouvez déposer un signalement sans compte. L'inscription n'est jamais obligatoire.",
+    "withoutAccount": "Sans compte, vous pouvez quand même :",
+    "anon1": "Créer un signalement et rester anonyme",
+    "anon2": "Fournir votre e-mail pour recevoir une réponse",
+    "anon3": "Utiliser le lien de suivi reçu après envoi",
+    "invalidQr": "QR Code non reconnu"
+  },
+  "support": {
+    "title": "Support concerné",
+    "fallbackType": "Support"
+  },
+  "report": {
+    "title": "Déposer un signalement",
+    "subtitle": "Décrivez la situation rencontrée. Notre équipe traitera votre demande dans les meilleurs délais.",
+    "typeLabel": "Type de signalement *",
+    "typePlaceholder": "Sélectionnez un type",
+    "typeRequired": "Veuillez choisir un type de signalement.",
+    "descriptionLabel": "Description *",
+    "descriptionPlaceholder": "Décrivez précisément le problème rencontré…",
+    "descriptionRequired": "La description doit contenir au moins 10 caractères.",
+    "emailPlaceholder": "exemple@domaine.com",
+    "emailInvalid": "Adresse e-mail invalide.",
+    "phoneInvalid": "Numéro de téléphone invalide.",
+    "submit": "Envoyer mon signalement",
+    "submitting": "Envoi en cours…",
+    "success": "Votre signalement a bien été enregistré.",
+    "invalidQr": "QR Code non reconnu"
+  },
+  "emailNudge": {
+    "title": "Pourquoi renseigner votre e-mail ?",
+    "body": "Vous pouvez effectuer votre signalement de manière anonyme. Toutefois, si vous renseignez votre adresse e-mail, vous serez automatiquement informé de l'évolution de votre dossier et recevrez la réponse de notre équipe directement par e-mail."
+  },
+  "attachments": {
+    "title": "Pièces jointes (optionnel)",
+    "limits": "Maximum {{maxFiles}} fichiers · {{maxFileMb}} Mo / fichier · total {{maxTotalMb}} Mo · JPG, JPEG, PNG, WEBP, PDF",
+    "dropHint": "Glissez-déposez vos fichiers ici ou",
+    "browse": "Parcourir",
+    "removeAria": "Retirer {{name}}",
+    "maxFiles": "Maximum {{count}} pièces jointes autorisées.",
+    "badFormat": "Format non autorisé ({{name}}). Formats : JPG, JPEG, PNG, WEBP, PDF.",
+    "badMime": "Type MIME non autorisé ({{name}}).",
+    "fileTooBig": "Le fichier {{name}} dépasse 10 Mo.",
+    "totalTooBig": "La taille totale des pièces jointes ne doit pas dépasser 25 Mo.",
+    "unitB": "{{n}} o",
+    "unitKb": "{{n}} Ko",
+    "unitMb": "{{n}} Mo"
+  },
+  "auth": {
+    "loginTitle": "Connexion",
+    "loginSubtitle": "Accédez à vos signalements et suivez vos demandes.",
+    "loginSubmit": "Se connecter",
+    "loginSubmitting": "Connexion…",
+    "loginSuccess": "Connexion réussie.",
+    "passwordRequired": "Mot de passe requis (8 caractères minimum).",
+    "noAccount": "Pas encore de compte ?",
+    "createAccountLink": "Créer un compte",
+    "registerTitle": "Créer un compte",
+    "registerSubtitle": "Facultatif — retrouvez vos signalements et suivez vos demandes en toute simplicité.",
+    "emailRequired": "Adresse e-mail *",
+    "passwordRequiredLabel": "Mot de passe *",
+    "passwordMin": "8 caractères minimum.",
+    "registerSubmit": "Créer mon compte",
+    "registerSubmitting": "Création…",
+    "hasAccount": "Déjà un compte ?",
+    "signInLink": "Se connecter",
+    "registerSuccess": "Compte créé. Vous êtes connecté.",
+    "emailInvalid": "Adresse e-mail invalide.",
+    "phoneInvalid": "Numéro de téléphone invalide."
+  },
+  "confirmation": {
+    "emptyTitle": "Aucune confirmation disponible",
+    "emptyBody": "Déposez d'abord un signalement via un QR Code.",
+    "title": "Votre signalement a bien été enregistré",
+    "copy": "Copier la référence",
+    "keepRef": "Conservez cette référence pour vos échanges avec TRANSTU.",
+    "aboutFollowUp": "À propos du suivi",
+    "emailSent": "Un lien de suivi sécurisé a été envoyé à {{email}} (vérifiez aussi les indésirables). Un nouvel e-mail partira lorsque notre équipe vous répondra.",
+    "noEmail": "Aucun e-mail n'est associé à ce signalement. Conservez la référence pour vos échanges avec TRANSTU.",
+    "notifyTo": "Les notifications seront envoyées à {{email}}.",
+    "backSupport": "Retour à l'accueil du support",
+    "copied": "Référence copiée dans le presse-papiers.",
+    "copyFailed": "Impossible de copier automatiquement. Sélectionnez la référence manuellement."
+  },
+  "followUp": {
+    "title": "Votre signalement",
+    "subtitle": "Consultez l'état de votre demande et les réponses de TRANSTU.",
+    "invalidLinkTitle": "Lien de suivi invalide",
+    "invalidLinkBody": "Utilisez le lien sécurisé reçu par e-mail pour consulter votre signalement.",
+    "loading": "Chargement du suivi…",
+    "notFoundTitle": "Aucun signalement trouvé",
+    "notFoundBody": "Ce lien de suivi est invalide ou le signalement n'existe plus.",
+    "createdAt": "Créé le",
+    "repliesTitle": "Réponses de TRANSTU",
+    "replyFrom": "Réponse de TRANSTU",
+    "noReplies": "Aucune réponse visible pour le moment."
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "body": "Cette adresse n'existe pas. Scannez un QR Code TRANSTU ou suivez un signalement existant."
+  },
+  "errors": {
+    "offline": "Impossible de joindre le serveur. Vérifiez votre connexion Internet.",
+    "unavailable": "Le service est temporairement indisponible. Réessayez dans quelques instants.",
+    "server": "Une erreur technique est survenue. Merci de réessayer plus tard.",
+    "invalidForm": "Certaines informations du formulaire sont invalides.",
+    "notFound": "La ressource demandée est introuvable.",
+    "generic": "Une erreur est survenue. Merci de réessayer.",
+    "invalidQr": "Ce QR Code est invalide. Vérifiez qu'il s'agit bien d'un QR Code TRANSTU officiel.",
+    "supportMissing": "Ce support de transport est introuvable ou n'est plus actif. Le QR Code peut être obsolète.",
+    "supportLoadFailed": "Impossible de charger les informations du support. Réessayez dans quelques instants."
+  },
+  "gps": {
+    "unavailable": "La localisation GPS n'est pas disponible sur cet appareil.",
+    "denied": "Autorisation de localisation refusée.",
+    "failed": "Impossible d'obtenir la position GPS."
+  }
+}

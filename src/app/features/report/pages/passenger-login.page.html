@@ -1,12 +1,12 @@
 <section class="panel p-4">
   <div class="text-center mb-4">
-    <h1 class="h3 mb-2">Connexion</h1>
-    <p class="text-secondary mb-0">Accédez à vos signalements et suivez vos demandes.</p>
+    <h1 class="h3 mb-2">{{ 'auth.loginTitle' | translate }}</h1>
+    <p class="text-secondary mb-0">{{ 'auth.loginSubtitle' | translate }}</p>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
     <div class="mb-3">
-      <label class="form-label fw-semibold" for="login-email">Adresse e-mail</label>
+      <label class="form-label fw-semibold" for="login-email">{{ 'common.email' | translate }}</label>
       <input
         id="login-email"
         type="email"
@@ -16,12 +16,12 @@
         [class.is-invalid]="form.controls.email.touched && form.controls.email.invalid"
       />
       @if (form.controls.email.touched && form.controls.email.invalid) {
-        <div class="invalid-feedback">Adresse e-mail invalide.</div>
+        <div class="invalid-feedback">{{ 'auth.emailInvalid' | translate }}</div>
       }
     </div>
 
     <div class="mb-4">
-      <label class="form-label fw-semibold" for="login-password">Mot de passe</label>
+      <label class="form-label fw-semibold" for="login-password">{{ 'common.password' | translate }}</label>
       <input
         id="login-password"
         type="password"
@@ -31,28 +31,28 @@
         [class.is-invalid]="form.controls.password.touched && form.controls.password.invalid"
       />
       @if (form.controls.password.touched && form.controls.password.invalid) {
-        <div class="invalid-feedback">Mot de passe requis (8 caractères minimum).</div>
+        <div class="invalid-feedback">{{ 'auth.passwordRequired' | translate }}</div>
       }
     </div>
 
     <button type="submit" class="btn btn-transtu btn-lg w-100 mb-3" [disabled]="submitting()">
       @if (submitting()) {
         <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-        Connexion…
+        {{ 'auth.loginSubmitting' | translate }}
       } @else {
-        Se connecter
+        {{ 'auth.loginSubmit' | translate }}
       }
     </button>
   </form>
 
   <p class="text-center mb-0">
-    Pas encore de compte ?
+    {{ 'auth.noAccount' | translate }}
     <a
       [routerLink]="['/inscription']"
       [queryParams]="{ returnUrl: returnUrl() }"
       class="fw-semibold"
     >
-      Créer un compte
+      {{ 'auth.createAccountLink' | translate }}
     </a>
   </p>
 </section>
