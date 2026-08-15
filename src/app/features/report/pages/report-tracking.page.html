@@ -1,7 +1,7 @@
 <section class="mb-3">
-  <h1 class="h3 mb-1">Suivi de signalement</h1>
+  <h1 class="h3 mb-1">Votre signalement</h1>
   <p class="text-secondary mb-0">
-    Consultez l’état de votre demande et les réponses de notre équipe.
+    Consultez l'état de votre demande et les réponses de TRANSTU.
   </p>
 </section>
 
@@ -22,7 +22,7 @@
   <section class="panel page-state">
     <div class="icon-wrap error"><i class="bi bi-search" aria-hidden="true"></i></div>
     <h2 class="h5">Aucun signalement trouvé</h2>
-    <p class="text-secondary mb-0">Ce lien de suivi est invalide ou le signalement n’existe plus.</p>
+    <p class="text-secondary mb-0">Ce lien de suivi est invalide ou le signalement n'existe plus.</p>
   </section>
 } @else if (report(); as r) {
   <section class="panel p-3 p-md-4 mb-3">
@@ -37,24 +37,25 @@
     </div>
     <div class="gold-rule mb-3"></div>
     <dl class="row gy-2 mb-0">
+      <dt class="col-5 text-secondary">Statut</dt>
+      <dd class="col-7 mb-0">{{ r.statusLabel || '—' }}</dd>
       <dt class="col-5 text-secondary">Type</dt>
       <dd class="col-7 mb-0">{{ r.reportTypeLabel || '—' }}</dd>
       <dt class="col-5 text-secondary">Créé le</dt>
       <dd class="col-7 mb-0">{{ r.creationDate | date: 'dd/MM/yyyy HH:mm' }}</dd>
       <dt class="col-5 text-secondary">Support</dt>
       <dd class="col-7 mb-0">{{ r.supportLabel || '—' }}</dd>
-      <dt class="col-5 text-secondary">Description</dt>
-      <dd class="col-7 mb-0">{{ r.description }}</dd>
     </dl>
   </section>
 
   <section class="panel p-3 p-md-4">
-    <h2 class="h5 mb-3">Réponses de l’administration</h2>
+    <h2 class="h5 mb-3">Réponses de TRANSTU</h2>
     @if (r.replies?.length) {
       @for (reply of r.replies; track reply.replyDate + reply.message) {
         <article class="mb-3 p-3 border rounded-2">
+          <div class="small text-secondary mb-1 fw-semibold">Réponse de TRANSTU</div>
           <div class="small text-secondary mb-2">
-            {{ reply.replyDate | date: 'dd/MM/yyyy HH:mm' }}
+            {{ reply.replyDate | date: 'dd/MM/yyyy – HH:mm' }}
           </div>
           <p class="mb-0" style="white-space: pre-wrap">{{ reply.message }}</p>
         </article>
@@ -66,5 +67,5 @@
 }
 
 <p class="text-center mt-3 mb-0">
-  <a routerLink="/accueil">Retour à l’accueil</a>
+  <a routerLink="/accueil">Retour à l'accueil</a>
 </p>

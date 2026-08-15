@@ -84,6 +84,7 @@ export class ReportWelcomePage implements OnInit {
   }
 
   goTracking(): void {
+    // Le suivi détaillé nécessite le lien sécurisé reçu par e-mail (UUID).
     void this.router.navigate(['/suivi']);
   }
 

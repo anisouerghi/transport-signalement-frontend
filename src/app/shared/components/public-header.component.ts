@@ -28,7 +28,6 @@ import { AuthService } from '../../core/services/auth.service';
           } @else {
             <a routerLink="/connexion" class="nav-link-muted">Connexion</a>
           }
-          <a routerLink="/suivi" class="nav-link-muted">Suivre un signalement</a>
         </nav>
       </div>
       <div class="gold-bar" aria-hidden="true"></div>

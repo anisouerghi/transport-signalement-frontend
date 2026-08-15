@@ -14,7 +14,7 @@ import { RouterLink } from '@angular/router';
       </p>
       <div class="d-grid gap-2 col-md-8 mx-auto">
         <a routerLink="/accueil" class="btn btn-transtu">Retour à l’accueil</a>
-        <a routerLink="/suivi" class="btn btn-transtu-outline">Suivre un signalement</a>
+        <a routerLink="/accueil" class="btn btn-transtu-outline">Retour à l'accueil</a>
       </div>
     </section>
   `,

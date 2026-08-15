@@ -7,6 +7,9 @@ export const API_CONFIG = {
     supports: `${environment.apiBaseUrl}/api/public/supports`,
     reportTypes: `${environment.apiBaseUrl}/api/public/report-types`,
     signalements: `${environment.apiBaseUrl}/api/public/signalements`,
+    /** Suivi sécurisé par UUID (lien e-mail). */
+    followUp: `${environment.apiBaseUrl}/api/public/signalements`,
+    /** @deprecated alias — préférer followUp */
     suivi: `${environment.apiBaseUrl}/api/public/suivi`,
     auth: `${environment.apiBaseUrl}/api/public/auth`,
   },

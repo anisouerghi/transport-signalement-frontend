@@ -19,7 +19,11 @@ import { RouterLink } from '@angular/router';
         Scannez le QR Code présent sur votre support de transport pour déposer un signalement
         rapidement et en toute sécurité.
       </p>
-      <a routerLink="/suivi" class="btn btn-transtu">Suivre un signalement existant</a>
+      <p class="small text-secondary mb-4">
+        Le suivi des réponses s'effectue via le lien sécurisé envoyé par e-mail lorsque notre équipe
+        vous répond.
+      </p>
+      <a routerLink="/accueil" class="btn btn-transtu">Retour à l'accueil</a>
     </section>
   `,
 })

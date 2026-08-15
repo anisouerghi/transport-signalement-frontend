@@ -34,9 +34,16 @@ export class ReportService {
    * Suivi sécurisé par UUID (lien e-mail).
    * N'expose que les réponses visibles pour le voyageur.
    */
-  getByUuid(uuid: string): Observable<PublicReportTracking> {
+  getFollowUp(uuid: string): Observable<PublicReportTracking> {
     return this.http
-      .get<ApiResponse<PublicReportTracking>>(`${API_CONFIG.public.suivi}/${encodeURIComponent(uuid)}`)
+      .get<ApiResponse<PublicReportTracking>>(
+        `${API_CONFIG.public.followUp}/${encodeURIComponent(uuid)}/follow-up`,
+      )
       .pipe(map((res) => res.data));
+  }
+
+  /** @deprecated Préférer {@link getFollowUp} */
+  getByUuid(uuid: string): Observable<PublicReportTracking> {
+    return this.getFollowUp(uuid);
   }
 }

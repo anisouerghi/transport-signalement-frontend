@@ -32,13 +32,20 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/report/pages/report-confirmation.page').then((m) => m.ReportConfirmationPage),
   },
+  /** Suivi sécurisé (lien e-mail UUID). */
   {
-    path: 'suivi',
+    path: 'report-followup/:uuid',
     loadComponent: () =>
       import('./features/report/pages/report-tracking.page').then((m) => m.ReportTrackingPage),
   },
+  /** Compatibilité anciens liens e-mail /suivi/{uuid} */
   {
     path: 'suivi/:uuid',
+    redirectTo: 'report-followup/:uuid',
+    pathMatch: 'full',
+  },
+  {
+    path: 'suivi',
     loadComponent: () =>
       import('./features/report/pages/report-tracking.page').then((m) => m.ReportTrackingPage),
   },

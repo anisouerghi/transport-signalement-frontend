@@ -10,7 +10,7 @@ const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 /**
- * Page de suivi public sécurisé : /suivi/:uuid
+ * Page de suivi public sécurisé : /report-followup/:uuid
  * Accès sans authentification via le lien e-mail (UUID).
  */
 @Component({
@@ -46,7 +46,7 @@ export class ReportTrackingPage implements OnInit {
     this.notFound.set(false);
     this.report.set(null);
 
-    this.reportService.getByUuid(uuid).subscribe({
+    this.reportService.getFollowUp(uuid).subscribe({
       next: (report) => {
         this.report.set(report);
         this.loading.set(false);
