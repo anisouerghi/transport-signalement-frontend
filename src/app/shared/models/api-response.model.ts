@@ -14,3 +14,11 @@ export interface ApiErrorBody {
   path?: string;
   details?: string[];
 }
+
+export interface PageResult<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  page: number;
+  size: number;
+}

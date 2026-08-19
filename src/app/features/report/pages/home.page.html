@@ -1,0 +1,89 @@
+<section class="home-page">
+  <section class="panel p-4 text-center home-hero">
+    <h1 class="h4 mb-2">{{ 'home.title' | translate }}</h1>
+    <p class="text-secondary mb-4 home-hero__intro mx-auto">{{ 'home.intro' | translate }}</p>
+
+    <ol class="home-steps list-unstyled mb-4">
+      <li class="home-steps__item">
+        <span class="home-steps__icon" aria-hidden="true"><i class="bi bi-qr-code-scan"></i></span>
+        <span class="home-steps__label">{{ 'home.step1' | translate }}</span>
+      </li>
+      <li class="home-steps__sep" aria-hidden="true"><i class="bi bi-arrow-right"></i></li>
+      <li class="home-steps__item">
+        <span class="home-steps__icon" aria-hidden="true"><i class="bi bi-pencil-square"></i></span>
+        <span class="home-steps__label">{{ 'home.step2' | translate }}</span>
+      </li>
+      <li class="home-steps__sep" aria-hidden="true"><i class="bi bi-arrow-right"></i></li>
+      <li class="home-steps__item">
+        <span class="home-steps__icon" aria-hidden="true"><i class="bi bi-chat-check"></i></span>
+        <span class="home-steps__label">{{ 'home.step3' | translate }}</span>
+      </li>
+    </ol>
+
+    <a routerLink="/signalement" class="btn btn-transtu home-hero__cta">
+      {{ 'home.cta' | translate }}
+    </a>
+  </section>
+
+  <section class="home-replies" aria-labelledby="home-replies-title">
+    <h2 id="home-replies-title" class="h5 text-center mb-1">
+      {{ 'home.repliesTitle' | translate }}
+    </h2>
+    <p class="text-center text-secondary small mb-3">{{ 'home.repliesLead' | translate }}</p>
+
+    @if (loading()) {
+      <div class="home-replies-track" aria-busy="true">
+        <div class="home-reply-card home-reply-card--skeleton"></div>
+        <div class="home-reply-card home-reply-card--skeleton"></div>
+        <div class="home-reply-card home-reply-card--skeleton d-none d-md-block"></div>
+      </div>
+    } @else if (error()) {
+      <div class="panel p-3 text-center text-secondary">{{ 'home.repliesError' | translate }}</div>
+    } @else if (replies().length === 0) {
+      <div class="panel p-3 text-center text-secondary">{{ 'home.repliesEmpty' | translate }}</div>
+    } @else {
+      <div class="home-replies-track">
+        @for (reply of replies(); track trackReply($index, reply)) {
+          <article class="home-reply-card">
+            @if (reply.reportTypeLabel) {
+              <p class="home-reply-card__type mb-1">{{ reply.reportTypeLabel }}</p>
+            }
+            <p class="home-reply-card__date mb-2">{{ formatReplyDate(reply.replyDate) }}</p>
+            <p class="home-reply-card__message mb-0">{{ displayMessage(reply, $index) }}</p>
+            @if (needsExcerpt(reply.message)) {
+              <button type="button" class="home-reply-card__more" (click)="toggleExpand($index)">
+                {{ isExpanded($index) ? ('home.seeLess' | translate) : ('home.seeMore' | translate) }}
+              </button>
+            }
+          </article>
+        }
+      </div>
+
+      @if (totalPages() > 1) {
+        <nav class="mine-pagination mt-3" [attr.aria-label]="'home.repliesPagination' | translate">
+          <button type="button" class="page-btn" [disabled]="page() === 0" (click)="goToPage(page() - 1)">
+            ‹
+          </button>
+          @for (p of pages(); track p) {
+            <button
+              type="button"
+              class="page-btn"
+              [class.page-btn--active]="p === page()"
+              (click)="goToPage(p)"
+            >
+              {{ p + 1 }}
+            </button>
+          }
+          <button
+            type="button"
+            class="page-btn"
+            [disabled]="page() >= totalPages() - 1"
+            (click)="goToPage(page() + 1)"
+          >
+            ›
+          </button>
+        </nav>
+      }
+    }
+  </section>
+</section>

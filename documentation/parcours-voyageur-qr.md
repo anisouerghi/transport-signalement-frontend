@@ -65,6 +65,11 @@ Ajouts minimaux (accès direct + Mes signalements) :
 
 - `GET /api/public/supports` — supports **actifs** (catalogue public, sans chemins fichiers)
 - `GET /api/public/signalements/mine` — 15 derniers signalements du voyageur **authentifié** (JWT uniquement, pas d’id voyageur en paramètre). Query optionnelle `reference` (filtre partiel, insensible à la casse). Pagination 5 / page côté frontend.
+- `GET /api/public/reponses?page=&size=` — réponses **publiées à l’accueil** (`report.publish = true`). **15 plus récentes** maximum, **5 par page**, tri date décroissante. DTO sans données personnelles ni UUID / référence.
+
+## Accueil — réponses publiques
+
+La section « Réponses aux signalements » (sous le bloc principal) affiche des **aperçus** (texte tronqué, bouton Voir plus). Uniquement les signalements avec **Visible à l'accueil**. Si l’agent décoche l’option, elles disparaissent de l’accueil.
 
 ## UX
 

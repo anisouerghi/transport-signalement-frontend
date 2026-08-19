@@ -11,6 +11,8 @@ export const API_CONFIG = {
     followUp: `${environment.apiBaseUrl}/api/public/signalements`,
     /** @deprecated alias — préférer followUp */
     suivi: `${environment.apiBaseUrl}/api/public/suivi`,
+    /** Réponses visibles à l'accueil (publish). */
+    reponses: `${environment.apiBaseUrl}/api/public/reponses`,
     auth: `${environment.apiBaseUrl}/api/public/auth`,
   },
 } as const;

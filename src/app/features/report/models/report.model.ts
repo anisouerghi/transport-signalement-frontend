@@ -106,3 +106,10 @@ export interface PublicReportListItem {
   statusCode?: string;
   statusLabel?: string;
 }
+
+/** Réponse publiée sur l'accueil (aucune donnée personnelle). */
+export interface PublicHomepageReply {
+  message: string;
+  replyDate: string;
+  reportTypeLabel?: string;
+}

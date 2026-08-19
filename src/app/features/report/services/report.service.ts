@@ -2,8 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { API_CONFIG } from '../../../core/config/api.config';
-import { ApiResponse } from '../../../shared/models/api-response.model';
-import { PublicReportListItem, PublicReportTracking, ReportRequest, ReportResponse } from '../models/report.model';
+import { ApiResponse, PageResult } from '../../../shared/models/api-response.model';
+import {
+  PublicHomepageReply,
+  PublicReportListItem,
+  PublicReportTracking,
+  ReportRequest,
+  ReportResponse,
+} from '../models/report.model';
 
 /**
  * Accès HTTP aux signalements côté interface publique voyageur.
@@ -54,6 +60,31 @@ export class ReportService {
         params,
       })
       .pipe(map((res) => res.data ?? []));
+  }
+
+  /** Réponses publiées sur l'accueil (pagination serveur). */
+  listHomepageReplies(page: number, size = 5): Observable<PageResult<PublicHomepageReply>> {
+    return this.http
+      .get<ApiResponse<PageResult<PublicHomepageReply>>>(API_CONFIG.public.reponses, {
+        params: { page: String(page), size: String(size) },
+      })
+      .pipe(map((res) => this.toHomepagePage(res, page, size)));
+  }
+
+  private toHomepagePage(
+    res: ApiResponse<PageResult<PublicHomepageReply>> | null,
+    page: number,
+    size: number,
+  ): PageResult<PublicHomepageReply> {
+    const payload = res?.data;
+    const content = Array.isArray(payload?.content) ? payload.content : [];
+    return {
+      content,
+      totalElements: payload?.totalElements ?? content.length,
+      totalPages: payload?.totalPages ?? (content.length > 0 ? 1 : 0),
+      page: payload?.page ?? page,
+      size: payload?.size ?? size,
+    };
   }
 
   /** @deprecated Préférer {@link getFollowUp} */

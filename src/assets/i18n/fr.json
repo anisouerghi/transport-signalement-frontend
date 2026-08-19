@@ -42,7 +42,17 @@
     "step1": "Scanner un QR Code",
     "step2": "Déposer un signalement",
     "step3": "Recevoir une réponse",
-    "cta": "Déposer un signalement"
+    "cta": "Déposer un signalement",
+    "repliesTitle": "Réponses aux signalements",
+    "repliesLead": "Aperçus des dernières réponses publiées par nos équipes.",
+    "repliesTeam": "Réponse de l'équipe",
+    "repliesEmpty": "Aucune réponse n'est publiée pour le moment.",
+    "repliesError": "Les réponses publiques sont temporairement indisponibles.",
+    "repliesPrev": "Précédent",
+    "repliesNext": "Suivant",
+    "repliesPagination": "Pagination des réponses publiques",
+    "seeMore": "Voir plus",
+    "seeLess": "Réduire"
   },
   "welcome": {
     "title": "Votre avis nous intéresse",

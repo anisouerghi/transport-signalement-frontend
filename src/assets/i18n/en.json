@@ -42,7 +42,17 @@
     "step1": "Scan a QR code",
     "step2": "Submit a report",
     "step3": "Receive a reply",
-    "cta": "Submit a report"
+    "cta": "Submit a report",
+    "repliesTitle": "Replies to reports",
+    "repliesLead": "Short previews of the latest published team replies.",
+    "repliesTeam": "Team reply",
+    "repliesEmpty": "No public replies at the moment.",
+    "repliesError": "Public replies are temporarily unavailable.",
+    "repliesPrev": "Previous",
+    "repliesNext": "Next",
+    "repliesPagination": "Public replies pagination",
+    "seeMore": "See more",
+    "seeLess": "Show less"
   },
   "welcome": {
     "title": "Your feedback matters",
