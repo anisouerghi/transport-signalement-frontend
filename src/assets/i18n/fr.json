@@ -21,6 +21,12 @@
     "navMain": "Navigation principale",
     "traveler": "Voyageur"
   },
+  "nav": {
+    "home": "Accueil",
+    "report": "Signalement",
+    "myReports": "Mes signalements",
+    "about": "À propos"
+  },
   "header": {
     "login": "Connexion",
     "logout": "Déconnexion",
@@ -32,7 +38,11 @@
   "home": {
     "title": "Signalement voyageur",
     "intro": "Scannez le QR Code présent sur votre support de transport pour déposer un signalement rapidement et en toute sécurité.",
-    "followHint": "Le suivi des réponses s'effectue via le lien sécurisé envoyé par e-mail lorsque notre équipe vous répond."
+    "followHint": "Le suivi des réponses s'effectue via le lien sécurisé envoyé par e-mail lorsque notre équipe vous répond.",
+    "step1": "Scanner un QR Code",
+    "step2": "Déposer un signalement",
+    "step3": "Recevoir une réponse",
+    "cta": "Déposer un signalement"
   },
   "welcome": {
     "title": "Votre avis nous intéresse",
@@ -60,6 +70,53 @@
     "anon3": "Utiliser le lien de suivi reçu après envoi",
     "invalidQr": "QR Code non reconnu"
   },
+  "identity": {
+    "title": "Vous souhaitez déposer un signalement",
+    "anonymous": "Continuer anonymement",
+    "anonymousHint": "Sans créer de compte. L'inscription n'est jamais obligatoire.",
+    "auth": "S'inscrire / Se connecter",
+    "authHint": "Retrouvez vos signalements et les réponses de l'équipe.",
+    "greeting": "Bonjour",
+    "connectedHint": "Votre compte sera associé à ce signalement.",
+    "continue": "Continuer"
+  },
+  "entry": {
+    "title": "Sélectionnez votre support de transport",
+    "subtitle": "Choisissez le type puis le support concerné.",
+    "typeLabel": "Type de support",
+    "typePlaceholder": "Sélectionnez un type",
+    "supportLabel": "Support",
+    "supportPlaceholder": "Sélectionnez le support",
+    "loadError": "Impossible de charger la liste des supports."
+  },
+  "about": {
+    "title": "Signalement voyageur",
+    "intro": "Scannez le QR Code présent sur votre support de transport pour déposer un signalement rapidement et en toute sécurité.",
+    "follow": "Le suivi des réponses s'effectue via le lien sécurisé envoyé par e-mail lorsque notre équipe vous répond.",
+    "howTitle": "Comment ça fonctionne ?",
+    "step1": "Scannez le QR Code",
+    "step2": "Déposez votre signalement",
+    "step3": "Notre équipe traite votre demande",
+    "step4": "Consultez votre réponse"
+  },
+  "myReports": {
+    "title": "Mes signalements",
+    "subtitle": "Vos 15 signalements les plus récents.",
+    "date": "Date",
+    "searchLabel": "Rechercher par référence",
+    "searchPlaceholder": "SIG-2026-000123",
+    "search": "Rechercher",
+    "reset": "Réinitialiser la recherche",
+    "consult": "Consulter",
+    "prev": "Précédent",
+    "next": "Suivant",
+    "pagination": "Pagination des signalements",
+    "noMatch": "Aucun signalement ne correspond à cette référence.",
+    "anonymousHint": "Pour retrouver facilement vos signalements et recevoir les réponses, nous vous recommandons de créer un compte.",
+    "emptyTitle": "Vous n'avez encore aucun signalement.",
+    "emptyBody": "Vous n'avez encore aucun signalement.",
+    "loadError": "Impossible de charger vos signalements."
+  },
   "support": {
     "title": "Support concerné",
     "fallbackType": "Support"
@@ -79,7 +136,8 @@
     "submit": "Envoyer mon signalement",
     "submitting": "Envoi en cours…",
     "success": "Votre signalement a bien été enregistré.",
-    "invalidQr": "QR Code non reconnu"
+    "invalidQr": "QR Code non reconnu",
+    "sessionContact": "Ce signalement sera associé à votre compte ({{email}})."
   },
   "emailNudge": {
     "title": "Pourquoi renseigner votre e-mail ?",

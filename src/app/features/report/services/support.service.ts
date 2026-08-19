@@ -15,4 +15,11 @@ export class SupportService {
       .get<ApiResponse<TransportSupport>>(`${this.baseUrl}/${uuid}`)
       .pipe(map((res) => res.data));
   }
+
+  /** Supports actifs pour le choix sans QR. */
+  listActive(): Observable<TransportSupport[]> {
+    return this.http
+      .get<ApiResponse<TransportSupport[]>>(this.baseUrl)
+      .pipe(map((res) => res.data ?? []));
+  }
 }

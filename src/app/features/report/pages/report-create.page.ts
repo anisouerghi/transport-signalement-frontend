@@ -42,7 +42,7 @@ export class ReportCreatePage implements OnInit {
   private readonly reportTypeService = inject(ReportTypeService);
   private readonly reportService = inject(ReportService);
   private readonly notifications = inject(NotificationService);
-  private readonly auth = inject(AuthService);
+  readonly auth = inject(AuthService);
   private readonly translate = inject(TranslateService);
 
   readonly loading = signal(true);

@@ -1,47 +1,85 @@
-# Parcours voyageur après scan QR
+# Parcours voyageur (QR + accès direct)
 
 Internationalisation FR / AR (RTL) / EN : voir [i18n-public.md](./i18n-public.md).
 
-## Flux
+## Principe
+
+Un seul formulaire de signalement (`ReportCreatePage`). Seule l’identification du support change :
 
 ```text
-Scan QR → /report/{uuid}           Page Welcome
-              ├─ Continuer anonymement → /report/{uuid}/signaler
-              ├─ Se connecter        → /connexion?returnUrl=...
-              ├─ Créer un compte     → /inscription?returnUrl=...
-              └─ (déjà connecté)     → actions rapides
+QR Code
+   ↓
+Support identifié automatiquement (/report/{uuid})
+   ↓
+Anonyme ou authentifié
+   ↓
+Formulaire /report/{uuid}/signaler
+
+Accès direct (/ ou /signalement)
+   ↓
+Choix du type + support
+   ↓
+Anonyme ou authentifié
+   ↓
+Même formulaire /report/{uuid}/signaler
 ```
 
-L'UUID du support est conservé dans l'URL pendant tout le parcours.
+L’UUID n’est **jamais** saisi par le voyageur. La priorité n’est **jamais** demandée.
+
+Il n’existe pas d’authentification Google dans ce projet : connexion / inscription e-mail uniquement.
 
 ## Routes Angular
 
 | Route | Composant | Rôle |
 |-------|-----------|------|
-| `/report/:uuid` | `ReportWelcomePage` | Accueil après QR |
-| `/report/:uuid/signaler` | `ReportCreatePage` | Formulaire existant (inchangé) |
-| `/connexion` | `PassengerLoginPage` | Connexion voyageur |
-| `/inscription` | `PassengerRegisterPage` | Création de compte |
+| `/accueil` | `HomePage` | Accueil public |
+| `/signalement` | `ReportEntryPage` | Choix du support (sans QR) |
+| `/report/:uuid` | `ReportWelcomePage` | Support QR + choix identité |
+| `/report/:uuid/signaler` | `ReportCreatePage` | Formulaire unique |
+| `/mes-signalements` | `MyReportsPage` | Liste (auth) ou invitation compte (anonyme) |
+| `/a-propos` | `AboutPage` | Page courte |
+| `/connexion` | `PassengerLoginPage` | Connexion |
+| `/inscription` | `PassengerRegisterPage` | Inscription |
+| `/confirmation` | `ReportConfirmationPage` | Confirmation d’envoi |
+| `/report-followup/:uuid` | `ReportTrackingPage` | Détail / réponses (lien e-mail ou liste) |
 
-## Authentification
+`/suivi` redirige vers `/mes-signalements`. `/suivi/:uuid` reste un alias du suivi UUID.
 
-- `AuthService` : session JWT en `localStorage` (`transtu_passenger_session`)
-- `authInterceptor` : ajoute `Authorization: Bearer …`
-- `APP_INITIALIZER` : restauration via `GET /api/public/auth/me`
-- Le mot de passe n'est **jamais** stocké côté client
+## Identité
 
-## APIs utilisées (inchangées sauf auth)
+- **Anonyme** : dépôt possible sans compte (passenger anonyme côté API).
+- **Authentifié** : JWT voyageur (`AuthService`, `localStorage`). Le signalement est rattaché au compte.
+- Après login/inscription, `returnUrl` ramène au formulaire du support déjà identifié.
 
-- `GET /api/public/supports/{uuid}` — support détecté
-- `POST /api/public/signalements` — création signalement
-- `GET /api/public/suivi/{uuid}` — suivi
-- `POST /api/public/auth/login` — connexion
-- `POST /api/public/auth/register` — inscription
-- `GET /api/public/auth/me` — profil session
+## APIs
+
+Inchangées :
+
+- `GET /api/public/supports/{uuid}`
+- `POST /api/public/signalements`
+- `GET /api/public/signalements/{uuid}/follow-up`
+- `POST /api/public/auth/login` / `register` / `GET .../me`
+- `GET /api/public/report-types`
+
+Ajouts minimaux (accès direct + Mes signalements) :
+
+- `GET /api/public/supports` — supports **actifs** (catalogue public, sans chemins fichiers)
+- `GET /api/public/signalements/mine` — 15 derniers signalements du voyageur **authentifié** (JWT uniquement, pas d’id voyageur en paramètre). Query optionnelle `reference` (filtre partiel, insensible à la casse). Pagination 5 / page côté frontend.
+
+## UX
+
+- Navigation : Accueil, Signalement, Mes signalements, À propos (barre basse mobile).
+- Mobile first : gros boutons, peu de champs, pas de modal, pas de priorité, pas de saisie d’UUID.
+- Voyageur anonyme sur « Mes signalements » : message d’invitation, pas de fausse liste personnelle.
 
 ## Fichiers clés
 
-- `src/app/features/report/pages/report-welcome.page.*`
-- `src/app/core/services/auth.service.ts`
-- `src/app/core/interceptors/auth.interceptor.ts`
 - `src/app/app.routes.ts`
+- `src/app/shared/components/public-header.component.ts`
+- `src/app/features/report/pages/home.page.ts`
+- `src/app/features/report/pages/report-entry.page.ts`
+- `src/app/features/report/pages/report-welcome.page.*`
+- `src/app/features/report/pages/report-create.page.*`
+- `src/app/features/report/pages/my-reports.page.*`
+- `src/app/features/report/pages/about.page.ts`
+- `src/app/features/report/components/identity-choice.component.ts`

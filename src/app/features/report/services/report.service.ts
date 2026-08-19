@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { API_CONFIG } from '../../../core/config/api.config';
 import { ApiResponse } from '../../../shared/models/api-response.model';
-import { PublicReportTracking, ReportRequest, ReportResponse } from '../models/report.model';
+import { PublicReportListItem, PublicReportTracking, ReportRequest, ReportResponse } from '../models/report.model';
 
 /**
  * Accès HTTP aux signalements côté interface publique voyageur.
@@ -40,6 +40,20 @@ export class ReportService {
         `${API_CONFIG.public.followUp}/${encodeURIComponent(uuid)}/follow-up`,
       )
       .pipe(map((res) => res.data));
+  }
+
+  /** 15 derniers signalements du voyageur authentifié (JWT). */
+  listMine(reference?: string): Observable<PublicReportListItem[]> {
+    const params: { [key: string]: string } = {};
+    const q = reference?.trim();
+    if (q) {
+      params['reference'] = q;
+    }
+    return this.http
+      .get<ApiResponse<PublicReportListItem[]>>(`${API_CONFIG.public.signalements}/mine`, {
+        params,
+      })
+      .pipe(map((res) => res.data ?? []));
   }
 
   /** @deprecated Préférer {@link getFollowUp} */

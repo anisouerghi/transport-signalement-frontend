@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ConfirmationState } from '../models/report.model';
+import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
@@ -49,6 +50,9 @@ import { NotificationService } from '../../../core/services/notification.service
         }
 
         <div class="d-grid gap-2 col-md-10 mx-auto">
+          @if (auth.isAuthenticated()) {
+            <a class="btn btn-transtu" routerLink="/mes-signalements">{{ 'nav.myReports' | translate }}</a>
+          }
           @if (state()!.supportUuid) {
             <a class="btn btn-transtu-outline" [routerLink]="['/report', state()!.supportUuid]">
               {{ 'confirmation.backSupport' | translate }}
@@ -63,6 +67,7 @@ import { NotificationService } from '../../../core/services/notification.service
 export class ReportConfirmationPage implements OnInit {
   private readonly notifications = inject(NotificationService);
   private readonly translate = inject(TranslateService);
+  readonly auth = inject(AuthService);
 
   readonly state = signal<ConfirmationState | null>(null);
 

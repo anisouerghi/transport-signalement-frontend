@@ -21,6 +21,12 @@
     "navMain": "Main navigation",
     "traveler": "Traveler"
   },
+  "nav": {
+    "home": "Home",
+    "report": "Report",
+    "myReports": "My reports",
+    "about": "About"
+  },
   "header": {
     "login": "Sign in",
     "logout": "Sign out",
@@ -32,7 +38,11 @@
   "home": {
     "title": "Traveler reporting",
     "intro": "Scan the QR code on your transport support to submit a report quickly and securely.",
-    "followHint": "You can track replies via the secure link emailed when our team responds."
+    "followHint": "You can track replies via the secure link emailed when our team responds.",
+    "step1": "Scan a QR code",
+    "step2": "Submit a report",
+    "step3": "Receive a reply",
+    "cta": "Submit a report"
   },
   "welcome": {
     "title": "Your feedback matters",
@@ -60,6 +70,53 @@
     "anon3": "Use the tracking link received after submission",
     "invalidQr": "Unrecognized QR code"
   },
+  "identity": {
+    "title": "You want to submit a report",
+    "anonymous": "Continue anonymously",
+    "anonymousHint": "No account needed. Registration is never required.",
+    "auth": "Sign up / Sign in",
+    "authHint": "Find your reports and team replies.",
+    "greeting": "Hello",
+    "connectedHint": "This report will be linked to your account.",
+    "continue": "Continue"
+  },
+  "entry": {
+    "title": "Select your transport support",
+    "subtitle": "Choose the type, then the related support.",
+    "typeLabel": "Support type",
+    "typePlaceholder": "Select a type",
+    "supportLabel": "Support",
+    "supportPlaceholder": "Select the support",
+    "loadError": "Unable to load the support list."
+  },
+  "about": {
+    "title": "Traveler reporting",
+    "intro": "Scan the QR code on your transport support to submit a report quickly and securely.",
+    "follow": "You can track replies via the secure link emailed when our team responds.",
+    "howTitle": "How it works",
+    "step1": "Scan the QR code",
+    "step2": "Submit your report",
+    "step3": "Our team handles your request",
+    "step4": "Read the reply"
+  },
+  "myReports": {
+    "title": "My reports",
+    "subtitle": "Your 15 most recent reports.",
+    "date": "Date",
+    "searchLabel": "Search by reference",
+    "searchPlaceholder": "SIG-2026-000123",
+    "search": "Search",
+    "reset": "Reset search",
+    "consult": "View",
+    "prev": "Previous",
+    "next": "Next",
+    "pagination": "Reports pagination",
+    "noMatch": "No report matches this reference.",
+    "anonymousHint": "To easily find your reports and receive replies, we recommend creating an account.",
+    "emptyTitle": "You have no reports yet.",
+    "emptyBody": "You have no reports yet.",
+    "loadError": "Unable to load your reports."
+  },
   "support": {
     "title": "Related support",
     "fallbackType": "Support"
@@ -79,7 +136,8 @@
     "submit": "Send my report",
     "submitting": "Sending…",
     "success": "Your report has been recorded.",
-    "invalidQr": "Unrecognized QR code"
+    "invalidQr": "Unrecognized QR code",
+    "sessionContact": "This report will be linked to your account ({{email}})."
   },
   "emailNudge": {
     "title": "Why provide your email?",

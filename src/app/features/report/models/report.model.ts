@@ -1,10 +1,11 @@
 export type Priority = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 
 export interface TransportSupport {
-  transportSupportId: number;
+  transportSupportId?: number;
   uuid: string;
   reference: string;
   label: string;
+  supportTypeId?: number;
   supportTypeCode?: string;
   supportTypeLabel?: string;
   supportStatus?: string;
@@ -94,4 +95,14 @@ export interface PublicReportTracking {
 export interface PublicReplyView {
   message: string;
   replyDate: string;
+}
+
+export interface PublicReportListItem {
+  uuid: string;
+  reference: string;
+  creationDate?: string;
+  supportLabel?: string;
+  supportTypeLabel?: string;
+  statusCode?: string;
+  statusLabel?: string;
 }

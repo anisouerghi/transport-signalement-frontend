@@ -1,8 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
+import { IdentityChoiceComponent } from '../components/identity-choice.component';
 import { SupportSummaryComponent } from '../components/support-summary.component';
 import { TransportSupport } from '../models/report.model';
 import { SupportService } from '../services/support.service';
@@ -11,13 +12,12 @@ const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 /**
- * Première étape après scan QR : présentation du service + choix anonyme / authentifié.
- * L'UUID du support est conservé dans l'URL pour tout le parcours.
+ * Après scan QR : le support est identifié automatiquement, puis choix anonyme / authentifié.
  */
 @Component({
   selector: 'app-report-welcome-page',
   standalone: true,
-  imports: [SupportSummaryComponent, TranslatePipe],
+  imports: [SupportSummaryComponent, IdentityChoiceComponent, TranslatePipe, RouterLink],
   templateUrl: './report-welcome.page.html',
   styleUrl: './report-welcome.page.scss',
 })
@@ -33,7 +33,6 @@ export class ReportWelcomePage implements OnInit {
   readonly errorMessage = signal<string | null>(null);
   readonly support = signal<TransportSupport | null>(null);
   readonly supportUuid = signal('');
-  readonly showProfile = signal(false);
 
   ngOnInit(): void {
     const uuid = this.route.snapshot.paramMap.get('uuid')?.trim() ?? '';
@@ -67,37 +66,7 @@ export class ReportWelcomePage implements OnInit {
     void this.router.navigate(['/report', this.supportUuid(), 'signaler']);
   }
 
-  goLogin(): void {
-    void this.router.navigate(['/connexion'], {
-      queryParams: { returnUrl: `/report/${this.supportUuid()}` },
-    });
-  }
-
-  goRegister(): void {
-    void this.router.navigate(['/inscription'], {
-      queryParams: { returnUrl: `/report/${this.supportUuid()}` },
-    });
-  }
-
-  goTracking(): void {
-    // Le suivi détaillé nécessite le lien sécurisé reçu par e-mail (UUID).
-    void this.router.navigate(['/suivi']);
-  }
-
-  toggleProfile(): void {
-    this.showProfile.update((v) => !v);
-  }
-
-  logout(): void {
-    this.auth.logout();
-    this.showProfile.set(false);
-  }
-
-  displayName(): string {
-    const user = this.auth.currentUser();
-    if (!user?.name?.trim()) {
-      return user?.email?.split('@')[0] ?? this.translate.instant('common.traveler');
-    }
-    return user.name;
+  formReturnUrl(): string {
+    return `/report/${this.supportUuid()}/signaler`;
   }
 }

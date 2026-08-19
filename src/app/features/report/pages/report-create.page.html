@@ -57,7 +57,9 @@
       }
     </div>
 
-    <app-email-nudge />
+    @if (!auth.isAuthenticated()) {
+      <app-email-nudge />
+    }
 
     <div class="mb-3">
       <app-attachment-picker
@@ -66,41 +68,47 @@
       />
     </div>
 
-    <div class="row g-3 mb-3">
-      <div class="col-md-6">
-        <label class="form-label fw-semibold" for="name">{{ 'common.name' | translate }}</label>
-        <input id="name" type="text" class="form-control" formControlName="name" autocomplete="name" />
+    @if (auth.isAuthenticated()) {
+      <p class="small text-secondary mb-3">
+        {{ 'report.sessionContact' | translate: { email: auth.currentUser()?.email } }}
+      </p>
+    } @else {
+      <div class="row g-3 mb-3">
+        <div class="col-md-6">
+          <label class="form-label fw-semibold" for="name">{{ 'common.name' | translate }}</label>
+          <input id="name" type="text" class="form-control" formControlName="name" autocomplete="name" />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold" for="phoneNumber">{{ 'common.phone' | translate }}</label>
+          <input
+            id="phoneNumber"
+            type="tel"
+            class="form-control"
+            formControlName="phoneNumber"
+            autocomplete="tel"
+            [class.is-invalid]="controlInvalid('phoneNumber')"
+          />
+          @if (controlInvalid('phoneNumber')) {
+            <div class="invalid-feedback">{{ 'report.phoneInvalid' | translate }}</div>
+          }
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-semibold" for="email">{{ 'common.email' | translate }}</label>
+          <input
+            id="email"
+            type="email"
+            class="form-control"
+            formControlName="email"
+            autocomplete="email"
+            [attr.placeholder]="'report.emailPlaceholder' | translate"
+            [class.is-invalid]="controlInvalid('email')"
+          />
+          @if (controlInvalid('email')) {
+            <div class="invalid-feedback">{{ 'report.emailInvalid' | translate }}</div>
+          }
+        </div>
       </div>
-      <div class="col-md-6">
-        <label class="form-label fw-semibold" for="phoneNumber">{{ 'common.phone' | translate }}</label>
-        <input
-          id="phoneNumber"
-          type="tel"
-          class="form-control"
-          formControlName="phoneNumber"
-          autocomplete="tel"
-          [class.is-invalid]="controlInvalid('phoneNumber')"
-        />
-        @if (controlInvalid('phoneNumber')) {
-          <div class="invalid-feedback">{{ 'report.phoneInvalid' | translate }}</div>
-        }
-      </div>
-      <div class="col-12">
-        <label class="form-label fw-semibold" for="email">{{ 'common.email' | translate }}</label>
-        <input
-          id="email"
-          type="email"
-          class="form-control"
-          formControlName="email"
-          autocomplete="email"
-          [attr.placeholder]="'report.emailPlaceholder' | translate"
-          [class.is-invalid]="controlInvalid('email')"
-        />
-        @if (controlInvalid('email')) {
-          <div class="invalid-feedback">{{ 'report.emailInvalid' | translate }}</div>
-        }
-      </div>
-    </div>
+    }
 
     <button type="submit" class="btn btn-transtu w-100" [disabled]="submitting()">
       @if (submitting()) {

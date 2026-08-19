@@ -43,6 +43,11 @@ Français et anglais restent en `ltr`.
 common.*          — libellés partagés
 header.* / footer.*
 home.*            — page d'accueil
+nav.*             — menu principal
+identity.*        — choix anonyme / authentifié
+entry.*           — sélection support (accès direct)
+about.*           — à propos
+myReports.*       — mes signalements
 welcome.*         — post-QR
 support.*         — résumé support
 report.*          — formulaire signalement

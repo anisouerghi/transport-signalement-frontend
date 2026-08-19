@@ -1,0 +1,42 @@
+<section class="mb-3">
+  <h1 class="h3 mb-1">{{ 'entry.title' | translate }}</h1>
+  <p class="text-secondary mb-0">{{ 'entry.subtitle' | translate }}</p>
+</section>
+
+@if (loading()) {
+  <section class="panel p-4" aria-busy="true">
+    <div class="skeleton mb-3" style="height: 3rem"></div>
+    <div class="skeleton" style="height: 3rem"></div>
+  </section>
+} @else if (loadError()) {
+  <section class="panel page-state">
+    <div class="icon-wrap error"><i class="bi bi-wifi-off" aria-hidden="true"></i></div>
+    <h2 class="h5">{{ 'entry.loadError' | translate }}</h2>
+  </section>
+} @else {
+  <form class="panel p-4 mb-3" [formGroup]="form">
+    <div class="mb-3">
+      <label class="form-label fw-semibold" for="supportTypeId">{{ 'entry.typeLabel' | translate }}</label>
+      <select id="supportTypeId" class="form-select form-select-lg" formControlName="supportTypeId">
+        <option value="">{{ 'entry.typePlaceholder' | translate }}</option>
+        @for (type of types(); track type.id) {
+          <option [value]="type.id">{{ type.label }}</option>
+        }
+      </select>
+    </div>
+    <div>
+      <label class="form-label fw-semibold" for="supportUuid">{{ 'entry.supportLabel' | translate }}</label>
+      <select id="supportUuid" class="form-select form-select-lg" formControlName="supportUuid">
+        <option value="">{{ 'entry.supportPlaceholder' | translate }}</option>
+        @for (item of filteredSupports(); track item.uuid) {
+          <option [value]="item.uuid">{{ item.reference }} — {{ item.label }}</option>
+        }
+      </select>
+    </div>
+  </form>
+
+  @if (selectedSupport(); as support) {
+    <app-support-summary [support]="support" />
+    <app-identity-choice [returnUrl]="returnUrl()" (continue)="goToForm()" />
+  }
+}

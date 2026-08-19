@@ -8,6 +8,21 @@ export const routes: Routes = [
       import('./features/report/pages/home.page').then((m) => m.HomePage),
   },
   {
+    path: 'signalement',
+    loadComponent: () =>
+      import('./features/report/pages/report-entry.page').then((m) => m.ReportEntryPage),
+  },
+  {
+    path: 'mes-signalements',
+    loadComponent: () =>
+      import('./features/report/pages/my-reports.page').then((m) => m.MyReportsPage),
+  },
+  {
+    path: 'a-propos',
+    loadComponent: () =>
+      import('./features/report/pages/about.page').then((m) => m.AboutPage),
+  },
+  {
     path: 'report/:uuid',
     loadComponent: () =>
       import('./features/report/pages/report-welcome.page').then((m) => m.ReportWelcomePage),
@@ -46,8 +61,8 @@ export const routes: Routes = [
   },
   {
     path: 'suivi',
-    loadComponent: () =>
-      import('./features/report/pages/report-tracking.page').then((m) => m.ReportTrackingPage),
+    redirectTo: 'mes-signalements',
+    pathMatch: 'full',
   },
   {
     path: '**',

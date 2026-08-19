@@ -83,7 +83,7 @@ h5,
   flex: 1;
   width: min(720px, 100%);
   margin: 0 auto;
-  padding: 1rem 1rem 2.5rem;
+  padding: 1rem 1rem 5.5rem;
 }
 
 @media (min-width: 768px) {
@@ -226,6 +226,98 @@ h5,
   }
 }
 
+.home-hero__logo {
+  height: 64px;
+  width: auto;
+}
+
+.home-hero__intro {
+  max-width: 28rem;
+  margin-inline: auto;
+  line-height: 1.5;
+}
+
+.home-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 18rem;
+}
+
+.home-steps li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 600;
+}
+
+.home-steps__icon {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--transtu-green-soft);
+  color: var(--transtu-green-dark);
+  flex-shrink: 0;
+}
+
+.home-steps__arrow {
+  justify-content: center;
+  color: var(--transtu-gold);
+  min-height: 1.4rem;
+}
+
+.about-steps {
+  padding-left: 1.2rem;
+}
+
+.about-steps li + li {
+  margin-top: 0.45rem;
+}
+
+.report-card {
+  display: block;
+}
+
+.report-card:hover {
+  border-color: rgba(11, 138, 62, 0.35);
+}
+
+.mine-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.page-btn {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--transtu-border);
+  background: #fff;
+  border-radius: 0.7rem;
+  font-weight: 600;
+  color: var(--transtu-blue-deep);
+}
+
+.page-btn:disabled {
+  opacity: 0.4;
+}
+
+.page-btn--active,
+.page-btn:not(:disabled):hover {
+  background: var(--transtu-green);
+  border-color: var(--transtu-green);
+  color: #fff;
+}
+
+.form-select-lg,
+.btn-lg {
+  min-height: 3.15rem;
+}
+
 /* -------------------------------------------------------------------------- */
 /* RTL (arabe) — bascule via html[dir=rtl] définie par LanguageService        */
 /* -------------------------------------------------------------------------- */
@@ -260,9 +352,10 @@ html[dir='rtl'] .text-end {
   text-align: left !important;
 }
 
+html[dir='rtl'] .about-steps,
 html[dir='rtl'] .welcome__benefits,
 html[dir='rtl'] .welcome__anonymous-info ul {
-  padding-right: 1rem;
+  padding-right: 1.2rem;
   padding-left: 0;
 }
 

@@ -49,7 +49,7 @@ import { NotificationService } from '../../core/services/notification.service';
       }
       .toast-banner {
         position: sticky;
-        bottom: 0;
+        bottom: 4.4rem;
         z-index: 20;
         display: flex;
         justify-content: space-between;
@@ -64,6 +64,11 @@ import { NotificationService } from '../../core/services/notification.service';
       }
       .toast-banner--success {
         background: #0b8a3e;
+      }
+      @media (min-width: 768px) {
+        .toast-banner {
+          bottom: 0;
+        }
       }
     `,
   ],

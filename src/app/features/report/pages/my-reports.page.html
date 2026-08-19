@@ -1,0 +1,117 @@
+<section class="mb-3">
+  <h1 class="h3 mb-1">{{ 'myReports.title' | translate }}</h1>
+  <p class="text-secondary mb-0">{{ 'myReports.subtitle' | translate }}</p>
+</section>
+
+@if (!auth.isAuthenticated()) {
+  <section class="panel p-4">
+    <p class="mb-4">{{ 'myReports.anonymousHint' | translate }}</p>
+    <div class="d-grid gap-2">
+      <a routerLink="/inscription" [queryParams]="{ returnUrl: '/mes-signalements' }" class="btn btn-transtu btn-lg">
+        {{ 'welcome.createAccount' | translate }}
+      </a>
+      <a routerLink="/connexion" [queryParams]="{ returnUrl: '/mes-signalements' }" class="btn btn-transtu-outline btn-lg">
+        {{ 'welcome.signIn' | translate }}
+      </a>
+      <a routerLink="/signalement" class="btn btn-link">{{ 'home.cta' | translate }}</a>
+    </div>
+  </section>
+} @else {
+  <form class="panel p-3 p-md-4 mb-3" [formGroup]="filterForm" (ngSubmit)="search()">
+    <label class="form-label fw-semibold" for="mine-reference">{{ 'myReports.searchLabel' | translate }}</label>
+    <div class="d-flex flex-column flex-sm-row gap-2">
+      <div class="input-group">
+        <span class="input-group-text" aria-hidden="true"><i class="bi bi-search"></i></span>
+        <input
+          id="mine-reference"
+          type="search"
+          class="form-control form-control-lg"
+          formControlName="reference"
+          [attr.placeholder]="'myReports.searchPlaceholder' | translate"
+          autocomplete="off"
+        />
+      </div>
+      <button type="submit" class="btn btn-transtu">{{ 'myReports.search' | translate }}</button>
+      @if (appliedReference()) {
+        <button type="button" class="btn btn-transtu-outline" (click)="resetSearch()">
+          {{ 'myReports.reset' | translate }}
+        </button>
+      }
+    </div>
+  </form>
+
+  @if (loading()) {
+    <section class="panel p-4 text-center text-secondary" aria-busy="true">
+      <div class="spinner-border text-success mb-2" role="status"></div>
+      <div>{{ 'common.loading' | translate }}</div>
+    </section>
+  } @else if (error()) {
+    <section class="panel page-state">
+      <div class="icon-wrap error"><i class="bi bi-exclamation-triangle" aria-hidden="true"></i></div>
+      <h2 class="h5">{{ 'myReports.loadError' | translate }}</h2>
+    </section>
+  } @else if (items().length === 0 && appliedReference()) {
+    <section class="panel page-state">
+      <div class="icon-wrap info"><i class="bi bi-search" aria-hidden="true"></i></div>
+      <h2 class="h5">{{ 'myReports.noMatch' | translate }}</h2>
+      <button type="button" class="btn btn-transtu mt-2" (click)="resetSearch()">
+        {{ 'myReports.reset' | translate }}
+      </button>
+    </section>
+  } @else if (items().length === 0) {
+    <section class="panel page-state">
+      <div class="icon-wrap info"><i class="bi bi-inbox" aria-hidden="true"></i></div>
+      <h2 class="h5">{{ 'myReports.emptyTitle' | translate }}</h2>
+      <a routerLink="/signalement" class="btn btn-transtu mt-2">{{ 'home.cta' | translate }}</a>
+    </section>
+  } @else {
+    <div class="d-grid gap-3">
+      @for (item of pageItems(); track item.uuid) {
+        <article class="report-card panel p-3 p-md-4">
+          <div class="fw-bold fs-5 mb-1" style="color: var(--transtu-blue-deep); word-break: break-word">
+            {{ item.reference }}
+          </div>
+          @if (supportLine(item)) {
+            <p class="mb-1">{{ supportLine(item) }}</p>
+          }
+          <p class="small text-secondary mb-2">
+            {{ item.creationDate | date: "dd/MM/yyyy 'à' HH:mm" }}
+          </p>
+          <p class="mb-3">
+            {{ 'common.status' | translate }} :
+            <span class="support-chip">{{ item.statusLabel || ('common.dash' | translate) }}</span>
+          </p>
+          <a class="btn btn-transtu w-100" [routerLink]="['/report-followup', item.uuid]">
+            {{ 'myReports.consult' | translate }}
+          </a>
+        </article>
+      }
+    </div>
+
+    @if (totalPages() > 1) {
+      <nav class="mine-pagination mt-4" [attr.aria-label]="'myReports.pagination' | translate">
+        <button type="button" class="page-btn" [disabled]="page() === 0" (click)="goToPage(page() - 1)">
+          ‹ {{ 'myReports.prev' | translate }}
+        </button>
+        @for (p of pages(); track p) {
+          <button
+            type="button"
+            class="page-btn"
+            [class.page-btn--active]="p === page()"
+            (click)="goToPage(p)"
+          >
+            {{ p + 1 }}
+          </button>
+        }
+        <button
+          type="button"
+          class="page-btn"
+          [disabled]="page() >= totalPages() - 1"
+          (click)="goToPage(page() + 1)"
+        >
+          {{ 'myReports.next' | translate }} ›
+        </button>
+      </nav>
+    }
+  }
+}
