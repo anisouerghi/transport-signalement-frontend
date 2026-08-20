@@ -93,10 +93,16 @@
   "entry": {
     "title": "Sélectionnez votre support de transport",
     "subtitle": "Choisissez le type puis le support concerné.",
+    "stepSupport": "Support",
+    "stepIdentity": "Identité",
+    "stepForm": "Signalement",
     "typeLabel": "Type de support",
     "typePlaceholder": "Sélectionnez un type",
     "supportLabel": "Support",
     "supportPlaceholder": "Sélectionnez le support",
+    "selectSupportHint": "Veuillez sélectionner un type et un support pour continuer.",
+    "noSupports": "Aucun support de transport n'est disponible pour le moment.",
+    "noSupportsForType": "Aucun support disponible pour ce type.",
     "loadError": "Impossible de charger la liste des supports."
   },
   "about": {
@@ -147,6 +153,10 @@
     "submitting": "Envoi en cours…",
     "success": "Votre signalement a bien été enregistré.",
     "invalidQr": "QR Code non reconnu",
+    "backToSelection": "Modifier le support",
+    "contactSection": "Vos coordonnées",
+    "contactOptional": "facultatif",
+    "contactDisabledHint": "Informations issues de votre compte (non modifiables).",
     "sessionContact": "Ce signalement sera associé à votre compte ({{email}})."
   },
   "emailNudge": {

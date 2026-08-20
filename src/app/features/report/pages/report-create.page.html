@@ -13,8 +13,8 @@
   </section>
 } @else if (support(); as currentSupport) {
   <section class="mb-3">
-    <a class="small text-decoration-none" [routerLink]="['/report', supportUuid()]">
-      ← {{ 'common.back' | translate }}
+    <a class="small text-decoration-none" [routerLink]="backLink()">
+      ← {{ (fromDirect() ? 'report.backToSelection' : 'common.back') | translate }}
     </a>
     <h1 class="h3 mb-1 mt-2">{{ 'report.title' | translate }}</h1>
     <p class="text-secondary mb-0">{{ 'report.subtitle' | translate }}</p>
@@ -68,18 +68,23 @@
       />
     </div>
 
-    @if (auth.isAuthenticated()) {
-      <p class="small text-secondary mb-3">
-        {{ 'report.sessionContact' | translate: { email: auth.currentUser()?.email } }}
+    <div class="mb-3">
+      <p class="form-label fw-semibold mb-1">
+        {{ 'report.contactSection' | translate }}
+        @if (!auth.isAuthenticated()) {
+          <span class="text-secondary fw-normal small"> — {{ 'report.contactOptional' | translate }}</span>
+        }
       </p>
-    } @else {
-      <div class="row g-3 mb-3">
+      @if (auth.isAuthenticated()) {
+        <p class="small text-secondary mb-2">{{ 'report.contactDisabledHint' | translate }}</p>
+      }
+      <div class="row g-3">
         <div class="col-md-6">
-          <label class="form-label fw-semibold" for="name">{{ 'common.name' | translate }}</label>
+          <label class="form-label" for="name">{{ 'common.name' | translate }}</label>
           <input id="name" type="text" class="form-control" formControlName="name" autocomplete="name" />
         </div>
         <div class="col-md-6">
-          <label class="form-label fw-semibold" for="phoneNumber">{{ 'common.phone' | translate }}</label>
+          <label class="form-label" for="phoneNumber">{{ 'common.phone' | translate }}</label>
           <input
             id="phoneNumber"
             type="tel"
@@ -93,7 +98,7 @@
           }
         </div>
         <div class="col-12">
-          <label class="form-label fw-semibold" for="email">{{ 'common.email' | translate }}</label>
+          <label class="form-label" for="email">{{ 'common.email' | translate }}</label>
           <input
             id="email"
             type="email"
@@ -108,7 +113,7 @@
           }
         </div>
       </div>
-    }
+    </div>
 
     <button type="submit" class="btn btn-transtu w-100" [disabled]="submitting()">
       @if (submitting()) {

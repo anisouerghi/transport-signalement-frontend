@@ -15,13 +15,17 @@ Anonyme ou authentifié
    ↓
 Formulaire /report/{uuid}/signaler
 
-Accès direct (/ ou /signalement)
+Accès direct (/signalement)
    ↓
-Choix du type + support
+Choix type + support (GET /api/public/supports)
    ↓
-Anonyme ou authentifié
+Récapitulatif support + choix anonyme / authentifié
    ↓
-Même formulaire /report/{uuid}/signaler
+Même formulaire /report/{uuid}/signaler?source=direct
+   ↓
+Type · Description · Pièces jointes · Coordonnées (facultatif si anonyme, désactivées si connecté)
+   ↓
+Confirmation
 ```
 
 L’UUID n’est **jamais** saisi par le voyageur. La priorité n’est **jamais** demandée.

@@ -93,10 +93,16 @@
   "entry": {
     "title": "Select your transport support",
     "subtitle": "Choose the type, then the related support.",
+    "stepSupport": "Support",
+    "stepIdentity": "Identity",
+    "stepForm": "Report",
     "typeLabel": "Support type",
     "typePlaceholder": "Select a type",
     "supportLabel": "Support",
     "supportPlaceholder": "Select the support",
+    "selectSupportHint": "Please select a type and a support to continue.",
+    "noSupports": "No transport support is available at the moment.",
+    "noSupportsForType": "No support available for this type.",
     "loadError": "Unable to load the support list."
   },
   "about": {
@@ -147,6 +153,10 @@
     "submitting": "Sending…",
     "success": "Your report has been recorded.",
     "invalidQr": "Unrecognized QR code",
+    "backToSelection": "Change support",
+    "contactSection": "Your contact details",
+    "contactOptional": "optional",
+    "contactDisabledHint": "Information from your account (read-only).",
     "sessionContact": "This report will be linked to your account ({{email}})."
   },
   "emailNudge": {

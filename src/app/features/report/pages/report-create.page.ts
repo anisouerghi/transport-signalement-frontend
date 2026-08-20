@@ -53,6 +53,7 @@ export class ReportCreatePage implements OnInit {
   readonly support = signal<TransportSupport | null>(null);
   readonly reportTypes = signal<ReportType[]>([]);
   readonly supportUuid = signal('');
+  readonly fromDirect = signal(false);
   readonly selectedFiles = signal<File[]>([]);
 
   readonly form = this.fb.nonNullable.group({
@@ -66,6 +67,7 @@ export class ReportCreatePage implements OnInit {
   ngOnInit(): void {
     const uuid = this.route.snapshot.paramMap.get('uuid')?.trim() ?? '';
     this.supportUuid.set(uuid);
+    this.fromDirect.set(this.route.snapshot.queryParamMap.get('source') === 'direct');
 
     if (!UUID_RE.test(uuid)) {
       this.invalidQr.set(true);
@@ -141,7 +143,7 @@ export class ReportCreatePage implements OnInit {
     return c.invalid && (c.touched || this.submitted());
   }
 
-  /** Préremplit nom / e-mail / téléphone si le voyageur est connecté. */
+  /** Préremplit et verrouille nom / e-mail / téléphone si le voyageur est connecté. */
   private prefillFromSession(): void {
     const user = this.auth.currentUser();
     if (!user) {
@@ -152,5 +154,12 @@ export class ReportCreatePage implements OnInit {
       email: user.email ?? '',
       phoneNumber: user.phoneNumber ?? '',
     });
+    this.form.controls.name.disable();
+    this.form.controls.email.disable();
+    this.form.controls.phoneNumber.disable();
+  }
+
+  backLink(): string[] {
+    return this.fromDirect() ? ['/signalement'] : ['/report', this.supportUuid()];
   }
 }

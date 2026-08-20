@@ -12,6 +12,7 @@ import { SupportService } from '../services/support.service';
   standalone: true,
   imports: [ReactiveFormsModule, TranslatePipe, SupportSummaryComponent, IdentityChoiceComponent],
   templateUrl: './report-entry.page.html',
+  styleUrls: ['./report-entry.page.scss'],
 })
 export class ReportEntryPage implements OnInit {
   private readonly supportService = inject(SupportService);
@@ -20,6 +21,7 @@ export class ReportEntryPage implements OnInit {
 
   readonly loading = signal(true);
   readonly loadError = signal(false);
+  readonly submitted = signal(false);
   readonly supports = signal<TransportSupport[]>([]);
 
   readonly form = this.fb.nonNullable.group({
@@ -39,21 +41,25 @@ export class ReportEntryPage implements OnInit {
     return [...map.values()].sort((a, b) => a.label.localeCompare(b.label, 'fr'));
   });
 
-  readonly filteredSupports = computed(() => {
+  /**
+   * Note UX:
+   * on calcule ces valeurs à la volée (pas via `computed` signal),
+   * car elles dépendent directement des valeurs du `FormControl`.
+   * Sinon l'étape suivante (identité / formulaire) peut ne pas apparaître.
+   */
+  filteredSupports(): TransportSupport[] {
     const typeId = this.form.controls.supportTypeId.value;
     const all = this.supports();
     if (!typeId) {
-      return all;
+      return [];
     }
-    return all.filter(
-      (s) => String(s.supportTypeId ?? s.supportTypeCode ?? '') === typeId,
-    );
-  });
+    return all.filter((s) => String(s.supportTypeId ?? s.supportTypeCode ?? '') === typeId);
+  }
 
-  readonly selectedSupport = computed(() => {
+  selectedSupport(): TransportSupport | null {
     const uuid = this.form.controls.supportUuid.value;
     return this.supports().find((s) => s.uuid === uuid) ?? null;
-  });
+  }
 
   ngOnInit(): void {
     this.supportService.listActive().subscribe({
@@ -69,19 +75,27 @@ export class ReportEntryPage implements OnInit {
 
     this.form.controls.supportTypeId.valueChanges.subscribe(() => {
       this.form.controls.supportUuid.setValue('');
+      this.submitted.set(false);
+    });
+
+    this.form.controls.supportUuid.valueChanges.subscribe(() => {
+      this.submitted.set(false);
     });
   }
 
   returnUrl(): string {
     const uuid = this.form.controls.supportUuid.value;
-    return uuid ? `/report/${uuid}/signaler` : '/signalement';
+    return uuid ? `/report/${uuid}/signaler?source=direct` : '/signalement';
   }
 
   goToForm(): void {
+    this.submitted.set(true);
     const uuid = this.form.controls.supportUuid.value;
     if (!uuid) {
       return;
     }
-    void this.router.navigate(['/report', uuid, 'signaler']);
+    void this.router.navigate(['/report', uuid, 'signaler'], {
+      queryParams: { source: 'direct' },
+    });
   }
 }

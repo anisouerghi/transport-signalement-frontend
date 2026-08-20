@@ -93,10 +93,16 @@
   "entry": {
     "title": "اختر وسيلة النقل",
     "subtitle": "اختر النوع ثم الوسيلة المعنية.",
+    "stepSupport": "الوسيلة",
+    "stepIdentity": "الهوية",
+    "stepForm": "التبليغ",
     "typeLabel": "نوع الوسيلة",
     "typePlaceholder": "اختر نوعاً",
     "supportLabel": "الوسيلة",
     "supportPlaceholder": "اختر الوسيلة",
+    "selectSupportHint": "يرجى اختيار النوع والوسيلة للمتابعة.",
+    "noSupports": "لا توجد وسيلة نقل متاحة حالياً.",
+    "noSupportsForType": "لا توجد وسيلة متاحة لهذا النوع.",
     "loadError": "تعذر تحميل قائمة الوسائل."
   },
   "about": {
@@ -147,6 +153,10 @@
     "submitting": "جاري الإرسال…",
     "success": "تم تسجيل تبليغك بنجاح.",
     "invalidQr": "رمز QR غير معروف",
+    "backToSelection": "تغيير الوسيلة",
+    "contactSection": "بيانات الاتصال",
+    "contactOptional": "اختياري",
+    "contactDisabledHint": "معلومات من حسابك (للقراءة فقط).",
     "sessionContact": "سيتم ربط هذا التبليغ بحسابك ({{email}})."
   },
   "emailNudge": {
