@@ -5,7 +5,8 @@ Interface publique voyageur — TRANSTU (Société des Transports de Tunis).
 ## Prérequis
 
 - Node.js 20+ / 22+
-- Backend `transport-api` démarré sur `http://localhost:8080`
+- Backend **`public-api`** démarré sur `http://localhost:8081`  
+  (`mvn -pl public-api -am spring-boot:run` dans le repo backend)
 - Espace disque libre recommandé : ~1 Go pour `npm install`
 
 ## Démarrage
