@@ -18,7 +18,17 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               { "glob": "**/*", "input": "public" },
-              { "glob": "**/*", "input": "src/assets", "output": "assets" }
+              {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "assets",
+                "ignore": ["config/**"]
+              },
+              {
+                "glob": "config.json",
+                "input": "src/assets/config/development",
+                "output": "assets/config"
+              }
             ],
             "styles": ["src/styles.scss"]
           },
@@ -28,23 +38,25 @@
                 { "type": "initial", "maximumWarning": "1.2mb", "maximumError": "2mb" }
               ],
               "outputHashing": "all",
-              "fileReplacements": [
+              "assets": [
+                { "glob": "**/*", "input": "public" },
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.production.ts"
+                  "glob": "**/*",
+                  "input": "src/assets",
+                  "output": "assets",
+                  "ignore": ["config/**"]
+                },
+                {
+                  "glob": "config.json",
+                  "input": "src/assets/config/production",
+                  "output": "assets/config"
                 }
               ]
             },
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true,
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.development.ts"
-                }
-              ]
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "production"

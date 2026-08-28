@@ -9,6 +9,7 @@ import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { AuthService } from './core/services/auth.service';
 import { LanguageService } from './core/services/language.service';
+import { ConfigService, initAppConfig } from './core/config/config.service';
 
 function restorePassengerSession(auth: AuthService) {
   return () => firstValueFrom(auth.restoreSession()).catch(() => null);
@@ -32,6 +33,12 @@ export const appConfig: ApplicationConfig = {
       fallbackLang: 'fr',
       lang: 'fr',
     }),
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initAppConfig,
+      deps: [ConfigService],
+      multi: true,
+    },
     {
       provide: APP_INITIALIZER,
       useFactory: initLanguage,
