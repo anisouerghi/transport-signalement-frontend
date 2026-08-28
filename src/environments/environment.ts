@@ -1,4 +1,2 @@
-export const environment = {
-  production: false,
-  apiBaseUrl: '',
-};
+/** Valeurs par défaut (développement) — remplacées au build via angular.json. */
+export { environment } from './environment.development';

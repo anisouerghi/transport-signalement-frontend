@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --host 0.0.0.0 --port 4200 --proxy-config proxy.conf.json",
-    "start:admin-alongside": "ng serve --host 0.0.0.0 --port 4300 --proxy-config proxy.conf.json",
+    "start": "ng serve --host 0.0.0.0 --port 4200 --configuration development",
+    "start:prod": "ng serve --host 0.0.0.0 --port 4200 --configuration production",
+    "start:admin-alongside": "ng serve --host 0.0.0.0 --port 4300 --configuration development",
     "build": "ng build --configuration production",
+    "build:prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development"
   },
   "dependencies": {

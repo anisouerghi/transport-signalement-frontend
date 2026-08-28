@@ -23,8 +23,6 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withInMemoryScrolling({ scrollPositionRestoration: 'top' })),
     provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
-    // loader via chemin absolu /assets/... (évite 404 selon la route courante)
-    // useHttpBackend: bypass interceptors pendant le chargement des JSON i18n
     provideTranslateService({
       loader: provideTranslateHttpLoader({
         prefix: '/assets/i18n/',
