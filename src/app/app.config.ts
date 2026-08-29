@@ -1,5 +1,5 @@
 import { ApplicationConfig, APP_INITIALIZER, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter, withInMemoryScrolling } from '@angular/router';
+import { provideRouter, withHashLocation, withInMemoryScrolling } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -10,6 +10,11 @@ import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { AuthService } from './core/services/auth.service';
 import { LanguageService } from './core/services/language.service';
 import { ConfigService, initAppConfig } from './core/config/config.service';
+
+/** Préfixe i18n relatif au base href (ex. /sig/assets/i18n/). */
+function resolveI18nPrefix(): string {
+  return new URL('assets/i18n/', document.baseURI).href;
+}
 
 function restorePassengerSession(auth: AuthService) {
   return () => firstValueFrom(auth.restoreSession()).catch(() => null);
@@ -22,11 +27,15 @@ function initLanguage(language: LanguageService) {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes, withInMemoryScrolling({ scrollPositionRestoration: 'top' })),
+    provideRouter(
+      routes,
+      withHashLocation(),
+      withInMemoryScrolling({ scrollPositionRestoration: 'top' }),
+    ),
     provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
     provideTranslateService({
       loader: provideTranslateHttpLoader({
-        prefix: '/assets/i18n/',
+        prefix: resolveI18nPrefix(),
         suffix: '.json',
         useHttpBackend: true,
       }),

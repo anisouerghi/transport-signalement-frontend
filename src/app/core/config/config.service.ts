@@ -1,9 +1,12 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { Injectable } from '@angular/core';
 import { initializeApiConfig } from './api.config';
 
-const CONFIG_URL = '/assets/config/config.json';
+/** Chemin relatif au base href (compatible sous-repertoire ex. /sig/). */
+const CONFIG_ASSET_PATH = 'assets/config/config.json';
+
+function resolveConfigUrl(): string {
+  return new URL(CONFIG_ASSET_PATH, document.baseURI).href;
+}
 
 export interface AppRuntimeConfig {
   apiBaseUrl: string;
@@ -11,16 +14,21 @@ export interface AppRuntimeConfig {
 
 @Injectable({ providedIn: 'root' })
 export class ConfigService {
-  private readonly http = inject(HttpClient);
   private config!: AppRuntimeConfig;
 
   async load(): Promise<void> {
+    const configUrl = resolveConfigUrl();
     let raw: unknown;
     try {
-      raw = await firstValueFrom(this.http.get<unknown>(CONFIG_URL));
-    } catch {
+      const response = await fetch(configUrl, { cache: 'no-store' });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status} ${response.statusText}`.trim());
+      }
+      raw = await response.json();
+    } catch (err) {
+      const detail = err instanceof Error ? err.message : String(err);
       throw new Error(
-        `Impossible de charger ${CONFIG_URL}. Verifiez que le fichier existe et est accessible.`
+        `Impossible de charger ${configUrl} (${detail}). Verifiez que le fichier existe, est un JSON valide (sans commentaires) et accessible.`
       );
     }
 
