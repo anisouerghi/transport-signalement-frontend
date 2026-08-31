@@ -1,5 +1,5 @@
 import { ApplicationConfig, APP_INITIALIZER, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter, withHashLocation, withInMemoryScrolling } from '@angular/router';
+import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -29,7 +29,6 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(
       routes,
-      withHashLocation(),
       withInMemoryScrolling({ scrollPositionRestoration: 'top' }),
     ),
     provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),

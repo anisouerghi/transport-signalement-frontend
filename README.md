@@ -22,12 +22,12 @@ Script alternatif si le port 4200 est pris par l'admin : `npm run start:admin-al
 
 ## Parcours QR Code
 
-URL générée côté backend (Hash Routing) : `{app.qr.base-url}/#/report/{uuid}`
+URL générée côté backend : `{app.qr.base-url}report/{uuid}`
 
-Exemple local : `http://localhost:4200/#/report/{uuid}`  
-Exemple test : `http://192.168.1.55/sig/#/report/{uuid}`
+Exemple local : `http://localhost:4200/report/{uuid}`  
+Exemple test : `http://192.168.1.55/sig/report/{uuid}`
 
-Le Hash Routing (`withHashLocation()`) évite les 404 Apache sur les routes Angular.
+Le routing Angular classique (Path Location) fonctionne avec le fallback Apache `.htaccess`.
 
 ## Fonctionnalités
 
@@ -85,7 +85,7 @@ Déployer le contenu de `dist/transport-signalement-frontend/browser/` dans le r
 
 Après déploiement, `assets/config/config.json` peut être édité sur le serveur sans rebuild.
 
-**Routing :** Hash Location (`/#/report/{uuid}`) — aucune config Apache SPA requise.
+**Routing :** Path Location (`/report/{uuid}`) — fallback Apache `.htaccess` requis sous `/sig/`.
 
 Documentation complète (Admin inclus, Apache/nginx, tests) :
 [transport-api/documentation/frontend-runtime-config-deployment.md](../transport-api/documentation/frontend-runtime-config-deployment.md)
