@@ -198,7 +198,12 @@
     "signInLink": "Se connecter",
     "registerSuccess": "Compte créé. Vous êtes connecté.",
     "emailInvalid": "Adresse e-mail invalide.",
-    "phoneInvalid": "Numéro de téléphone invalide."
+    "phoneInvalid": "Numéro de téléphone invalide.",
+    "googleContinue": "Continuer avec Google",
+    "orDivider": "ou",
+    "googleCompleting": "Finalisation de la connexion Google…",
+    "googleFailedTitle": "Connexion Google impossible",
+    "googleFailedGeneric": "La connexion Google a échoué. Réessayez ou utilisez votre e-mail et mot de passe."
   },
   "confirmation": {
     "emptyTitle": "Aucune confirmation disponible",

@@ -10,6 +10,7 @@ function resolveConfigUrl(): string {
 
 export interface AppRuntimeConfig {
   apiBaseUrl: string;
+  googleClientId?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -53,7 +54,13 @@ export class ConfigService {
 
     return {
       apiBaseUrl: value['apiBaseUrl'],
+      googleClientId:
+        typeof value['googleClientId'] === 'string' ? value['googleClientId'] : undefined,
     };
+  }
+
+  get googleClientId(): string | undefined {
+    return this.config.googleClientId;
   }
 }
 

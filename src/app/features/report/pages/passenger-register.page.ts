@@ -5,10 +5,12 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
+import { GoogleSignInButtonComponent } from '../components/google-sign-in-button.component';
+
 @Component({
   selector: 'app-passenger-register-page',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, TranslatePipe],
+  imports: [ReactiveFormsModule, RouterLink, TranslatePipe, GoogleSignInButtonComponent],
   templateUrl: './passenger-register.page.html',
 })
 export class PassengerRegisterPage implements OnInit {

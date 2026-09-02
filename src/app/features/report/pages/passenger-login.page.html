@@ -4,6 +4,14 @@
     <p class="text-secondary mb-0">{{ 'auth.loginSubtitle' | translate }}</p>
   </div>
 
+  <app-google-sign-in-button class="d-block mb-3" [returnUrl]="returnUrl()" [disabled]="submitting()" />
+
+  <div class="d-flex align-items-center gap-3 my-4">
+    <hr class="flex-grow-1 m-0" />
+    <span class="text-secondary small text-uppercase">{{ 'auth.orDivider' | translate }}</span>
+    <hr class="flex-grow-1 m-0" />
+  </div>
+
   <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
     <div class="mb-3">
       <label class="form-label fw-semibold" for="login-email">{{ 'common.email' | translate }}</label>

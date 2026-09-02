@@ -4,11 +4,12 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
+import { GoogleSignInButtonComponent } from '../components/google-sign-in-button.component';
 
 @Component({
   selector: 'app-passenger-login-page',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, TranslatePipe],
+  imports: [ReactiveFormsModule, RouterLink, TranslatePipe, GoogleSignInButtonComponent],
   templateUrl: './passenger-login.page.html',
 })
 export class PassengerLoginPage implements OnInit {

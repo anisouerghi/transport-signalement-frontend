@@ -56,6 +56,20 @@ export class AuthService {
       .pipe(map((res) => this.persist(res.data)));
   }
 
+  /** Redirection vers le flux OAuth Google côté public-api (validation serveur). */
+  startGoogleSignIn(returnUrl: string): void {
+    const apiOrigin = this.resolveApiOrigin();
+    const params = new URLSearchParams({ returnUrl });
+    window.location.href = `${apiOrigin}/api/public/auth/google?${params.toString()}`;
+  }
+
+  /** Échange le code éphémère post-redirection contre un JWT application. */
+  completeGoogleSignIn(code: string): Observable<PassengerSession> {
+    return this.http
+      .post<ApiResponse<PassengerAuthResponse>>(`${this.baseUrl}/google/callback`, { code })
+      .pipe(map((res) => this.persist(res.data)));
+  }
+
   /** Restaure la session au démarrage via GET /me (token expiré → purge silencieuse). */
   restoreSession(): Observable<PassengerSession | null> {
     const stored = this.readStoredSession();
@@ -78,6 +92,14 @@ export class AuthService {
 
   logout(): void {
     this.clearSession();
+  }
+
+  private resolveApiOrigin(): string {
+    const base = API_CONFIG.baseUrl?.replace(/\/$/, '');
+    if (base) {
+      return base;
+    }
+    return 'http://localhost:8081';
   }
 
   private persist(auth: PassengerAuthResponse, existingToken?: string): PassengerSession {

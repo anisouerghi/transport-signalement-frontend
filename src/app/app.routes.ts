@@ -38,6 +38,13 @@ export const routes: Routes = [
       import('./features/report/pages/passenger-login.page').then((m) => m.PassengerLoginPage),
   },
   {
+    path: 'connexion/google/callback',
+    loadComponent: () =>
+      import('./features/report/pages/passenger-google-callback.page').then(
+        (m) => m.PassengerGoogleCallbackPage,
+      ),
+  },
+  {
     path: 'inscription',
     loadComponent: () =>
       import('./features/report/pages/passenger-register.page').then((m) => m.PassengerRegisterPage),
