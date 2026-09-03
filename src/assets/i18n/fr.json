@@ -203,7 +203,20 @@
     "orDivider": "ou",
     "googleCompleting": "Finalisation de la connexion Google…",
     "googleFailedTitle": "Connexion Google impossible",
-    "googleFailedGeneric": "La connexion Google a échoué. Réessayez ou utilisez votre e-mail et mot de passe."
+    "googleFailedGeneric": "La connexion Google a échoué. Réessayez ou utilisez votre e-mail et mot de passe.",
+    "otpTitle": "Vérification par e-mail",
+    "otpSubtitle": "Saisissez le code à 6 chiffres envoyé à {{email}}.",
+    "otpLabel": "Code de vérification",
+    "otpInvalid": "Code à 6 chiffres requis.",
+    "otpVerify": "Vérifier",
+    "otpVerifying": "Vérification…",
+    "otpResend": "Renvoyer le code",
+    "otpResending": "Envoi…",
+    "otpResendWait": "Renvoyer dans {{seconds}} s",
+    "otpResent": "Un nouveau code a été envoyé.",
+    "otpSent": "Un code a été envoyé à {{email}}.",
+    "otpEmailFailed": "L'e-mail n'a pas pu être envoyé. Cliquez sur « Renvoyer le code » ou vérifiez vos indésirables.",
+    "otpBackToLogin": "Retour à la connexion"
   },
   "confirmation": {
     "emptyTitle": "Aucune confirmation disponible",

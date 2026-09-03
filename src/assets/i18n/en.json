@@ -198,7 +198,22 @@
     "signInLink": "Sign in",
     "registerSuccess": "Account created. You are signed in.",
     "emailInvalid": "Invalid email address.",
-    "phoneInvalid": "Invalid phone number."
+    "phoneInvalid": "Invalid phone number.",
+    "googleContinue": "Continue with Google",
+    "orDivider": "or",
+    "otpTitle": "Email verification",
+    "otpSubtitle": "Enter the 6-digit code sent to {{email}}.",
+    "otpLabel": "Verification code",
+    "otpInvalid": "A 6-digit code is required.",
+    "otpVerify": "Verify",
+    "otpVerifying": "Verifying…",
+    "otpResend": "Resend code",
+    "otpResending": "Sending…",
+    "otpResendWait": "Resend in {{seconds}} s",
+    "otpResent": "A new code has been sent.",
+    "otpSent": "A code was sent to {{email}}.",
+    "otpEmailFailed": "The email could not be sent. Click \"Resend code\" or check your spam folder.",
+    "otpBackToLogin": "Back to sign in"
   },
   "confirmation": {
     "emptyTitle": "No confirmation available",

@@ -31,3 +31,15 @@ export interface PassengerAuthResponse {
   email: string;
   phoneNumber?: string;
 }
+
+export interface PassengerOtpPendingResponse {
+  otpTransactionId: string;
+  expiresInSeconds: number;
+  resendDelaySeconds: number;
+  maskedEmail?: string;
+  emailSent?: boolean;
+}
+
+export type LoginOutcome =
+  | { kind: 'session'; session: PassengerSession }
+  | { kind: 'otp'; pending: PassengerOtpPendingResponse };

@@ -2,6 +2,7 @@
 export interface ApiResponse<T> {
   success: boolean;
   message?: string;
+  errorCode?: string;
   data: T;
 }
 
@@ -11,6 +12,7 @@ export interface ApiErrorBody {
   status?: number;
   error?: string;
   message?: string;
+  errorCode?: string;
   path?: string;
   details?: string[];
 }

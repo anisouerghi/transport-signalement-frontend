@@ -198,7 +198,22 @@
     "signInLink": "تسجيل الدخول",
     "registerSuccess": "تم إنشاء الحساب. أنت متصل.",
     "emailInvalid": "عنوان بريد إلكتروني غير صالح.",
-    "phoneInvalid": "رقم هاتف غير صالح."
+    "phoneInvalid": "رقم هاتف غير صالح.",
+    "googleContinue": "المتابعة مع Google",
+    "orDivider": "أو",
+    "otpTitle": "التحقق بالبريد الإلكتروني",
+    "otpSubtitle": "أدخل الرمز المكوّن من 6 أرقام المرسل إلى {{email}}.",
+    "otpLabel": "رمز التحقق",
+    "otpInvalid": "رمز من 6 أرقام مطلوب.",
+    "otpVerify": "تحقق",
+    "otpVerifying": "جاري التحقق…",
+    "otpResend": "إعادة إرسال الرمز",
+    "otpResending": "جاري الإرسال…",
+    "otpResendWait": "إعادة الإرسال خلال {{seconds}} ث",
+    "otpResent": "تم إرسال رمز جديد.",
+    "otpSent": "تم إرسال رمز إلى {{email}}.",
+    "otpEmailFailed": "تعذر إرسال البريد. انقر « إعادة إرسال الرمز » أو تحقق من البريد غير المرغوب فيه.",
+    "otpBackToLogin": "العودة إلى تسجيل الدخول"
   },
   "confirmation": {
     "emptyTitle": "لا يوجد تأكيد متاح",

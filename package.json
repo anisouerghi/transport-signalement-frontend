@@ -9,6 +9,7 @@
     "start:admin-alongside": "ng serve --host 0.0.0.0 --port 4300 --configuration development",
     "build": "ng build --configuration production",
     "build:prod": "ng build --configuration production",
+    "build:sig": "ng build --configuration production --base-href /sig/",
     "watch": "ng build --watch --configuration development"
   },
   "dependencies": {
