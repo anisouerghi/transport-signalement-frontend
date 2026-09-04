@@ -12,10 +12,27 @@
     <p class="text-secondary mb-0">{{ errorMessage() }}</p>
   </section>
 } @else if (support(); as currentSupport) {
+  <!-- Stepper -->
+  <div class="stepper-container mb-4">
+    <div class="stepper">
+      <div class="step completed">
+        <div class="step__icon"><i class="bi bi-check-lg"></i></div>
+        <div class="step__label">Type</div>
+      </div>
+      <div class="step-line completed"></div>
+      <div class="step active">
+        <div class="step__icon">2</div>
+        <div class="step__label">Détails</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step">
+        <div class="step__icon">3</div>
+        <div class="step__label">Succès</div>
+      </div>
+    </div>
+  </div>
+
   <section class="mb-3">
-    <a class="small text-decoration-none" [routerLink]="backLink()">
-      ← {{ (fromDirect() ? 'report.backToSelection' : 'common.back') | translate }}
-    </a>
     <h1 class="h3 mb-1 mt-2">{{ 'report.title' | translate }}</h1>
     <p class="text-secondary mb-0">{{ 'report.subtitle' | translate }}</p>
   </section>
@@ -23,24 +40,6 @@
   <app-support-summary [support]="currentSupport" />
 
   <form class="panel p-3 p-md-4" [formGroup]="form" (ngSubmit)="submit()" novalidate>
-    <div class="mb-3">
-      <label class="form-label fw-semibold" for="reportTypeId">{{ 'report.typeLabel' | translate }}</label>
-      <select
-        id="reportTypeId"
-        class="form-select"
-        formControlName="reportTypeId"
-        [class.is-invalid]="controlInvalid('reportTypeId')"
-      >
-        <option value="">{{ 'report.typePlaceholder' | translate }}</option>
-        @for (type of reportTypes(); track type.reportTypeId) {
-          <option [value]="type.reportTypeId">{{ type.label }}</option>
-        }
-      </select>
-      @if (controlInvalid('reportTypeId')) {
-        <div class="invalid-feedback">{{ 'report.typeRequired' | translate }}</div>
-      }
-    </div>
-
     <div class="mb-3">
       <label class="form-label fw-semibold" for="description">{{ 'report.descriptionLabel' | translate }}</label>
       <textarea
@@ -57,9 +56,9 @@
       }
     </div>
 
-    @if (!auth.isAuthenticated()) {
+    <!-- @if (!auth.isAuthenticated()) {
       <app-email-nudge />
-    }
+    } -->
 
     <div class="mb-3">
       <app-attachment-picker
@@ -68,60 +67,48 @@
       />
     </div>
 
-    <div class="mb-3">
-      <p class="form-label fw-semibold mb-1">
-        {{ 'report.contactSection' | translate }}
-        @if (!auth.isAuthenticated()) {
-          <span class="text-secondary fw-normal small"> — {{ 'report.contactOptional' | translate }}</span>
+    <div class="report-actions">
+      <a class="btn btn-transtu-outline report-back" [routerLink]="backLink()">
+        <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>
+        {{ 'common.back' | translate }}
+      </a>
+      <button type="submit" class="btn btn-transtu" [disabled]="submitting()">
+        @if (submitting()) {
+          <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          {{ 'report.submitting' | translate }}
+        } @else {
+          {{ 'report.submit' | translate }}
         }
-      </p>
-      @if (auth.isAuthenticated()) {
-        <p class="small text-secondary mb-2">{{ 'report.contactDisabledHint' | translate }}</p>
-      }
-      <div class="row g-3">
-        <div class="col-md-6">
-          <label class="form-label" for="name">{{ 'common.name' | translate }}</label>
-          <input id="name" type="text" class="form-control" formControlName="name" autocomplete="name" />
-        </div>
-        <div class="col-md-6">
-          <label class="form-label" for="phoneNumber">{{ 'common.phone' | translate }}</label>
-          <input
-            id="phoneNumber"
-            type="tel"
-            class="form-control"
-            formControlName="phoneNumber"
-            autocomplete="tel"
-            [class.is-invalid]="controlInvalid('phoneNumber')"
-          />
-          @if (controlInvalid('phoneNumber')) {
-            <div class="invalid-feedback">{{ 'report.phoneInvalid' | translate }}</div>
-          }
-        </div>
-        <div class="col-12">
-          <label class="form-label" for="email">{{ 'common.email' | translate }}</label>
-          <input
-            id="email"
-            type="email"
-            class="form-control"
-            formControlName="email"
-            autocomplete="email"
-            [attr.placeholder]="'report.emailPlaceholder' | translate"
-            [class.is-invalid]="controlInvalid('email')"
-          />
-          @if (controlInvalid('email')) {
-            <div class="invalid-feedback">{{ 'report.emailInvalid' | translate }}</div>
-          }
-        </div>
-      </div>
+      </button>
     </div>
-
-    <button type="submit" class="btn btn-transtu w-100" [disabled]="submitting()">
-      @if (submitting()) {
-        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-        {{ 'report.submitting' | translate }}
-      } @else {
-        {{ 'report.submit' | translate }}
-      }
-    </button>
   </form>
 }
+
+<style>
+  .report-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .report-actions .btn {
+    flex: 1;
+    min-height: 3rem;
+  }
+
+  .report-actions .report-back {
+    --bs-btn-color: var(--transtu-green);
+    --bs-btn-bg: #fff;
+    --bs-btn-border-color: var(--transtu-green);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: var(--transtu-green);
+    --bs-btn-hover-border-color: var(--transtu-green);
+  }
+
+  @media (max-width: 420px) {
+    .report-actions .btn {
+      min-height: 2.85rem;
+    }
+  }
+</style>

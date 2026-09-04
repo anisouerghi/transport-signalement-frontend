@@ -16,7 +16,7 @@ const DEFAULT_LANG: AppLanguage = 'fr';
 
 export const LANGUAGE_OPTIONS: LanguageOption[] = [
   { code: 'fr', label: 'FR', dir: 'ltr' },
-  { code: 'ar', label: 'العربية', dir: 'rtl' },
+  { code: 'ar', label: 'ع', dir: 'rtl' },
   { code: 'en', label: 'EN', dir: 'ltr' },
 ];
 

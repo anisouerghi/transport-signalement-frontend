@@ -13,6 +13,75 @@ import { SupportService } from '../services/support.service';
   imports: [ReactiveFormsModule, TranslatePipe, SupportSummaryComponent, IdentityChoiceComponent],
   templateUrl: './report-entry.page.html',
   styleUrls: ['./report-entry.page.scss'],
+  styles: [`
+    .stepper-container {
+      background: #ffffff;
+      padding: 1rem;
+      border-radius: 0.85rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .stepper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      position: relative;
+      z-index: 1;
+    }
+    .step__icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #e9ecef;
+      color: #6c757d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+    .step__label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #6c757d;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .step.completed .step__icon {
+      background: #0b8a3e;
+      color: #fff;
+    }
+    .step.completed .step__label {
+      color: #0b8a3e;
+    }
+    .step.active .step__icon {
+      background: #e8a317;
+      color: #fff;
+      box-shadow: 0 0 0 4px rgba(232, 163, 23, 0.25);
+    }
+    .step.active .step__label {
+      color: #142033;
+      font-weight: 700;
+    }
+    .step-line {
+      flex: 1;
+      height: 3px;
+      background: #e9ecef;
+      margin: 0 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .step-line.completed {
+      background: #0b8a3e;
+    }
+  `]
 })
 export class ReportEntryPage implements OnInit {
   private readonly supportService = inject(SupportService);

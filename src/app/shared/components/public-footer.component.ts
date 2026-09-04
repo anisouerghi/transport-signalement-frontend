@@ -24,10 +24,11 @@ import { NotificationService } from '../../core/services/notification.service';
         ></button>
       </div>
     }
-    <footer class="public-footer">
+    <footer class="public-footer d-none d-md-block">
+      <div class="gold-bar" aria-hidden="true"></div>
       <div class="public-footer__inner">
         <strong>{{ 'common.brand' | translate }}</strong>
-        <span>{{ 'footer.tagline' | translate }}</span>
+        <span class="tagline">{{ 'footer.tagline' | translate }}</span>
       </div>
     </footer>
   `,
@@ -35,9 +36,10 @@ import { NotificationService } from '../../core/services/notification.service';
     `
       .public-footer {
         margin-top: auto;
-        background: #0f2758;
-        color: rgba(255, 255, 255, 0.85);
+        background: #ffffff;
+        color: #142033;
         font-size: 0.85rem;
+        border-top: 1px solid #e9ecef;
       }
       .public-footer__inner {
         width: min(720px, 100%);
@@ -46,6 +48,13 @@ import { NotificationService } from '../../core/services/notification.service';
         display: flex;
         flex-direction: column;
         gap: 0.2rem;
+      }
+      .tagline {
+        color: #5a6b7d;
+      }
+      .gold-bar {
+        height: 3px;
+        background: linear-gradient(90deg, #e8a317, #0b8a3e 55%, #1a3a7a);
       }
       .toast-banner {
         position: sticky;

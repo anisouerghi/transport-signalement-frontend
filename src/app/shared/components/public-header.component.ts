@@ -68,7 +68,7 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
   styles: [
     `
       .public-header {
-        background: linear-gradient(180deg, #0f2758 0%, #1a3a7a 100%);
+        background: #ffffff;
         color: #fff;
       }
       .public-header__inner {
@@ -106,7 +106,7 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
         justify-content: flex-start;
       }
       .public-header__links a {
-        color: rgba(255, 255, 255, 0.82);
+        color: #0f2758;
         text-decoration: none;
         font-size: 0.92rem;
         font-weight: 600;
@@ -115,8 +115,8 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
       }
       .public-header__links a.is-active,
       .public-header__links a:hover {
-        color: #fff;
-        border-bottom-color: #e8a317;
+        // font-size: 0.95rem;
+        color: #0f2758af;
       }
       .lang-switch {
         display: inline-flex;
@@ -124,12 +124,12 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
         gap: 0.15rem;
         padding: 0.15rem;
         border-radius: 999px;
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(169, 214, 181, 0.47);
       }
       .lang-btn {
         background: transparent;
         border: none;
-        color: rgba(255, 255, 255, 0.85);
+        color: rgba(10, 10, 10, 0.85);
         font-size: 0.72rem;
         font-weight: 700;
         letter-spacing: 0.02em;
@@ -139,8 +139,8 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
         line-height: 1.2;
       }
       .lang-btn:hover {
-        color: #fff;
-        background: rgba(255, 255, 255, 0.12);
+      font-size: 0.82rem;
+
       }
       .lang-btn--active {
         background: #fff;
@@ -180,15 +180,16 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
       }
       .public-bottom-nav {
         position: fixed;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        left: 0.75rem;
+        right: 0.75rem;
+        bottom: calc(0.75rem + env(safe-area-inset-bottom));
         z-index: 30;
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         background: #0f2758;
-        border-top: 3px solid #e8a317;
-        padding: 0.35rem 0.2rem calc(0.4rem + env(safe-area-inset-bottom));
+        padding: 0.4rem 0.2rem;
+        border-radius: 2rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
       }
       .public-bottom-nav a {
         display: flex;

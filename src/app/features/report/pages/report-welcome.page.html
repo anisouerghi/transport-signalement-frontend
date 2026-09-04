@@ -13,10 +13,10 @@
   </section>
 } @else if (support(); as currentSupport) {
   <section class="welcome">
-    <header class="welcome__hero text-center panel p-4 mb-3">
+    <!-- <header class="welcome__hero text-center panel p-4 mb-3">
       <h1 class="h3 mb-2">{{ 'welcome.title' | translate }}</h1>
       <p class="text-secondary mb-0 welcome__intro">{{ 'welcome.intro' | translate }}</p>
-    </header>
+    </header> -->
 
     <app-support-summary [support]="currentSupport" />
     <app-identity-choice [returnUrl]="formReturnUrl()" (continue)="goToForm()" />
