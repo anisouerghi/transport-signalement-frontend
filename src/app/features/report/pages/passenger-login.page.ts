@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
 
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
@@ -26,7 +26,13 @@ type LoginStep = 'credentials' | 'otp';
 
   standalone: true,
 
-  imports: [ReactiveFormsModule, RouterLink, TranslatePipe, GoogleSignInButtonComponent],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    RouterLinkActive,
+    TranslatePipe,
+    GoogleSignInButtonComponent,
+  ],
 
   templateUrl: './passenger-login.page.html',
 

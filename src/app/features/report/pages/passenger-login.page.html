@@ -1,259 +1,125 @@
 <section class="panel p-4">
 
+  <nav class="nav nav-tabs mb-4" aria-label="Authentication">
+    <a class="nav-link" routerLinkActive="active" ariaCurrentWhenActive="page"
+      [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/connexion']"
+      [queryParams]="{ returnUrl: returnUrl() }">
+      {{ 'auth.loginTitle' | translate }}
+    </a>
+    <a class="nav-link" routerLinkActive="active" ariaCurrentWhenActive="page"
+      [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/inscription']"
+      [queryParams]="{ returnUrl: returnUrl() }">
+      {{ 'auth.registerTitle' | translate }}
+    </a>
+  </nav>
+
   @if (step() === 'credentials') {
 
-    <div class="text-center mb-4">
+  <!-- <div class="text-center mb-4">
+    <h1 class="h3 mb-2">{{ 'auth.loginTitle' | translate }}</h1>
+    <p class="text-secondary mb-0">{{ 'auth.loginSubtitle' | translate }}</p>
+  </div> -->
 
-      <h1 class="h3 mb-2">{{ 'auth.loginTitle' | translate }}</h1>
-
-      <p class="text-secondary mb-0">{{ 'auth.loginSubtitle' | translate }}</p>
-
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="mb-3">
+      <label class="form-label fw-semibold" for="login-email">{{ 'common.email' | translate }}</label>
+      <input id="login-email" type="email" class="form-control form-control-lg" formControlName="email"
+        autocomplete="email" [class.is-invalid]="form.controls.email.touched && form.controls.email.invalid" />
+      @if (form.controls.email.touched && form.controls.email.invalid) {
+      <div class="invalid-feedback">{{ 'auth.emailInvalid' | translate }}</div>
+      }
     </div>
 
-
-
-    <app-google-sign-in-button class="d-block mb-3" [returnUrl]="returnUrl()" [disabled]="submitting()" />
-
-
-
-    <div class="d-flex align-items-center gap-3 my-4">
-
-      <hr class="flex-grow-1 m-0" />
-
-      <span class="text-secondary small text-uppercase">{{ 'auth.orDivider' | translate }}</span>
-
-      <hr class="flex-grow-1 m-0" />
-
+    <div class="mb-4">
+      <label class="form-label fw-semibold" for="login-password">{{ 'common.password' | translate }}</label>
+      <input id="login-password" type="password" class="form-control form-control-lg" formControlName="password"
+        autocomplete="current-password"
+        [class.is-invalid]="form.controls.password.touched && form.controls.password.invalid" />
+      @if (form.controls.password.touched && form.controls.password.invalid) {
+      <div class="invalid-feedback">{{ 'auth.passwordRequired' | translate }}</div>
+      }
     </div>
 
-
-
-    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
-
-      <div class="mb-3">
-
-        <label class="form-label fw-semibold" for="login-email">{{ 'common.email' | translate }}</label>
-
-        <input
-
-          id="login-email"
-
-          type="email"
-
-          class="form-control form-control-lg"
-
-          formControlName="email"
-
-          autocomplete="email"
-
-          [class.is-invalid]="form.controls.email.touched && form.controls.email.invalid"
-
-        />
-
-        @if (form.controls.email.touched && form.controls.email.invalid) {
-
-          <div class="invalid-feedback">{{ 'auth.emailInvalid' | translate }}</div>
-
-        }
-
-      </div>
+    <button type="submit" class="btn btn-transtu btn-lg w-100 mb-3" [disabled]="submitting()">
+      @if (submitting()) {
+      <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+      {{ 'auth.loginSubmitting' | translate }}
+      } @else {
+      {{ 'auth.loginSubmit' | translate }}
+      }
+    </button>
+  </form>
 
 
 
-      <div class="mb-4">
+  <div class="d-flex align-items-center gap-3 my-4">
+    <hr class="flex-grow-1 m-0" />
+    <span class="text-secondary small text-uppercase">{{ 'auth.orDivider' | translate }}</span>
+    <hr class="flex-grow-1 m-0" />
+  </div>
 
-        <label class="form-label fw-semibold" for="login-password">{{ 'common.password' | translate }}</label>
-
-        <input
-
-          id="login-password"
-
-          type="password"
-
-          class="form-control form-control-lg"
-
-          formControlName="password"
-
-          autocomplete="current-password"
-
-          [class.is-invalid]="form.controls.password.touched && form.controls.password.invalid"
-
-        />
-
-        @if (form.controls.password.touched && form.controls.password.invalid) {
-
-          <div class="invalid-feedback">{{ 'auth.passwordRequired' | translate }}</div>
-
-        }
-
-      </div>
+  <app-google-sign-in-button class="d-block mb-3" [returnUrl]="returnUrl()" [disabled]="submitting()" />
 
 
 
-      <button type="submit" class="btn btn-transtu btn-lg w-100 mb-3" [disabled]="submitting()">
-
-        @if (submitting()) {
-
-          <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-
-          {{ 'auth.loginSubmitting' | translate }}
-
-        } @else {
-
-          {{ 'auth.loginSubmit' | translate }}
-
-        }
-
-      </button>
-
-    </form>
 
 
 
-    <p class="text-center mb-0">
-
-      {{ 'auth.noAccount' | translate }}
-
-      <a
-
-        [routerLink]="['/inscription']"
-
-        [queryParams]="{ returnUrl: returnUrl() }"
-
-        class="fw-semibold"
-
-      >
-
-        {{ 'auth.createAccountLink' | translate }}
-
-      </a>
-
-    </p>
 
   } @else {
+  <div class="text-center mb-4">
+    <h1 class="h3 mb-2">{{ 'auth.otpTitle' | translate }}</h1>
+    <p class="text-secondary mb-0">
+      {{ 'auth.otpSubtitle' | translate: { email: otpPending()?.maskedEmail ?? '' } }}
+    </p>
+  </div>
 
-    <div class="text-center mb-4">
+  @if (otpPending()?.emailSent === false) {
+  <div class="alert alert-warning" role="alert">
+    {{ 'auth.otpEmailFailed' | translate }}
+  </div>
+  }
 
-      <h1 class="h3 mb-2">{{ 'auth.otpTitle' | translate }}</h1>
-
-      <p class="text-secondary mb-0">
-
-        {{ 'auth.otpSubtitle' | translate: { email: otpPending()?.maskedEmail ?? '' } }}
-
-      </p>
-
+  <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()" novalidate>
+    <div class="mb-4">
+      <label class="form-label fw-semibold" for="login-otp">{{ 'auth.otpLabel' | translate }}</label>
+      <input id="login-otp" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code"
+        class="form-control form-control-lg text-center letter-spacing-otp" formControlName="otp"
+        [class.is-invalid]="otpForm.controls.otp.touched && otpForm.controls.otp.invalid" />
+      @if (otpForm.controls.otp.touched && otpForm.controls.otp.invalid) {
+      <div class="invalid-feedback">{{ 'auth.otpInvalid' | translate }}</div>
+      }
     </div>
 
-
-
-    @if (otpPending()?.emailSent === false) {
-      <div class="alert alert-warning" role="alert">
-        {{ 'auth.otpEmailFailed' | translate }}
-      </div>
-    }
-
-
-
-    <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()" novalidate>
-
-      <div class="mb-4">
-
-        <label class="form-label fw-semibold" for="login-otp">{{ 'auth.otpLabel' | translate }}</label>
-
-        <input
-
-          id="login-otp"
-
-          type="text"
-
-          inputmode="numeric"
-
-          maxlength="6"
-
-          autocomplete="one-time-code"
-
-          class="form-control form-control-lg text-center letter-spacing-otp"
-
-          formControlName="otp"
-
-          [class.is-invalid]="otpForm.controls.otp.touched && otpForm.controls.otp.invalid"
-
-        />
-
-        @if (otpForm.controls.otp.touched && otpForm.controls.otp.invalid) {
-
-          <div class="invalid-feedback">{{ 'auth.otpInvalid' | translate }}</div>
-
-        }
-
-      </div>
+    <button type="submit" class="btn btn-transtu btn-lg w-100 mb-3" [disabled]="submitting()">
+      @if (submitting()) {
+      <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+      {{ 'auth.otpVerifying' | translate }}
+      } @else {
+      {{ 'auth.otpVerify' | translate }}
+      }
+    </button>
+  </form>
 
 
 
-      <button type="submit" class="btn btn-transtu btn-lg w-100 mb-3" [disabled]="submitting()">
+  <div class="d-flex flex-column gap-2 mb-3">
+    <button type="button" class="btn btn-outline-secondary" [disabled]="resending() || resendCountdown() > 0"
+      (click)="resendOtp()">
+      @if (resending()) {
+      <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+      {{ 'auth.otpResending' | translate }}
+      } @else if (resendCountdown() > 0) {
+      {{ 'auth.otpResendWait' | translate: { seconds: resendCountdown() } }}
+      } @else {
+      {{ 'auth.otpResend' | translate }}
+      }
+    </button>
 
-        @if (submitting()) {
-
-          <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-
-          {{ 'auth.otpVerifying' | translate }}
-
-        } @else {
-
-          {{ 'auth.otpVerify' | translate }}
-
-        }
-
-      </button>
-
-    </form>
-
-
-
-    <div class="d-flex flex-column gap-2 mb-3">
-
-      <button
-
-        type="button"
-
-        class="btn btn-outline-secondary"
-
-        [disabled]="resending() || resendCountdown() > 0"
-
-        (click)="resendOtp()"
-
-      >
-
-        @if (resending()) {
-
-          <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-
-          {{ 'auth.otpResending' | translate }}
-
-        } @else if (resendCountdown() > 0) {
-
-          {{ 'auth.otpResendWait' | translate: { seconds: resendCountdown() } }}
-
-        } @else {
-
-          {{ 'auth.otpResend' | translate }}
-
-        }
-
-      </button>
-
-
-
-      <button type="button" class="btn btn-link text-secondary" (click)="backToLogin()">
-
-        {{ 'auth.otpBackToLogin' | translate }}
-
-      </button>
-
-    </div>
-
+    <button type="button" class="btn btn-link text-secondary" (click)="backToLogin()">
+      {{ 'auth.otpBackToLogin' | translate }}
+    </button>
+  </div>
   }
 
 </section>
-
-

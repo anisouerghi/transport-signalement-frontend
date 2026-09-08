@@ -25,15 +25,20 @@
     "home": "Accueil",
     "report": "Signalement",
     "myReports": "Mes signalements",
-    "about": "À propos"
+    "scan": "Scanner"
   },
   "header": {
     "login": "Connexion",
     "logout": "Déconnexion",
+    "profile": "Profil",
     "language": "Langue"
   },
   "footer": {
     "tagline": "Société des Transports de Tunis — Signalement voyageur"
+  },
+  "profile": {
+    "title": "Mon profil",
+    "name": "Nom"
   },
   "home": {
     "title": "Signalement voyageur",
@@ -43,7 +48,7 @@
     "step2": "Déposer un signalement",
     "step3": "Recevoir une réponse",
     "cta": "Déposer un signalement",
-    "repliesTitle": "Réponses aux signalements",
+    "repliesTitle": "Vos réclamations, nos actions",
     "repliesLead": "Aperçus des dernières réponses publiées par nos équipes.",
     "repliesTeam": "Réponse de l'équipe",
     "repliesEmpty": "Aucune réponse n'est publiée pour le moment.",
@@ -115,6 +120,17 @@
     "step3": "Notre équipe traite votre demande",
     "step4": "Consultez votre réponse"
   },
+  "scan": {
+    "title": "Scanner un QR Code",
+    "intro": "Autorisez l'accès à votre caméra pour identifier votre support de transport.",
+    "camera": "Caméra",
+    "starting": "Démarrage de la caméra…",
+    "permission": "Autorisez l'accès à la caméra pour scanner un QR Code.",
+    "unsupported": "La caméra n'est pas disponible sur cet appareil ou ce navigateur.",
+    "invalid": "Ce QR Code ne correspond pas à un support TRANSTU.",
+    "retry": "Réessayer",
+    "back": "Retour"
+  },
   "myReports": {
     "title": "Mes signalements",
     "subtitle": "Vos 15 signalements les plus récents.",
@@ -179,7 +195,7 @@
     "unitMb": "{{n}} Mo"
   },
   "auth": {
-    "loginTitle": "Connexion",
+    "loginTitle": "Se connecter",
     "loginSubtitle": "Accédez à vos signalements et suivez vos demandes.",
     "loginSubmit": "Se connecter",
     "loginSubmitting": "Connexion…",
@@ -216,7 +232,8 @@
     "otpResent": "Un nouveau code a été envoyé.",
     "otpSent": "Un code a été envoyé à {{email}}.",
     "otpEmailFailed": "L'e-mail n'a pas pu être envoyé. Cliquez sur « Renvoyer le code » ou vérifiez vos indésirables.",
-    "otpBackToLogin": ""
+    "otpBackToLogin": "Retour à la connexion",
+    "otpBackToRegister": "Retour à l'inscription"
   },
   "confirmation": {
     "emptyTitle": "Aucune confirmation disponible",

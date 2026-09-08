@@ -1,16 +1,33 @@
 <section class="panel p-4">
-  <div class="text-center mb-4">
+  <nav class="nav nav-tabs mb-4" aria-label="Authentication">
+    <a
+      class="nav-link"
+      routerLinkActive="active"
+      ariaCurrentWhenActive="page"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [routerLink]="['/connexion']"
+      [queryParams]="{ returnUrl: returnUrl() }"
+    >
+      {{ 'auth.loginTitle' | translate }}
+    </a>
+    <a
+      class="nav-link"
+      routerLinkActive="active"
+      ariaCurrentWhenActive="page"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [routerLink]="['/inscription']"
+      [queryParams]="{ returnUrl: returnUrl() }"
+    >
+      {{ 'auth.registerTitle' | translate }}
+    </a>
+  </nav>
+
+  @if (step() === 'credentials') {
+
+  <!-- <div class="text-center mb-4">
     <h1 class="h3 mb-2">{{ 'auth.registerTitle' | translate }}</h1>
     <p class="text-secondary mb-0">{{ 'auth.registerSubtitle' | translate }}</p>
-  </div>
-
-  <app-google-sign-in-button class="d-block mb-3" [returnUrl]="returnUrl()" [disabled]="submitting()" />
-
-  <div class="d-flex align-items-center gap-3 my-4">
-    <hr class="flex-grow-1 m-0" />
-    <span class="text-secondary small text-uppercase">{{ 'auth.orDivider' | translate }}</span>
-    <hr class="flex-grow-1 m-0" />
-  </div>
+  </div> -->
 
   <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
     <div class="mb-3">
@@ -79,14 +96,58 @@
     </button>
   </form>
 
-  <p class="text-center mb-0">
-    {{ 'auth.hasAccount' | translate }}
-    <a
-      [routerLink]="['/connexion']"
-      [queryParams]="{ returnUrl: returnUrl() }"
-      class="fw-semibold"
-    >
-      {{ 'auth.signInLink' | translate }}
-    </a>
-  </p>
+  } @else {
+  <div class="text-center mb-4">
+    <h1 class="h3 mb-2">{{ 'auth.otpTitle' | translate }}</h1>
+    <p class="text-secondary mb-0">
+      {{ 'auth.otpSubtitle' | translate: { email: otpPending()?.maskedEmail ?? '' } }}
+    </p>
+  </div>
+
+  @if (otpPending()?.emailSent === false) {
+  <div class="alert alert-warning" role="alert">
+    {{ 'auth.otpEmailFailed' | translate }}
+  </div>
+  }
+
+  <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()" novalidate>
+    <div class="mb-4">
+      <label class="form-label fw-semibold" for="register-otp">{{ 'auth.otpLabel' | translate }}</label>
+      <input id="register-otp" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code"
+        class="form-control form-control-lg text-center letter-spacing-otp" formControlName="otp"
+        [class.is-invalid]="otpForm.controls.otp.touched && otpForm.controls.otp.invalid" />
+      @if (otpForm.controls.otp.touched && otpForm.controls.otp.invalid) {
+      <div class="invalid-feedback">{{ 'auth.otpInvalid' | translate }}</div>
+      }
+    </div>
+
+    <button type="submit" class="btn btn-transtu btn-lg w-100 mb-3" [disabled]="submitting()">
+      @if (submitting()) {
+      <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+      {{ 'auth.otpVerifying' | translate }}
+      } @else {
+      {{ 'auth.otpVerify' | translate }}
+      }
+    </button>
+  </form>
+
+  <div class="d-flex flex-column gap-2 mb-3">
+    <button type="button" class="btn btn-outline-secondary" [disabled]="resending() || resendCountdown() > 0"
+      (click)="resendOtp()">
+      @if (resending()) {
+      <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+      {{ 'auth.otpResending' | translate }}
+      } @else if (resendCountdown() > 0) {
+      {{ 'auth.otpResendWait' | translate: { seconds: resendCountdown() } }}
+      } @else {
+      {{ 'auth.otpResend' | translate }}
+      }
+    </button>
+
+    <button type="button" class="btn btn-link text-secondary" (click)="backToRegister()">
+      {{ 'auth.otpBackToRegister' | translate }}
+    </button>
+  </div>
+  }
+
 </section>

@@ -25,15 +25,20 @@
     "home": "Home",
     "report": "Report",
     "myReports": "My reports",
-    "about": "About"
+    "scan": "Scan"
   },
   "header": {
     "login": "Sign in",
     "logout": "Sign out",
+    "profile": "Profile",
     "language": "Language"
   },
   "footer": {
     "tagline": "Tunis Transport Company — Traveler reporting"
+  },
+  "profile": {
+    "title": "My profile",
+    "name": "Name"
   },
   "home": {
     "title": "Traveler reporting",
@@ -43,7 +48,7 @@
     "step2": "Submit a report",
     "step3": "Receive a reply",
     "cta": "Submit a report",
-    "repliesTitle": "Replies to reports",
+    "repliesTitle": "Your complaints, our actions",
     "repliesLead": "Short previews of the latest published team replies.",
     "repliesTeam": "Team reply",
     "repliesEmpty": "No public replies at the moment.",
@@ -114,6 +119,17 @@
     "step2": "Submit your report",
     "step3": "Our team handles your request",
     "step4": "Read the reply"
+  },
+  "scan": {
+    "title": "Scan a QR code",
+    "intro": "Allow camera access to identify your transport support.",
+    "camera": "Camera",
+    "starting": "Starting camera…",
+    "permission": "Allow camera access to scan a QR code.",
+    "unsupported": "The camera is not available on this device or browser.",
+    "invalid": "This QR code does not belong to a TRANSTU support.",
+    "retry": "Try again",
+    "back": "Back"
   },
   "myReports": {
     "title": "My reports",
@@ -213,7 +229,8 @@
     "otpResent": "A new code has been sent.",
     "otpSent": "A code was sent to {{email}}.",
     "otpEmailFailed": "The email could not be sent. Click \"Resend code\" or check your spam folder.",
-    "otpBackToLogin": "Back to sign in"
+    "otpBackToLogin": "Back to sign in",
+    "otpBackToRegister": "Back to registration"
   },
   "confirmation": {
     "emptyTitle": "No confirmation available",

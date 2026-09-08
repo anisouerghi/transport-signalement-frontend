@@ -10,26 +10,26 @@
       </li>
       <li class="home-steps__sep" aria-hidden="true"><i class="bi bi-arrow-right"></i></li>
       <li class="home-steps__item">
-        <span class="home-steps__icon" aria-hidden="true"><i class="bi bi-pencil-square"></i></span>
+        <span class="home-steps__icon" aria-hidden="true"><i class="bi bi-send"></i></span>
         <span class="home-steps__label">{{ 'home.step2' | translate }}</span>
       </li>
       <li class="home-steps__sep" aria-hidden="true"><i class="bi bi-arrow-right"></i></li>
       <li class="home-steps__item">
-        <span class="home-steps__icon" aria-hidden="true"><i class="bi bi-chat-check"></i></span>
+        <span class="home-steps__icon" aria-hidden="true"><i class="bi bi-lightbulb"></i></span>
         <span class="home-steps__label">{{ 'home.step3' | translate }}</span>
       </li>
     </ol>
 
-    <a routerLink="/signalement" class="btn btn-transtu home-hero__cta">
+    <!-- <a routerLink="/signalement" class="btn btn-transtu home-hero__cta">
       {{ 'home.cta' | translate }}
-    </a>
+    </a> -->
   </section>
 
   <section class="home-replies" aria-labelledby="home-replies-title">
-    <h2 id="home-replies-title" class="h5 text-center mb-1">
+    <h2 id="home-replies-title" class="h5 mb-1">
       {{ 'home.repliesTitle' | translate }}
     </h2>
-    <p class="text-center text-secondary small mb-3">{{ 'home.repliesLead' | translate }}</p>
+    <!-- <p class="text-center text-secondary small mb-3">{{ 'home.repliesLead' | translate }}</p> -->
 
     @if (loading()) {
       <div class="home-replies-track" aria-busy="true">

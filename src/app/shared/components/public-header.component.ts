@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from '../../core/services/auth.service';
@@ -35,13 +35,28 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
             }
           </div>
           @if (auth.isAuthenticated()) {
-            <span class="nav-user d-none d-md-inline-flex" [attr.title]="auth.currentUser()?.email">
-              <i class="bi bi-person-check-fill" aria-hidden="true"></i>
-              {{ displayName() }}
-            </span>
-            <button type="button" class="nav-btn" (click)="logout()">
-              {{ 'header.logout' | translate }}
-            </button>
+            <div class="user-menu">
+              <button
+                type="button"
+                class="user-menu__trigger"
+                [attr.aria-expanded]="userMenuOpen()"
+                aria-haspopup="menu"
+                [attr.aria-label]="displayName()"
+                (click)="toggleUserMenu()"
+              >
+                {{ userInitials() }}
+              </button>
+              @if (userMenuOpen()) {
+                <div class="user-menu__dropdown" role="menu">
+                  <a routerLink="/profil" role="menuitem" (click)="closeUserMenu()">
+                    {{ 'header.profile' | translate }}
+                  </a>
+                  <button type="button" role="menuitem" (click)="logout()">
+                    {{ 'header.logout' | translate }}
+                  </button>
+                </div>
+              }
+            </div>
           } @else {
             <a routerLink="/connexion" [queryParams]="{ returnUrl: '/mes-signalements' }" class="nav-link-muted">
               {{ 'header.login' | translate }}
@@ -152,6 +167,50 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
         font-weight: 600;
         font-size: 0.85rem;
       }
+      .user-menu {
+        position: relative;
+      }
+      .user-menu__trigger {
+        width: 2.35rem;
+        height: 2.35rem;
+        border: 0;
+        border-radius: 50%;
+        background: #0f2758;
+        color: #fff;
+        font-size: 0.78rem;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .user-menu__dropdown {
+        position: absolute;
+        top: calc(100% + 0.5rem);
+        right: 0;
+        z-index: 40;
+        min-width: 9rem;
+        padding: 0.35rem;
+        background: #fff;
+        border: 1px solid rgba(15, 39, 88, 0.14);
+        border-radius: 0.5rem;
+        box-shadow: 0 0.5rem 1.25rem rgba(15, 39, 88, 0.18);
+      }
+      .user-menu__dropdown a,
+      .user-menu__dropdown button {
+        display: block;
+        width: 100%;
+        padding: 0.5rem 0.65rem;
+        border: 0;
+        border-radius: 0.3rem;
+        background: transparent;
+        color: #0f2758;
+        text-align: left;
+        text-decoration: none;
+        font: inherit;
+        cursor: pointer;
+      }
+      .user-menu__dropdown a:hover,
+      .user-menu__dropdown button:hover {
+        background: #f1f4f8;
+      }
       .nav-user {
         font-size: 0.85rem;
         font-weight: 600;
@@ -215,12 +274,13 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
 export class PublicHeaderComponent {
   readonly auth = inject(AuthService);
   readonly language = inject(LanguageService);
+  readonly userMenuOpen = signal(false);
 
   readonly navItems = [
     { path: '/accueil', key: 'nav.home', icon: 'bi-house' },
     { path: '/signalement', key: 'nav.report', icon: 'bi-exclamation-circle' },
     { path: '/mes-signalements', key: 'nav.myReports', icon: 'bi-clipboard-check' },
-    { path: '/a-propos', key: 'nav.about', icon: 'bi-info-circle' },
+    { path: '/scan', key: 'nav.scan', icon: 'bi-qr-code-scan' },
   ];
 
   displayName(): string {
@@ -231,7 +291,26 @@ export class PublicHeaderComponent {
     return user.name.split(' ')[0];
   }
 
+  userInitials(): string {
+    const user = this.auth.currentUser();
+    const value = user?.name?.trim() || user?.email?.split('@')[0] || '';
+    const parts = value.split(/\s+/).filter(Boolean);
+    if (parts.length > 1) {
+      return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+    }
+    return value.slice(0, 2).toUpperCase();
+  }
+
+  toggleUserMenu(): void {
+    this.userMenuOpen.update((open) => !open);
+  }
+
+  closeUserMenu(): void {
+    this.userMenuOpen.set(false);
+  }
+
   logout(): void {
+    this.closeUserMenu();
     this.auth.logout();
   }
 

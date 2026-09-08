@@ -167,13 +167,13 @@ export class AuthService {
 
 
 
-  register(request: PassengerRegisterRequest): Observable<PassengerSession> {
+  register(request: PassengerRegisterRequest): Observable<PassengerOtpPendingResponse> {
 
     return this.http
 
-      .post<ApiResponse<PassengerAuthResponse>>(`${this.baseUrl}/register`, request)
+      .post<ApiResponse<PassengerOtpPendingResponse>>(`${this.baseUrl}/register`, request)
 
-      .pipe(map((res) => this.persist(res.data)));
+      .pipe(map((res) => res.data));
 
   }
 
@@ -248,9 +248,15 @@ export class AuthService {
 
 
   logout(): void {
+    if (!this.getToken()) {
+      this.clearSession();
+      return;
+    }
 
-    this.clearSession();
-
+    this.http.post<ApiResponse<unknown>>(`${this.baseUrl}/logout`, {}).subscribe({
+      next: () => this.clearSession(),
+      error: () => this.clearSession(),
+    });
   }
 
 
