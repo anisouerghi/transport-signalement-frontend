@@ -26,7 +26,7 @@ export interface PassengerRequest {
 }
 
 export interface ReportRequest {
-  supportUuid: string;
+  supportUuid?: string;
   reportTypeId: number;
   description: string;
   passenger: PassengerRequest;

@@ -14,4 +14,8 @@ export class ReportEntryPage {
   goToForm(): void {
     void this.router.navigate(['/scan']);
   }
+
+  goToAnonymousForm(): void {
+    void this.router.navigate(['/signalement/anonyme']);
+  }
 }

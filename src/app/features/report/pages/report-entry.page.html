@@ -1,1 +1,5 @@
-<app-identity-choice [returnUrl]="'/scan'" (continue)="goToForm()" />
+<app-identity-choice
+	[returnUrl]="'/scan'"
+	(anonymousContinue)="goToAnonymousForm()"
+	(continue)="goToForm()"
+/>

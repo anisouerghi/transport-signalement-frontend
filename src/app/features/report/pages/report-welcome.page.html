@@ -19,6 +19,10 @@
     </header> -->
 
     <app-support-summary [support]="currentSupport" />
-    <app-identity-choice [returnUrl]="formReturnUrl()" (continue)="goToForm()" />
+    <app-identity-choice
+      [returnUrl]="formReturnUrl()"
+      (anonymousContinue)="goToForm()"
+      (continue)="goToForm()"
+    />
   </section>
 }

@@ -122,6 +122,7 @@ export class ReportCreatePage implements OnInit {
   readonly support = signal<TransportSupport | null>(null);
   readonly reportTypes = signal<ReportType[]>([]);
   readonly supportUuid = signal('');
+  readonly anonymousMode = signal(false);
   readonly fromDirect = signal(false);
   readonly selectedFiles = signal<File[]>([]);
 
@@ -137,6 +138,26 @@ export class ReportCreatePage implements OnInit {
     const uuid = this.route.snapshot.paramMap.get('uuid')?.trim() ?? '';
     this.supportUuid.set(uuid);
     this.fromDirect.set(this.route.snapshot.queryParamMap.get('source') === 'direct');
+
+    if (!uuid) {
+      this.anonymousMode.set(true);
+      this.reportTypeService.getActive().subscribe({
+        next: (types) => {
+          this.reportTypes.set(types);
+          if (types.length > 0) {
+            this.form.controls.reportTypeId.setValue(String(types[0].reportTypeId));
+          }
+          this.prefillFromSession();
+          this.loading.set(false);
+        },
+        error: () => {
+          this.loading.set(false);
+          this.invalidQr.set(true);
+          this.errorMessage.set(this.translate.instant('errors.supportLoadFailed'));
+        },
+      });
+      return;
+    }
 
     if (!UUID_RE.test(uuid)) {
       this.invalidQr.set(true);
@@ -176,14 +197,13 @@ export class ReportCreatePage implements OnInit {
 
   submit(): void {
     this.submitted.set(true);
-    if (this.form.invalid || !this.support()) {
+    if (this.form.invalid || (!this.anonymousMode() && !this.support())) {
       this.form.markAllAsTouched();
       return;
     }
 
     const raw = this.form.getRawValue();
     const payload: ReportRequest = {
-      supportUuid: this.supportUuid(),
       reportTypeId: Number(raw.reportTypeId),
       description: raw.description.trim(),
       passenger: {
@@ -192,6 +212,9 @@ export class ReportCreatePage implements OnInit {
         phoneNumber: raw.phoneNumber.trim() || undefined,
       },
     };
+    if (this.supportUuid()) {
+      payload.supportUuid = this.supportUuid();
+    }
 
     this.submitting.set(true);
     this.reportService.create(payload, this.selectedFiles()).subscribe({
@@ -202,7 +225,7 @@ export class ReportCreatePage implements OnInit {
           state: {
             reference: report.reference,
             email: payload.passenger.email,
-            supportUuid: this.supportUuid(),
+            supportUuid: this.supportUuid() || undefined,
           },
         });
       },
@@ -232,6 +255,8 @@ export class ReportCreatePage implements OnInit {
   }
 
   backLink(): string[] {
-    return this.fromDirect() ? ['/signalement'] : ['/report', this.supportUuid()];
+    return this.anonymousMode() || this.fromDirect()
+      ? ['/signalement']
+      : ['/report', this.supportUuid()];
   }
 }

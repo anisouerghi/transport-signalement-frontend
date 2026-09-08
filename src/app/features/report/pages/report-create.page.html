@@ -11,7 +11,7 @@
     <h1 class="h4">{{ 'report.invalidQr' | translate }}</h1>
     <p class="text-secondary mb-0">{{ errorMessage() }}</p>
   </section>
-} @else if (support(); as currentSupport) {
+} @else {
   <!-- Stepper -->
   <div class="stepper-container mb-4">
     <div class="stepper">
@@ -37,7 +37,9 @@
     <p class="text-secondary mb-0">{{ 'report.subtitle' | translate }}</p>
   </section>
 
-  <app-support-summary [support]="currentSupport" />
+  @if (support(); as currentSupport) {
+    <app-support-summary [support]="currentSupport" />
+  }
 
   <form class="panel p-3 p-md-4" [formGroup]="form" (ngSubmit)="submit()" novalidate>
     <div class="mb-3">

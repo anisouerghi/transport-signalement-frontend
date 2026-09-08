@@ -14,6 +14,11 @@ export const routes: Routes = [
       import('./features/report/pages/report-entry.page').then((m) => m.ReportEntryPage),
   },
   {
+    path: 'signalement/anonyme',
+    loadComponent: () =>
+      import('./features/report/pages/report-create.page').then((m) => m.ReportCreatePage),
+  },
+  {
     path: 'mes-signalements',
     loadComponent: () =>
       import('./features/report/pages/my-reports.page').then((m) => m.MyReportsPage),
