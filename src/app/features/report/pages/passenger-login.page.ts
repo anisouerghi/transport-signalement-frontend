@@ -11,6 +11,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
 import { GoogleSignInButtonComponent } from '../components/google-sign-in-button.component';
+import { OtpInputComponent } from '../components/otp-input.component';
 
 import { PassengerOtpPendingResponse } from '../../../core/models/auth.model';
 
@@ -32,6 +33,7 @@ type LoginStep = 'credentials' | 'otp';
     RouterLinkActive,
     TranslatePipe,
     GoogleSignInButtonComponent,
+    OtpInputComponent,
   ],
 
   templateUrl: './passenger-login.page.html',

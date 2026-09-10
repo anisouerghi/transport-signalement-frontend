@@ -42,19 +42,32 @@
     } @else if (replies().length === 0) {
       <div class="panel p-3 text-center text-secondary">{{ 'home.repliesEmpty' | translate }}</div>
     } @else {
-      <div class="home-replies-track">
+      <div class="home-replies-track" role="list">
         @for (reply of replies(); track trackReply($index, reply)) {
-          <article class="home-reply-card">
-            @if (reply.reportTypeLabel) {
-              <p class="home-reply-card__type mb-1">{{ reply.reportTypeLabel }}</p>
-            }
-            <p class="home-reply-card__date mb-2">{{ formatReplyDate(reply.replyDate) }}</p>
-            <p class="home-reply-card__message mb-0">{{ displayMessage(reply, $index) }}</p>
-            @if (needsExcerpt(reply.message)) {
-              <button type="button" class="home-reply-card__more" (click)="toggleExpand($index)">
-                {{ isExpanded($index) ? ('home.seeLess' | translate) : ('home.seeMore' | translate) }}
-              </button>
-            }
+          <article class="home-reply-card" role="listitem">
+            <div class="home-reply-card__identity">
+              <span class="home-reply-card__avatar" aria-hidden="true">{{ authorInitials(reply) }}</span>
+              <div class="home-reply-card__body">
+                <div class="home-reply-card__meta">
+                  <strong>{{ authorLabel(reply) || ('home.anonymous' | translate) }}</strong>
+                  <time [attr.datetime]="reply.replyDate">{{ formatReplyDate(reply.replyDate) }}</time>
+                </div>
+                <p class="home-reply-card__message home-reply-card__message--bold mb-2">
+                  {{ displayMessage(reply, $index) }}
+                </p>
+                @if (reply.responseMessage || reply.message) {
+                  <div class="home-reply-card__response">
+                    <span class="home-reply-card__response-label">{{ 'home.repliesTeam' | translate }}</span>
+                    <p class="home-reply-card__message mb-0">{{ displayResponse(reply, $index) }}</p>
+                  </div>
+                }
+                @if (needsExcerpt(reply.description ?? reply.reportMessage ?? '') || needsExcerpt(reply.responseMessage ?? reply.message)) {
+                  <a href="#" class="home-reply-card__more" (click)="$event.preventDefault(); toggleExpand($index)">
+                    {{ isExpanded($index) ? ('home.seeLess' | translate) : ('home.seeMore' | translate) }}
+                  </a>
+                }
+              </div>
+            </div>
           </article>
         }
       </div>

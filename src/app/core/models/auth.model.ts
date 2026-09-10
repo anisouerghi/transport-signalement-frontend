@@ -22,6 +22,14 @@ export interface PassengerRegisterRequest {
   password: string;
 }
 
+export interface PassengerProfileUpdateRequest {
+  name?: string;
+  email: string;
+  phoneNumber?: string;
+  currentPassword?: string;
+  password?: string;
+}
+
 export interface PassengerAuthResponse {
   token: string;
   tokenType: string;

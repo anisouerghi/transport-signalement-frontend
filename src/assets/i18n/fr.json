@@ -7,6 +7,7 @@
     "back": "Retour",
     "or": "ou",
     "close": "Fermer",
+    "cancel": "Annuler",
     "loading": "Chargement…",
     "reference": "Référence",
     "label": "Libellé",
@@ -28,7 +29,8 @@
     "scan": "Scanner"
   },
   "header": {
-    "login": "Connexion",
+    "login": "Se connecter",
+    "account": "Compte utilisateur",
     "logout": "Déconnexion",
     "profile": "Profil",
     "language": "Langue"
@@ -38,7 +40,18 @@
   },
   "profile": {
     "title": "Mon profil",
-    "name": "Nom"
+    "name": "Nom",
+    "edit": "Modifier le profil",
+    "nameRequired": "Le nom est requis.",
+    "emailInvalid": "Adresse e-mail invalide.",
+    "changePassword": "Modifier le mot de passe",
+    "currentPassword": "Mot de passe actuel",
+    "newPassword": "Nouveau mot de passe",
+    "passwordRequired": "Le mot de passe actuel est requis.",
+    "passwordMin": "Le nouveau mot de passe doit contenir au moins 8 caractères.",
+    "save": "Enregistrer",
+    "submitting": "Enregistrement…",
+    "updated": "Profil mis à jour avec succès."
   },
   "home": {
     "title": "Signalement voyageur",
@@ -49,8 +62,9 @@
     "step3": "Recevoir une réponse",
     "cta": "Déposer un signalement",
     "repliesTitle": "Vos réclamations, nos actions",
+    "anonymous": "Anonyme",
     "repliesLead": "Aperçus des dernières réponses publiées par nos équipes.",
-    "repliesTeam": "Réponse de l'équipe",
+    "repliesTeam": "Réponse",
     "repliesEmpty": "Aucune réponse n'est publiée pour le moment.",
     "repliesError": "Les réponses publiques sont temporairement indisponibles.",
     "repliesPrev": "Précédent",

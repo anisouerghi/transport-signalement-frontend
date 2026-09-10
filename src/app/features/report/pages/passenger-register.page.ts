@@ -5,6 +5,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { PassengerOtpPendingResponse } from '../../../core/models/auth.model';
+import { OtpInputComponent } from '../components/otp-input.component';
 
 type RegisterStep = 'credentials' | 'otp';
 
@@ -16,6 +17,7 @@ type RegisterStep = 'credentials' | 'otp';
     RouterLink,
     RouterLinkActive,
     TranslatePipe,
+    OtpInputComponent,
   ],
   templateUrl: './passenger-register.page.html',
 })

@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from '../../core/services/auth.service';
 import { AppLanguage, LanguageService } from '../../core/services/language.service';
@@ -34,34 +34,43 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
               </button>
             }
           </div>
-          @if (auth.isAuthenticated()) {
-            <div class="user-menu">
-              <button
-                type="button"
-                class="user-menu__trigger"
-                [attr.aria-expanded]="userMenuOpen()"
-                aria-haspopup="menu"
-                [attr.aria-label]="displayName()"
-                (click)="toggleUserMenu()"
-              >
+          <div class="user-menu">
+            <button
+              type="button"
+              class="user-menu__trigger"
+              [attr.aria-expanded]="userMenuOpen()"
+              aria-haspopup="menu"
+              [attr.aria-label]="auth.isAuthenticated() ? displayName() : ('header.account' | translate)"
+              (click)="toggleUserMenu()"
+            >
+              @if (auth.isAuthenticated()) {
                 {{ userInitials() }}
-              </button>
-              @if (userMenuOpen()) {
-                <div class="user-menu__dropdown" role="menu">
+              } @else {
+                <i class="bi bi-person-circle" aria-hidden="true"></i>
+              }
+            </button>
+            @if (userMenuOpen()) {
+              <div class="user-menu__dropdown" role="menu">
+                @if (auth.isAuthenticated()) {
                   <a routerLink="/profil" role="menuitem" (click)="closeUserMenu()">
                     {{ 'header.profile' | translate }}
                   </a>
                   <button type="button" role="menuitem" (click)="logout()">
                     {{ 'header.logout' | translate }}
                   </button>
-                </div>
-              }
-            </div>
-          } @else {
-            <a routerLink="/connexion" [queryParams]="{ returnUrl: '/mes-signalements' }" class="nav-link-muted">
-              {{ 'header.login' | translate }}
-            </a>
-          }
+                } @else {
+                  <a
+                    routerLink="/connexion"
+                    [queryParams]="{ returnUrl: '/mes-signalements' }"
+                    role="menuitem"
+                    (click)="closeUserMenu()"
+                  >
+                    {{ 'header.login' | translate }}
+                  </a>
+                }
+              </div>
+            }
+          </div>
         </div>
       </div>
       <nav class="public-header__links d-none d-md-flex" [attr.aria-label]="'common.navMain' | translate">
@@ -175,11 +184,14 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
         height: 2.35rem;
         border: 0;
         border-radius: 50%;
-        background: #0f2758;
+        background: #0b8a3e;
         color: #fff;
         font-size: 0.78rem;
         font-weight: 700;
         cursor: pointer;
+      }
+      .user-menu__trigger i {
+        font-size: 1.35rem;
       }
       .user-menu__dropdown {
         position: absolute;
@@ -274,6 +286,7 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
 export class PublicHeaderComponent {
   readonly auth = inject(AuthService);
   readonly language = inject(LanguageService);
+  readonly router = inject(Router);
   readonly userMenuOpen = signal(false);
 
   readonly navItems = [
@@ -312,6 +325,7 @@ export class PublicHeaderComponent {
   logout(): void {
     this.closeUserMenu();
     this.auth.logout();
+    void this.router.navigate(['/accueil']);
   }
 
   onLang(code: AppLanguage): void {

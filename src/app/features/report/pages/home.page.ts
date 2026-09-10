@@ -6,7 +6,7 @@ import { PublicHomepageReply } from '../models/report.model';
 import { ReportService } from '../services/report.service';
 
 const PAGE_SIZE = 5;
-const EXCERPT_LENGTH = 72;
+const EXCERPT_LENGTH = 110;
 
 @Component({
   selector: 'app-home-page',
@@ -85,7 +85,7 @@ export class HomePage implements OnInit {
   }
 
   displayMessage(reply: PublicHomepageReply, index: number): string {
-    const text = (reply.message ?? '').replace(/\s+/g, ' ').trim();
+    const text = this.messageOf(reply);
     if (!this.needsExcerpt(text) || this.isExpanded(index)) {
       return text;
     }
@@ -93,6 +93,46 @@ export class HomePage implements OnInit {
     const lastSpace = cut.lastIndexOf(' ');
     const excerpt = lastSpace > 40 ? cut.slice(0, lastSpace) : cut;
     return `${excerpt}…`;
+  }
+
+  displayResponse(reply: PublicHomepageReply, index: number): string {
+    const text = this.responseOf(reply);
+    if (!this.needsExcerpt(text) || this.isExpanded(index)) {
+      return text;
+    }
+    const cut = text.slice(0, EXCERPT_LENGTH);
+    const lastSpace = cut.lastIndexOf(' ');
+    const excerpt = lastSpace > 40 ? cut.slice(0, lastSpace) : cut;
+    return `${excerpt}…`;
+  }
+
+  authorLabel(reply: PublicHomepageReply): string | null {
+    return this.authorName(reply);
+  }
+
+  authorInitials(reply: PublicHomepageReply): string {
+    const name = this.authorName(reply);
+    if (!name) {
+      return 'A';
+    }
+    return name
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((part) => part[0])
+      .join('')
+      .toUpperCase();
+  }
+
+  private authorName(reply: PublicHomepageReply): string | null {
+    return reply.passengerName?.trim() || reply.passenger?.name?.trim() || null;
+  }
+
+  private messageOf(reply: PublicHomepageReply): string {
+    return (reply.description ?? reply.reportMessage ?? '').replace(/\s+/g, ' ').trim();
+  }
+
+  private responseOf(reply: PublicHomepageReply): string {
+    return (reply.responseMessage ?? reply.message ?? '').replace(/\s+/g, ' ').trim();
   }
 
   formatReplyDate(value?: string): string {

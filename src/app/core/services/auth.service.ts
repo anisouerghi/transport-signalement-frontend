@@ -16,6 +16,8 @@ import {
 
   PassengerLoginRequest,
 
+  PassengerProfileUpdateRequest,
+
   PassengerOtpPendingResponse,
 
   PassengerRegisterRequest,
@@ -27,6 +29,7 @@ import {
 
 
 const STORAGE_KEY = 'transtu_passenger_session';
+const GOOGLE_RETURN_URL_KEY = 'transtu_google_return_url';
 
 
 
@@ -177,6 +180,30 @@ export class AuthService {
 
   }
 
+  updateProfile(request: PassengerProfileUpdateRequest): Observable<PassengerSession> {
+    return this.http
+      .put<ApiResponse<Partial<PassengerAuthResponse>>>(`${this.baseUrl}/me`, request)
+      .pipe(
+        map((res) => {
+          const current = this.sessionSignal();
+          const updated = res.data;
+          if (!current) {
+            throw new Error('Passenger session is missing');
+          }
+
+          const session: PassengerSession = {
+            ...current,
+            name: updated.name ?? request.name ?? current.name,
+            email: updated.email ?? request.email,
+            phoneNumber: updated.phoneNumber ?? request.phoneNumber ?? current.phoneNumber,
+          };
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+          this.sessionSignal.set(session);
+          return session;
+        }),
+      );
+  }
+
 
 
   /** Redirection vers le flux OAuth Google côté public-api (validation serveur). */
@@ -185,10 +212,18 @@ export class AuthService {
 
     const apiOrigin = this.resolveApiOrigin();
 
+    sessionStorage.setItem(GOOGLE_RETURN_URL_KEY, returnUrl);
+
     const params = new URLSearchParams({ returnUrl });
 
     window.location.href = `${apiOrigin}/api/public/auth/google?${params.toString()}`;
 
+  }
+
+  consumeGoogleReturnUrl(): string | null {
+    const returnUrl = sessionStorage.getItem(GOOGLE_RETURN_URL_KEY);
+    sessionStorage.removeItem(GOOGLE_RETURN_URL_KEY);
+    return returnUrl;
   }
 
 

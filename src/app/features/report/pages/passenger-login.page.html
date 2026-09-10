@@ -83,8 +83,7 @@
   <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()" novalidate>
     <div class="mb-4">
       <label class="form-label fw-semibold" for="login-otp">{{ 'auth.otpLabel' | translate }}</label>
-      <input id="login-otp" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code"
-        class="form-control form-control-lg text-center letter-spacing-otp" formControlName="otp"
+      <app-otp-input id="login-otp" formControlName="otp"
         [class.is-invalid]="otpForm.controls.otp.touched && otpForm.controls.otp.invalid" />
       @if (otpForm.controls.otp.touched && otpForm.controls.otp.invalid) {
       <div class="invalid-feedback">{{ 'auth.otpInvalid' | translate }}</div>

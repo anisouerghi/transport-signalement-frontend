@@ -1,5 +1,7 @@
-<app-identity-choice
-	[returnUrl]="'/scan'"
-	(anonymousContinue)="goToAnonymousForm()"
-	(continue)="goToForm()"
-/>
+@if (!redirecting()) {
+	<app-identity-choice
+		[returnUrl]="'/signalement/anonyme'"
+		(anonymousContinue)="goToAnonymousForm()"
+		(continue)="goToForm()"
+	/>
+}

@@ -110,6 +110,13 @@ export interface PublicReportListItem {
 /** Réponse publiée sur l'accueil (aucune donnée personnelle). */
 export interface PublicHomepageReply {
   message: string;
+  description?: string;
   replyDate: string;
   reportTypeLabel?: string;
+  passengerName?: string;
+  passenger?: {
+    name?: string;
+  } | null;
+  reportMessage?: string;
+  responseMessage?: string;
 }
