@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, Output, inject } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild, inject } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 export interface SelectedAttachment {
@@ -26,9 +26,13 @@ export class AttachmentPickerComponent implements OnDestroy {
   @Input() disabled = false;
   @Output() filesChange = new EventEmitter<File[]>();
 
+  @ViewChild('cameraPreview') private cameraPreview?: ElementRef<HTMLVideoElement>;
+
   readonly items: SelectedAttachment[] = [];
   error: string | null = null;
   dragOver = false;
+  cameraOpen = false;
+  private cameraStream: MediaStream | null = null;
 
   readonly maxFiles = MAX_FILES;
   readonly maxFileMb = 10;
@@ -44,6 +48,61 @@ export class AttachmentPickerComponent implements OnDestroy {
       this.addFiles(Array.from(input.files));
       input.value = '';
     }
+  }
+
+  async openCamera(): Promise<void> {
+    if (this.disabled || this.cameraOpen) {
+      return;
+    }
+    if (!navigator.mediaDevices?.getUserMedia) {
+      this.error = this.translate.instant('attachments.cameraUnavailable');
+      return;
+    }
+
+    this.error = null;
+    try {
+      this.cameraStream = await navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: { facingMode: { ideal: 'environment' } },
+      });
+      this.cameraOpen = true;
+      setTimeout(() => {
+        if (this.cameraPreview?.nativeElement && this.cameraStream) {
+          this.cameraPreview.nativeElement.srcObject = this.cameraStream;
+        }
+      });
+    } catch {
+      this.cameraStream = null;
+      this.error = this.translate.instant('attachments.cameraPermissionDenied');
+    }
+  }
+
+  capturePhoto(): void {
+    const video = this.cameraPreview?.nativeElement;
+    if (!video || !video.videoWidth || !video.videoHeight) {
+      this.error = this.translate.instant('attachments.captureFailed');
+      return;
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('2d')?.drawImage(video, 0, 0, canvas.width, canvas.height);
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        this.error = this.translate.instant('attachments.captureFailed');
+        return;
+      }
+      const file = new File([blob], `photo-${Date.now()}.jpg`, { type: 'image/jpeg' });
+      this.addFiles([file]);
+      this.closeCamera();
+    }, 'image/jpeg', 0.9);
+  }
+
+  closeCamera(): void {
+    this.cameraStream?.getTracks().forEach((track) => track.stop());
+    this.cameraStream = null;
+    this.cameraOpen = false;
   }
 
   onDrop(event: DragEvent): void {
@@ -93,6 +152,7 @@ export class AttachmentPickerComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.closeCamera();
     for (const item of this.items) {
       if (item.previewUrl) {
         URL.revokeObjectURL(item.previewUrl);
