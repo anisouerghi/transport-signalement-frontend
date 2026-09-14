@@ -229,15 +229,16 @@ export class AuthService {
 
 
   /** Échange le code éphémère post-redirection contre un JWT application. */
-
-  completeGoogleSignIn(code: string): Observable<PassengerSession> {
-
+  completeGoogleSignIn(
+    code: string,
+    gps?: { latitude?: number; longitude?: number; gpsAccuracy?: number },
+  ): Observable<PassengerSession> {
     return this.http
-
-      .post<ApiResponse<PassengerAuthResponse>>(`${this.baseUrl}/google/callback`, { code })
-
+      .post<ApiResponse<PassengerAuthResponse>>(`${this.baseUrl}/google/callback`, {
+        code,
+        ...gps,
+      })
       .pipe(map((res) => this.persist(res.data)));
-
   }
 
 
@@ -313,31 +314,20 @@ export class AuthService {
 
 
   private persist(auth: PassengerAuthResponse, existingToken?: string): PassengerSession {
-
     const session: PassengerSession = {
-
       token: existingToken ?? auth.token,
-
       tokenType: auth.tokenType ?? 'Bearer',
-
       expiresAt: Date.now() + (auth.expiresInMs ?? 86_400_000),
-
       passengerId: auth.passengerId,
-
       name: auth.name,
-
       email: auth.email,
-
       phoneNumber: auth.phoneNumber,
-
+      profilePictureUrl: auth.profilePictureUrl,
+      authProvider: auth.authProvider,
     };
-
     localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
-
     this.sessionSignal.set(session);
-
     return session;
-
   }
 
 

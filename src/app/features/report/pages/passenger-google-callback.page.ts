@@ -5,8 +5,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { AuthService } from '../../../core/services/auth.service';
-
 import { NotificationService } from '../../../core/services/notification.service';
+import { tryGetOptionalGps } from '../../../core/utils/optional-gps';
+import { from, switchMap } from 'rxjs';
 
 
 
@@ -114,32 +115,21 @@ export class PassengerGoogleCallbackPage implements OnInit {
 
 
 
-    this.auth.completeGoogleSignIn(code).subscribe({
-
-      next: () => {
-
-        this.loading.set(false);
-
-        this.notifications.success(this.translate.instant('auth.loginSuccess'));
-
-        void this.router.navigateByUrl(returnUrl);
-
-      },
-
-      error: () => {
-
-        this.loading.set(false);
-
-        this.errorMessage.set(this.translate.instant('auth.googleFailedGeneric'));
-
-        this.notifications.error(this.errorMessage()!);
-
-        void this.router.navigate(['/connexion'], { queryParams: { returnUrl } });
-
-      },
-
-    });
-
+    from(tryGetOptionalGps())
+      .pipe(switchMap((gps) => this.auth.completeGoogleSignIn(code, gps)))
+      .subscribe({
+        next: () => {
+          this.loading.set(false);
+          this.notifications.success(this.translate.instant('auth.loginSuccess'));
+          void this.router.navigateByUrl(returnUrl);
+        },
+        error: () => {
+          this.loading.set(false);
+          this.errorMessage.set(this.translate.instant('auth.googleFailedGeneric'));
+          this.notifications.error(this.errorMessage()!);
+          void this.router.navigate(['/connexion'], { queryParams: { returnUrl } });
+        },
+      });
   }
 
   private safeReturnUrl(returnUrl: string | null): string {
@@ -147,6 +137,5 @@ export class PassengerGoogleCallbackPage implements OnInit {
       ? returnUrl
       : '/accueil';
   }
-
 }
 

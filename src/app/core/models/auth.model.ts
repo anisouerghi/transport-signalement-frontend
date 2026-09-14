@@ -8,6 +8,8 @@ export interface PassengerSession {
   name?: string;
   email: string;
   phoneNumber?: string;
+  profilePictureUrl?: string;
+  authProvider?: string;
 }
 
 export interface PassengerLoginRequest {
@@ -15,7 +17,13 @@ export interface PassengerLoginRequest {
   password: string;
 }
 
-export interface PassengerRegisterRequest {
+export interface OptionalGpsPayload {
+  latitude?: number;
+  longitude?: number;
+  gpsAccuracy?: number;
+}
+
+export interface PassengerRegisterRequest extends OptionalGpsPayload {
   name?: string;
   email: string;
   phoneNumber?: string;
@@ -38,6 +46,8 @@ export interface PassengerAuthResponse {
   name?: string;
   email: string;
   phoneNumber?: string;
+  profilePictureUrl?: string;
+  authProvider?: string;
 }
 
 export interface PassengerOtpPendingResponse {

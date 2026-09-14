@@ -6,6 +6,8 @@ import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { PassengerOtpPendingResponse } from '../../../core/models/auth.model';
 import { OtpInputComponent } from '../components/otp-input.component';
+import { tryGetOptionalGps } from '../../../core/utils/optional-gps';
+import { from, switchMap } from 'rxjs';
 
 type RegisterStep = 'credentials' | 'otp';
 
@@ -67,13 +69,18 @@ export class PassengerRegisterPage implements OnInit, OnDestroy {
     }
     this.submitting.set(true);
     const raw = this.form.getRawValue();
-    this.auth
-      .register({
-        name: raw.name.trim() || undefined,
-        email: raw.email.trim(),
-        phoneNumber: raw.phoneNumber.trim() || undefined,
-        password: raw.password,
-      })
+    from(tryGetOptionalGps())
+      .pipe(
+        switchMap((gps) =>
+          this.auth.register({
+            name: raw.name.trim() || undefined,
+            email: raw.email.trim(),
+            phoneNumber: raw.phoneNumber.trim() || undefined,
+            password: raw.password,
+            ...gps,
+          }),
+        ),
+      )
       .subscribe({
         next: (pending) => {
           this.submitting.set(false);
