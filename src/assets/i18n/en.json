@@ -204,6 +204,16 @@
     "empty": "No sound was captured. You can try again or continue without a voice message.",
     "tooLarge": "The voice message exceeds 10 MB. Shorten it or continue without audio."
   },
+  "turnstile": {
+    "label": "Security check",
+    "hint": "Security verification (Cloudflare)",
+    "required": "Please complete the security check before submitting your report.",
+    "error": "Security verification failed. Please try again.",
+    "expired": "The verification expired. Please complete it again.",
+    "timeout": "Security check timed out. Please try again.",
+    "loadFailed": "Could not load the security check. Check your connection and reload the page.",
+    "missingKey": "Security configuration incomplete. Please contact the administrator."
+  },
   "emailNudge": {
     "title": "Why provide your email?",
     "body": "You can submit your report anonymously. However, if you provide your email address, you will be automatically informed of progress and receive our team's reply by email."

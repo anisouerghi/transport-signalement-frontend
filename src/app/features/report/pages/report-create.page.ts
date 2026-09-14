@@ -1,14 +1,16 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
+import { ConfigService } from '../../../core/config/config.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { EmailNudgeComponent } from '../components/email-nudge.component';
 import { AttachmentPickerComponent } from '../components/attachment-picker.component';
 import { SupportSummaryComponent } from '../components/support-summary.component';
+import { TurnstileWidgetComponent } from '../components/turnstile-widget.component';
 import { VoiceRecorderComponent } from '../components/voice-recorder.component';
 import {
   ReportRequest,
@@ -32,6 +34,7 @@ const UUID_RE =
     EmailNudgeComponent,
     AttachmentPickerComponent,
     VoiceRecorderComponent,
+    TurnstileWidgetComponent,
     TranslatePipe,
   ],
   templateUrl: './report-create.page.html',
@@ -115,6 +118,9 @@ export class ReportCreatePage implements OnInit {
   private readonly notifications = inject(NotificationService);
   readonly auth = inject(AuthService);
   private readonly translate = inject(TranslateService);
+  private readonly config = inject(ConfigService);
+
+  @ViewChild(TurnstileWidgetComponent) private turnstileWidget?: TurnstileWidgetComponent;
 
   readonly loading = signal(true);
   readonly submitting = signal(false);
@@ -128,6 +134,8 @@ export class ReportCreatePage implements OnInit {
   readonly fromDirect = signal(false);
   readonly selectedFiles = signal<File[]>([]);
   readonly voiceFile = signal<File | null>(null);
+  readonly turnstileToken = signal<string | null>(null);
+  readonly turnstileError = signal<string | null>(null);
 
   readonly form = this.fb.nonNullable.group({
     reportTypeId: ['', Validators.required],
@@ -202,10 +210,29 @@ export class ReportCreatePage implements OnInit {
     this.voiceFile.set(file);
   }
 
+  onTurnstileToken(token: string | null): void {
+    this.turnstileToken.set(token);
+    if (token) {
+      this.turnstileError.set(null);
+    }
+  }
+
+  /** Turnstile requis et pas encore validé → bloquer l'envoi. */
+  turnstileBlocksSubmit(): boolean {
+    return this.config.cloudflareEnabled && !!this.config.cloudflareSiteKey && !this.turnstileToken();
+  }
+
   submit(): void {
     this.submitted.set(true);
+    this.turnstileError.set(null);
     if (this.form.invalid || (!this.anonymousMode() && !this.support())) {
       this.form.markAllAsTouched();
+      return;
+    }
+
+    if (this.turnstileBlocksSubmit()) {
+      this.turnstileError.set(this.translate.instant('turnstile.required'));
+      this.notifications.error(this.translate.instant('turnstile.required'));
       return;
     }
 
@@ -221,6 +248,10 @@ export class ReportCreatePage implements OnInit {
     };
     if (this.supportUuid()) {
       payload.supportUuid = this.supportUuid();
+    }
+    const token = this.turnstileToken();
+    if (token) {
+      payload.turnstileToken = token;
     }
 
     const files = [...this.selectedFiles()];
@@ -242,7 +273,11 @@ export class ReportCreatePage implements OnInit {
           },
         });
       },
-      error: () => this.submitting.set(false),
+      error: () => {
+        this.submitting.set(false);
+        this.turnstileToken.set(null);
+        this.turnstileWidget?.reset();
+      },
     });
   }
 

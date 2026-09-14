@@ -1,0 +1,14 @@
+<aside
+  class="turnstile-wrap"
+  [class.d-none]="!visible"
+  [attr.aria-hidden]="visible ? null : 'true'"
+  [attr.aria-label]="visible ? ('turnstile.label' | translate) : null"
+>
+  @if (visible) {
+    <p class="small text-secondary mb-2">{{ 'turnstile.hint' | translate }}</p>
+  }
+  <div #container class="turnstile-host" [class.turnstile-host--disabled]="disabled"></div>
+  @if (visible && error) {
+    <div class="alert alert-warning py-2 px-3 small mt-2 mb-0" role="alert">{{ error }}</div>
+  }
+</aside>

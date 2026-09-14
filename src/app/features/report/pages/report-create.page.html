@@ -77,12 +77,26 @@
       />
     </div>
 
+    <div class="mb-3">
+      <app-turnstile-widget
+        [disabled]="submitting()"
+        (tokenChange)="onTurnstileToken($event)"
+      />
+      @if (turnstileError()) {
+        <div class="alert alert-danger py-2 px-3 small mt-2 mb-0" role="alert">{{ turnstileError() }}</div>
+      }
+    </div>
+
     <div class="report-actions">
       <a class="btn btn-transtu-outline report-back" [routerLink]="backLink()">
         <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>
         {{ 'common.back' | translate }}
       </a>
-      <button type="submit" class="btn btn-transtu" [disabled]="submitting()">
+      <button
+        type="submit"
+        class="btn btn-transtu"
+        [disabled]="submitting() || turnstileBlocksSubmit()"
+      >
         @if (submitting()) {
           <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
           {{ 'report.submitting' | translate }}

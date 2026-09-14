@@ -1,0 +1,22 @@
+.turnstile-wrap {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.turnstile-host {
+  width: 100%;
+  max-width: 100%;
+  min-height: 65px;
+  display: flex;
+  justify-content: center;
+}
+
+.turnstile-host--disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+:host ::ng-deep .turnstile-host iframe {
+  max-width: 100% !important;
+}

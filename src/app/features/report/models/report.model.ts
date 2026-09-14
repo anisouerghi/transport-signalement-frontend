@@ -30,6 +30,8 @@ export interface ReportRequest {
   reportTypeId: number;
   description: string;
   passenger: PassengerRequest;
+  /** Token Cloudflare Turnstile (obligatoire si Turnstile est activé). */
+  turnstileToken?: string;
 }
 
 export interface StatusInfo {

@@ -204,6 +204,16 @@
     "empty": "Aucun son n’a été capturé. Vous pouvez réessayer ou continuer sans message vocal.",
     "tooLarge": "Le message vocal dépasse 10 Mo. Réduisez la durée ou continuez sans vocal."
   },
+  "turnstile": {
+    "label": "Vérification de sécurité",
+    "hint": "Vérification de sécurité (Cloudflare)",
+    "required": "Veuillez effectuer la vérification de sécurité avant d'envoyer votre signalement.",
+    "error": "La vérification de sécurité a échoué. Veuillez réessayer.",
+    "expired": "La vérification a expiré. Veuillez la refaire.",
+    "timeout": "Délai de vérification dépassé. Veuillez réessayer.",
+    "loadFailed": "Impossible de charger la vérification de sécurité. Vérifiez votre connexion puis rechargez la page.",
+    "missingKey": "Configuration de sécurité incomplète. Contactez l'administrateur."
+  },
   "emailNudge": {
     "title": "Pourquoi renseigner votre e-mail ?",
     "body": "Vous pouvez effectuer votre signalement de manière anonyme. Toutefois, si vous renseignez votre adresse e-mail, vous serez automatiquement informé de l'évolution de votre dossier et recevrez la réponse de notre équipe directement par e-mail."

@@ -11,6 +11,9 @@ function resolveConfigUrl(): string {
 export interface AppRuntimeConfig {
   apiBaseUrl: string;
   googleClientId?: string;
+  /** Cloudflare Turnstile activé (site key publique uniquement — jamais la secret). */
+  cloudflareEnabled?: boolean;
+  cloudflareSiteKey?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -52,15 +55,33 @@ export class ConfigService {
       throw new Error('config.json invalide : apiBaseUrl (string) est obligatoire.');
     }
 
+    const cloudflareEnabled =
+      typeof value['cloudflareEnabled'] === 'boolean' ? value['cloudflareEnabled'] : true;
+    const cloudflareSiteKey =
+      typeof value['cloudflareSiteKey'] === 'string' ? value['cloudflareSiteKey'] : undefined;
+
     return {
       apiBaseUrl: value['apiBaseUrl'],
       googleClientId:
         typeof value['googleClientId'] === 'string' ? value['googleClientId'] : undefined,
+      cloudflareEnabled,
+      cloudflareSiteKey,
     };
   }
 
   get googleClientId(): string | undefined {
     return this.config.googleClientId;
+  }
+
+  /** Turnstile activé côté UI (défaut true si absent du JSON). */
+  get cloudflareEnabled(): boolean {
+    return this.config.cloudflareEnabled !== false;
+  }
+
+  /** Site key publique Turnstile — jamais la secret key. */
+  get cloudflareSiteKey(): string | undefined {
+    const key = this.config.cloudflareSiteKey?.trim();
+    return key ? key : undefined;
   }
 }
 
