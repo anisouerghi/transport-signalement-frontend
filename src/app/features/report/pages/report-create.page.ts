@@ -9,6 +9,7 @@ import { NotificationService } from '../../../core/services/notification.service
 import { EmailNudgeComponent } from '../components/email-nudge.component';
 import { AttachmentPickerComponent } from '../components/attachment-picker.component';
 import { SupportSummaryComponent } from '../components/support-summary.component';
+import { VoiceRecorderComponent } from '../components/voice-recorder.component';
 import {
   ReportRequest,
   ReportType,
@@ -30,6 +31,7 @@ const UUID_RE =
     SupportSummaryComponent,
     EmailNudgeComponent,
     AttachmentPickerComponent,
+    VoiceRecorderComponent,
     TranslatePipe,
   ],
   templateUrl: './report-create.page.html',
@@ -125,6 +127,7 @@ export class ReportCreatePage implements OnInit {
   readonly anonymousMode = signal(false);
   readonly fromDirect = signal(false);
   readonly selectedFiles = signal<File[]>([]);
+  readonly voiceFile = signal<File | null>(null);
 
   readonly form = this.fb.nonNullable.group({
     reportTypeId: ['', Validators.required],
@@ -195,6 +198,10 @@ export class ReportCreatePage implements OnInit {
     this.selectedFiles.set(files);
   }
 
+  onVoiceChange(file: File | null): void {
+    this.voiceFile.set(file);
+  }
+
   submit(): void {
     this.submitted.set(true);
     if (this.form.invalid || (!this.anonymousMode() && !this.support())) {
@@ -216,8 +223,14 @@ export class ReportCreatePage implements OnInit {
       payload.supportUuid = this.supportUuid();
     }
 
+    const files = [...this.selectedFiles()];
+    const voice = this.voiceFile();
+    if (voice) {
+      files.push(voice);
+    }
+
     this.submitting.set(true);
-    this.reportService.create(payload, this.selectedFiles()).subscribe({
+    this.reportService.create(payload, files).subscribe({
       next: (report) => {
         this.submitting.set(false);
         this.notifications.success(this.translate.instant('report.success'));

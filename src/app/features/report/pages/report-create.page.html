@@ -63,8 +63,16 @@
     } -->
 
     <div class="mb-3">
+      <app-voice-recorder
+        [disabled]="submitting() || selectedFiles().length >= 5"
+        (voiceChange)="onVoiceChange($event)"
+      />
+    </div>
+
+    <div class="mb-3">
       <app-attachment-picker
         [disabled]="submitting()"
+        [reservedSlots]="voiceFile() ? 1 : 0"
         (filesChange)="onAttachmentsChange($event)"
       />
     </div>

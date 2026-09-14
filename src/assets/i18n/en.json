@@ -189,6 +189,21 @@
     "contactDisabledHint": "Information from your account (read-only).",
     "sessionContact": "This report will be linked to your account ({{email}})."
   },
+  "voice": {
+    "title": "Voice message",
+    "optional": "optional",
+    "hint": "Record a short message (30 s max). Microphone permission is requested only when you start recording.",
+    "record": "Record a voice message",
+    "recording": "Recording…",
+    "stop": "Stop",
+    "ready": "Message ready to send",
+    "delete": "Delete",
+    "rerecord": "Record again",
+    "permissionDenied": "Microphone access was denied. You can still submit the report without a voice message.",
+    "unsupported": "Audio recording is not available on this device or browser.",
+    "empty": "No sound was captured. You can try again or continue without a voice message.",
+    "tooLarge": "The voice message exceeds 10 MB. Shorten it or continue without audio."
+  },
   "emailNudge": {
     "title": "Why provide your email?",
     "body": "You can submit your report anonymously. However, if you provide your email address, you will be automatically informed of progress and receive our team's reply by email."

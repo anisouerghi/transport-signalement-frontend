@@ -189,6 +189,21 @@
     "contactDisabledHint": "Informations issues de votre compte (non modifiables).",
     "sessionContact": "Ce signalement sera associé à votre compte ({{email}})."
   },
+  "voice": {
+    "title": "Message vocal",
+    "optional": "optionnel",
+    "hint": "Enregistrez un court message (30 s max). L’autorisation micro n’est demandée qu’au démarrage de l’enregistrement.",
+    "record": "Enregistrer un message vocal",
+    "recording": "Enregistrement en cours…",
+    "stop": "Arrêter",
+    "ready": "Message prêt à l’envoi",
+    "delete": "Supprimer",
+    "rerecord": "Réenregistrer",
+    "permissionDenied": "Accès au microphone refusé. Vous pouvez poursuivre le signalement sans message vocal.",
+    "unsupported": "L’enregistrement audio n’est pas disponible sur cet appareil ou ce navigateur.",
+    "empty": "Aucun son n’a été capturé. Vous pouvez réessayer ou continuer sans message vocal.",
+    "tooLarge": "Le message vocal dépasse 10 Mo. Réduisez la durée ou continuez sans vocal."
+  },
   "emailNudge": {
     "title": "Pourquoi renseigner votre e-mail ?",
     "body": "Vous pouvez effectuer votre signalement de manière anonyme. Toutefois, si vous renseignez votre adresse e-mail, vous serez automatiquement informé de l'évolution de votre dossier et recevrez la réponse de notre équipe directement par e-mail."

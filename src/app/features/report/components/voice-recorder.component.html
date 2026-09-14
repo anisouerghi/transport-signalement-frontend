@@ -1,0 +1,58 @@
+<aside class="voice-recorder" [attr.aria-label]="'voice.title' | translate">
+  <div class="d-flex justify-content-between align-items-baseline gap-2 mb-2">
+    <label class="form-label fw-semibold mb-0">{{ 'voice.title' | translate }}</label>
+    <span class="small text-secondary">{{ 'voice.optional' | translate }}</span>
+  </div>
+
+  <p class="small text-secondary mb-3">{{ 'voice.hint' | translate }}</p>
+
+  @if (error) {
+    <div class="alert alert-info py-2 px-3 small mb-3" role="status">{{ error }}</div>
+  }
+
+  @if (state === 'idle' || state === 'denied' || state === 'unsupported') {
+    <button
+      type="button"
+      class="btn btn-outline-success w-100"
+      [disabled]="disabled || state === 'unsupported'"
+      (click)="startRecording()"
+    >
+      <i class="bi bi-mic-fill me-1" aria-hidden="true"></i>
+      {{ 'voice.record' | translate }}
+    </button>
+  }
+
+  @if (state === 'recording') {
+    <div class="voice-panel voice-panel--recording">
+      <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
+        <span class="voice-pulse" aria-hidden="true"></span>
+        <span class="fw-semibold flex-grow-1">{{ 'voice.recording' | translate }}</span>
+        <span class="voice-timer font-monospace" aria-live="polite">{{ timeLabel }}</span>
+      </div>
+      <button type="button" class="btn btn-danger w-100" [disabled]="disabled" (click)="stopRecording()">
+        <i class="bi bi-stop-fill me-1" aria-hidden="true"></i>
+        {{ 'voice.stop' | translate }}
+      </button>
+    </div>
+  }
+
+  @if (state === 'recorded' && previewUrl) {
+    <div class="voice-panel">
+      <div class="d-flex align-items-center justify-content-between gap-2 mb-2">
+        <span class="fw-semibold">{{ 'voice.ready' | translate }}</span>
+        <span class="voice-timer font-monospace small text-secondary">{{ timeLabel }}</span>
+      </div>
+      <audio class="voice-audio w-100 mb-3" controls [src]="previewUrl" preload="metadata"></audio>
+      <div class="d-flex flex-wrap gap-2">
+        <button type="button" class="btn btn-outline-danger flex-grow-1" [disabled]="disabled" (click)="clearRecording()">
+          <i class="bi bi-trash me-1" aria-hidden="true"></i>
+          {{ 'voice.delete' | translate }}
+        </button>
+        <button type="button" class="btn btn-outline-success flex-grow-1" [disabled]="disabled" (click)="rerecord()">
+          <i class="bi bi-mic me-1" aria-hidden="true"></i>
+          {{ 'voice.rerecord' | translate }}
+        </button>
+      </div>
+    </div>
+  }
+</aside>

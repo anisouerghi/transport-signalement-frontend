@@ -24,6 +24,8 @@ export class AttachmentPickerComponent implements OnDestroy {
   private readonly translate = inject(TranslateService);
 
   @Input() disabled = false;
+  /** Emplacements réservés (ex. message vocal) comptés dans le plafond de 5 fichiers. */
+  @Input() reservedSlots = 0;
   @Output() filesChange = new EventEmitter<File[]>();
 
   @ViewChild('cameraPreview') private cameraPreview?: ElementRef<HTMLVideoElement>;
@@ -38,8 +40,12 @@ export class AttachmentPickerComponent implements OnDestroy {
   readonly maxFileMb = 10;
   readonly maxTotalMb = 25;
 
+  get maxSelectable(): number {
+    return Math.max(0, MAX_FILES - Math.max(0, this.reservedSlots));
+  }
+
   get countLabel(): string {
-    return `${this.items.length} / ${MAX_FILES}`;
+    return `${this.items.length} / ${this.maxSelectable}`;
   }
 
   onFileInput(event: Event): void {
@@ -165,7 +171,7 @@ export class AttachmentPickerComponent implements OnDestroy {
     const next = [...this.items];
 
     for (const file of files) {
-      if (next.length >= MAX_FILES) {
+      if (next.length >= this.maxSelectable) {
         this.error = this.translate.instant('attachments.maxFiles', { count: MAX_FILES });
         break;
       }
