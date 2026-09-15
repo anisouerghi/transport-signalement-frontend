@@ -15,6 +15,8 @@ export interface PassengerSession {
 export interface PassengerLoginRequest {
   email: string;
   password: string;
+  /** Token Cloudflare Turnstile (si activé). */
+  turnstileToken?: string;
 }
 
 export interface OptionalGpsPayload {
@@ -28,6 +30,8 @@ export interface PassengerRegisterRequest extends OptionalGpsPayload {
   email: string;
   phoneNumber?: string;
   password: string;
+  /** Token Cloudflare Turnstile (si activé). */
+  turnstileToken?: string;
 }
 
 export interface PassengerProfileUpdateRequest {

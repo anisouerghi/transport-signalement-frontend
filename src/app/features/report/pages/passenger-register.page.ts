@@ -1,11 +1,13 @@
-import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { ConfigService } from '../../../core/config/config.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { PassengerOtpPendingResponse } from '../../../core/models/auth.model';
 import { OtpInputComponent } from '../components/otp-input.component';
+import { TurnstileWidgetComponent } from '../components/turnstile-widget.component';
 import { tryGetOptionalGps } from '../../../core/utils/optional-gps';
 import { from, switchMap } from 'rxjs';
 
@@ -20,6 +22,7 @@ type RegisterStep = 'credentials' | 'otp';
     RouterLinkActive,
     TranslatePipe,
     OtpInputComponent,
+    TurnstileWidgetComponent,
   ],
   templateUrl: './passenger-register.page.html',
 })
@@ -30,6 +33,9 @@ export class PassengerRegisterPage implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly notifications = inject(NotificationService);
   private readonly translate = inject(TranslateService);
+  private readonly config = inject(ConfigService);
+
+  @ViewChild(TurnstileWidgetComponent) private turnstileWidget?: TurnstileWidgetComponent;
 
   readonly submitting = signal(false);
   readonly resending = signal(false);
@@ -37,6 +43,7 @@ export class PassengerRegisterPage implements OnInit, OnDestroy {
   readonly step = signal<RegisterStep>('credentials');
   readonly otpPending = signal<PassengerOtpPendingResponse | null>(null);
   readonly resendCountdown = signal(0);
+  readonly turnstileToken = signal<string | null>(null);
 
   private resendTimer: ReturnType<typeof setInterval> | null = null;
 
@@ -62,13 +69,27 @@ export class PassengerRegisterPage implements OnInit, OnDestroy {
     this.clearResendTimer();
   }
 
+  onTurnstileToken(token: string | null): void {
+    this.turnstileToken.set(token);
+  }
+
+  turnstileBlocksSubmit(): boolean {
+    return this.config.cloudflareEnabled && !!this.config.cloudflareSiteKey && !this.turnstileToken();
+  }
+
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
+    if (this.turnstileBlocksSubmit()) {
+      this.notifications.error(this.translate.instant('turnstile.required'));
+      return;
+    }
+
     this.submitting.set(true);
     const raw = this.form.getRawValue();
+    const token = this.turnstileToken();
     from(tryGetOptionalGps())
       .pipe(
         switchMap((gps) =>
@@ -77,6 +98,7 @@ export class PassengerRegisterPage implements OnInit, OnDestroy {
             email: raw.email.trim(),
             phoneNumber: raw.phoneNumber.trim() || undefined,
             password: raw.password,
+            ...(token ? { turnstileToken: token } : {}),
             ...gps,
           }),
         ),
@@ -97,7 +119,11 @@ export class PassengerRegisterPage implements OnInit, OnDestroy {
             );
           }
         },
-        error: () => this.submitting.set(false),
+        error: () => {
+          this.submitting.set(false);
+          this.turnstileToken.set(null);
+          this.turnstileWidget?.reset();
+        },
       });
   }
 
@@ -151,6 +177,7 @@ export class PassengerRegisterPage implements OnInit, OnDestroy {
     this.step.set('credentials');
     this.otpPending.set(null);
     this.otpForm.reset();
+    this.turnstileToken.set(null);
   }
 
   private startResendCountdown(seconds: number): void {

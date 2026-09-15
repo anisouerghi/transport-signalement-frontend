@@ -40,7 +40,14 @@
       }
     </div>
 
-    <button type="submit" class="btn btn-transtu btn-lg w-100 mb-3" [disabled]="submitting()">
+    <div class="mb-3">
+      <app-turnstile-widget
+        [disabled]="submitting()"
+        (tokenChange)="onTurnstileToken($event)"
+      />
+    </div>
+
+    <button type="submit" class="btn btn-transtu btn-lg w-100 mb-3" [disabled]="submitting() || turnstileBlocksSubmit()">
       @if (submitting()) {
       <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
       {{ 'auth.loginSubmitting' | translate }}
