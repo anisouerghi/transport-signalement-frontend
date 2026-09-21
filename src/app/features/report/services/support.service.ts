@@ -8,7 +8,10 @@ import { TransportSupport } from '../models/report.model';
 @Injectable({ providedIn: 'root' })
 export class SupportService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = API_CONFIG.public.supports;
+
+  private get baseUrl(): string {
+    return API_CONFIG.public.supports;
+  }
 
   getByUuid(uuid: string): Observable<TransportSupport> {
     return this.http

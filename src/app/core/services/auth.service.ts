@@ -47,7 +47,10 @@ export class AuthService {
 
   private readonly http = inject(HttpClient);
 
-  private readonly baseUrl = API_CONFIG.public.auth;
+  /** Lu à chaque appel : config.json peut arriver après la construction du service. */
+  private get baseUrl(): string {
+    return API_CONFIG.public.auth;
+  }
 
 
 

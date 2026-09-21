@@ -8,7 +8,10 @@ import { ReportType } from '../models/report.model';
 @Injectable({ providedIn: 'root' })
 export class ReportTypeService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = API_CONFIG.public.reportTypes;
+
+  private get baseUrl(): string {
+    return API_CONFIG.public.reportTypes;
+  }
 
   getActive(): Observable<ReportType[]> {
     return this.http
