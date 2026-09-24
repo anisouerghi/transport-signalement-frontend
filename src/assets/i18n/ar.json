@@ -159,9 +159,9 @@
   "report": {
     "title": "إيداع تبليغ",
     "subtitle": "صف الوضع الذي واجهته. سيعالج فريقنا طلبك في أقرب الآجال.",
-    "typeLabel": "نوع التبليغ *",
-    "typePlaceholder": "اختر نوعاً",
-    "typeRequired": "يرجى اختيار نوع التبليغ.",
+    "typeLabel": "طبيعة التبليغ *",
+    "typePlaceholder": "اختر طبيعة التبليغ",
+    "typeRequired": "يرجى اختيار نوع البلاغ.",
     "descriptionLabel": "الوصف *",
     "descriptionPlaceholder": "صف المشكلة بدقة…",
     "descriptionRequired": "يجب أن يحتوي الوصف على 10 أحرف على الأقل.",

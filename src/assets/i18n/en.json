@@ -170,9 +170,9 @@
   "report": {
     "title": "Submit a report",
     "subtitle": "Describe the situation. Our team will handle your request as soon as possible.",
-    "typeLabel": "Report type *",
-    "typePlaceholder": "Select a type",
-    "typeRequired": "Please choose a report type.",
+    "typeLabel": "Report nature *",
+    "typePlaceholder": "Select a nature",
+    "typeRequired": "Please select a report nature.",
     "descriptionLabel": "Description *",
     "descriptionPlaceholder": "Describe the problem precisely…",
     "descriptionRequired": "The description must contain at least 10 characters.",

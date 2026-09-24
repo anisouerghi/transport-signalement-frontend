@@ -1,11 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { forkJoin } from 'rxjs';
+import { Subscription, forkJoin } from 'rxjs';
 import { ConfigService } from '../../../core/config/config.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { LanguageService } from '../../../core/services/language.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { EmailNudgeComponent } from '../components/email-nudge.component';
 import { AttachmentPickerComponent } from '../components/attachment-picker.component';
@@ -23,6 +24,16 @@ import { SupportService } from '../services/support.service';
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+/** Ordre fixe des natures voyageur (indépendant de la langue et des IDs). */
+const NATURE_ORDER = [
+  'COMPLAINT',
+  'ASSAULT',
+  'INCIDENT',
+  'SUGGESTION',
+  'THANKS',
+  'OTHER',
+] as const;
 
 @Component({
   selector: 'app-report-create-page',
@@ -106,9 +117,64 @@ const UUID_RE =
     .step-line.completed {
       background: #0b8a3e;
     }
+    .nature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.65rem;
+    }
+    @media (min-width: 768px) {
+      .nature-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+    .nature-card {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      min-height: 3.25rem;
+      width: 100%;
+      padding: 0.7rem 0.75rem;
+      border: 1.5px solid var(--transtu-border, #d7dde7);
+      border-radius: 0.85rem;
+      background: #fff;
+      color: #142033;
+      font-weight: 600;
+      font-size: 0.92rem;
+      text-align: center;
+      line-height: 1.25;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+    }
+    .nature-card:hover:not(:disabled) {
+      border-color: rgba(11, 138, 62, 0.45);
+      background: var(--transtu-green-soft, #e8f6ee);
+    }
+    .nature-card:focus-visible {
+      outline: 3px solid rgba(232, 163, 23, 0.55);
+      outline-offset: 2px;
+    }
+    .nature-card.is-selected {
+      border-color: var(--transtu-green, #0b8a3e);
+      background: var(--transtu-green-soft, #e8f6ee);
+      color: var(--transtu-green-dark, #066b30);
+      box-shadow: inset 0 0 0 1px var(--transtu-green, #0b8a3e);
+    }
+    .nature-card.is-selected .nature-card__check {
+      display: inline-flex;
+    }
+    .nature-card__check {
+      display: none;
+      flex-shrink: 0;
+      font-size: 1rem;
+      line-height: 1;
+    }
+    .nature-card.is-invalid {
+      border-color: #dc3545;
+    }
   `]
 })
-export class ReportCreatePage implements OnInit {
+export class ReportCreatePage implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
@@ -118,7 +184,9 @@ export class ReportCreatePage implements OnInit {
   private readonly notifications = inject(NotificationService);
   readonly auth = inject(AuthService);
   private readonly translate = inject(TranslateService);
+  private readonly language = inject(LanguageService);
   private readonly config = inject(ConfigService);
+  private langSub?: Subscription;
 
   @ViewChild(TurnstileWidgetComponent) private turnstileWidget?: TurnstileWidgetComponent;
 
@@ -152,21 +220,8 @@ export class ReportCreatePage implements OnInit {
 
     if (!uuid) {
       this.anonymousMode.set(true);
-      this.reportTypeService.getActive().subscribe({
-        next: (types) => {
-          this.reportTypes.set(types);
-          if (types.length > 0) {
-            this.form.controls.reportTypeId.setValue(String(types[0].reportTypeId));
-          }
-          this.prefillFromSession();
-          this.loading.set(false);
-        },
-        error: () => {
-          this.loading.set(false);
-          this.invalidQr.set(true);
-          this.errorMessage.set(this.translate.instant('errors.supportLoadFailed'));
-        },
-      });
+      this.loadAnonymous();
+      this.langSub = this.language.langChanged$.subscribe(() => this.reloadTypesOnly());
       return;
     }
 
@@ -177,29 +232,21 @@ export class ReportCreatePage implements OnInit {
       return;
     }
 
-    forkJoin({
-      support: this.supportService.getByUuid(uuid),
-      types: this.reportTypeService.getActive(),
-    }).subscribe({
-      next: ({ support, types }) => {
-        this.support.set(support);
-        this.reportTypes.set(types);
-        if (types.length > 0) {
-          this.form.controls.reportTypeId.setValue(String(types[0].reportTypeId));
-        }
-        this.prefillFromSession();
-        this.loading.set(false);
-      },
-      error: (err: HttpErrorResponse) => {
-        this.loading.set(false);
-        this.invalidQr.set(true);
-        if (err.status === 404) {
-          this.errorMessage.set(this.translate.instant('errors.supportMissing'));
-        } else {
-          this.errorMessage.set(this.translate.instant('errors.supportLoadFailed'));
-        }
-      },
-    });
+    this.loadWithSupport(uuid);
+    this.langSub = this.language.langChanged$.subscribe(() => this.reloadTypesOnly());
+  }
+
+  ngOnDestroy(): void {
+    this.langSub?.unsubscribe();
+  }
+
+  selectNature(type: ReportType): void {
+    this.form.controls.reportTypeId.setValue(String(type.reportTypeId));
+    this.form.controls.reportTypeId.markAsTouched();
+  }
+
+  isNatureSelected(type: ReportType): boolean {
+    return this.form.controls.reportTypeId.value === String(type.reportTypeId);
   }
 
   onAttachmentsChange(files: File[]): void {
@@ -306,5 +353,74 @@ export class ReportCreatePage implements OnInit {
     return this.anonymousMode() || this.fromDirect()
       ? ['/signalement']
       : ['/report', this.supportUuid()];
+  }
+
+  private loadAnonymous(): void {
+    this.reportTypeService.getActive().subscribe({
+      next: (types) => {
+        this.applyTypes(types);
+        this.prefillFromSession();
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
+        this.invalidQr.set(true);
+        this.errorMessage.set(this.translate.instant('errors.supportLoadFailed'));
+      },
+    });
+  }
+
+  private loadWithSupport(uuid: string): void {
+    forkJoin({
+      support: this.supportService.getByUuid(uuid),
+      types: this.reportTypeService.getActive(),
+    }).subscribe({
+      next: ({ support, types }) => {
+        this.support.set(support);
+        this.applyTypes(types);
+        this.prefillFromSession();
+        this.loading.set(false);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.loading.set(false);
+        this.invalidQr.set(true);
+        if (err.status === 404) {
+          this.errorMessage.set(this.translate.instant('errors.supportMissing'));
+        } else {
+          this.errorMessage.set(this.translate.instant('errors.supportLoadFailed'));
+        }
+      },
+    });
+  }
+
+  /** Recharge les libellés localisés sans perdre la sélection ni le support. */
+  private reloadTypesOnly(): void {
+    const selectedId = this.form.controls.reportTypeId.value;
+    this.reportTypeService.getActive().subscribe({
+      next: (types) => {
+        this.applyTypes(types, selectedId);
+      },
+    });
+  }
+
+  private applyTypes(types: ReportType[], preserveId?: string): void {
+    const ordered = this.orderNatures(types);
+    this.reportTypes.set(ordered);
+    const keep = preserveId ?? this.form.controls.reportTypeId.value;
+    if (keep && ordered.some((t) => String(t.reportTypeId) === keep)) {
+      this.form.controls.reportTypeId.setValue(keep);
+    }
+  }
+
+  private orderNatures(types: ReportType[]): ReportType[] {
+    const byCode = new Map(types.map((t) => [t.code?.toUpperCase(), t]));
+    const ordered: ReportType[] = [];
+    for (const code of NATURE_ORDER) {
+      const hit = byCode.get(code);
+      if (hit) {
+        ordered.push(hit);
+      }
+    }
+    return ordered;
   }
 }

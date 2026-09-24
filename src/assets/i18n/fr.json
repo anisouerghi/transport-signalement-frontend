@@ -170,9 +170,9 @@
   "report": {
     "title": "Déposer un signalement",
     "subtitle": "Décrivez la situation rencontrée. Notre équipe traitera votre demande dans les meilleurs délais.",
-    "typeLabel": "Type de signalement *",
-    "typePlaceholder": "Sélectionnez un type",
-    "typeRequired": "Veuillez choisir un type de signalement.",
+    "typeLabel": "Nature du signalement *",
+    "typePlaceholder": "Sélectionnez une nature",
+    "typeRequired": "Veuillez sélectionner une nature de signalement.",
     "descriptionLabel": "Description *",
     "descriptionPlaceholder": "Décrivez précisément le problème rencontré…",
     "descriptionRequired": "La description doit contenir au moins 10 caractères.",

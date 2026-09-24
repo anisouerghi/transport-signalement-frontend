@@ -42,6 +42,35 @@
   }
 
   <form class="panel p-3 p-md-4" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <fieldset class="mb-3 border-0 p-0 m-0">
+      <legend class="form-label fw-semibold mb-2">{{ 'report.typeLabel' | translate }}</legend>
+      <div
+        class="nature-grid"
+        role="radiogroup"
+        [attr.aria-label]="'report.typeLabel' | translate"
+        [attr.aria-invalid]="controlInvalid('reportTypeId') ? true : null"
+      >
+        @for (type of reportTypes(); track type.reportTypeId) {
+          <button
+            type="button"
+            class="nature-card"
+            role="radio"
+            [attr.aria-checked]="isNatureSelected(type)"
+            [class.is-selected]="isNatureSelected(type)"
+            [class.is-invalid]="controlInvalid('reportTypeId')"
+            [disabled]="submitting()"
+            (click)="selectNature(type)"
+          >
+            <span class="nature-card__check" aria-hidden="true"><i class="bi bi-check-lg"></i></span>
+            <span>{{ type.label }}</span>
+          </button>
+        }
+      </div>
+      @if (controlInvalid('reportTypeId')) {
+        <div class="invalid-feedback d-block">{{ 'report.typeRequired' | translate }}</div>
+      }
+    </fieldset>
+
     <div class="mb-3">
       <label class="form-label fw-semibold" for="description">{{ 'report.descriptionLabel' | translate }}</label>
       <textarea
