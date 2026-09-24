@@ -1,6 +1,7 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 import { LanguageService } from '../../../core/services/language.service';
 import { PublicHomepageReply } from '../models/report.model';
 import { ReportService } from '../services/report.service';
@@ -15,9 +16,10 @@ const EXCERPT_LENGTH = 110;
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, OnDestroy {
   private readonly reportService = inject(ReportService);
   private readonly language = inject(LanguageService);
+  private langSub?: Subscription;
 
   readonly loading = signal(true);
   readonly error = signal(false);
@@ -33,6 +35,11 @@ export class HomePage implements OnInit {
 
   ngOnInit(): void {
     this.load(0);
+    this.langSub = this.language.langChanged$.subscribe(() => this.load(this.page()));
+  }
+
+  ngOnDestroy(): void {
+    this.langSub?.unsubscribe();
   }
 
   load(page: number): void {

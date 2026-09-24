@@ -300,6 +300,7 @@
     "notFoundTitle": "No report found",
     "notFoundBody": "This tracking link is invalid or the report no longer exists.",
     "createdAt": "Created on",
+    "description": "Report description",
     "repliesTitle": "TRANSTU replies",
     "replyFrom": "Reply from TRANSTU",
     "noReplies": "No visible reply yet."

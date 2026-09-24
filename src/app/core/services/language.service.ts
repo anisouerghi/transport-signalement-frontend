@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subject } from 'rxjs';
 
 export type AppLanguage = 'fr' | 'ar' | 'en';
 
@@ -27,14 +27,19 @@ export const LANGUAGE_OPTIONS: LanguageOption[] = [
 @Injectable({ providedIn: 'root' })
 export class LanguageService {
   private readonly translate = inject(TranslateService);
+  private readonly langChangedSubject = new Subject<AppLanguage>();
 
   readonly currentLang = signal<AppLanguage>(DEFAULT_LANG);
+  /** Incrémenté à chaque changement de langue (re-fetch labels API). */
+  readonly langVersion = signal(0);
+  /** Observable pour recharger les données localisées. */
+  readonly langChanged$ = this.langChangedSubject.asObservable();
   readonly options = LANGUAGE_OPTIONS;
 
   /** Initialise la langue au démarrage (localStorage ou français par défaut). */
   async init(): Promise<void> {
     const saved = this.readStored();
-    await this.applyLanguage(saved ?? DEFAULT_LANG, false);
+    await this.applyLanguage(saved ?? DEFAULT_LANG, false, false);
   }
 
   /** Change la langue immédiatement sans perdre le parcours / formulaire. */
@@ -42,14 +47,14 @@ export class LanguageService {
     if (lang === this.currentLang()) {
       return;
     }
-    await this.applyLanguage(lang, true);
+    await this.applyLanguage(lang, true, true);
   }
 
   isRtl(lang: AppLanguage = this.currentLang()): boolean {
     return LANGUAGE_OPTIONS.find((o) => o.code === lang)?.dir === 'rtl';
   }
 
-  private async applyLanguage(lang: AppLanguage, persist: boolean): Promise<void> {
+  private async applyLanguage(lang: AppLanguage, persist: boolean, notify: boolean): Promise<void> {
     const option = LANGUAGE_OPTIONS.find((o) => o.code === lang) ?? LANGUAGE_OPTIONS[0];
     this.translate.setFallbackLang(DEFAULT_LANG);
     await firstValueFrom(this.translate.use(option.code));
@@ -61,6 +66,10 @@ export class LanguageService {
       } catch {
         /* mode privé / quota — non bloquant */
       }
+    }
+    if (notify) {
+      this.langVersion.update((v) => v + 1);
+      this.langChangedSubject.next(option.code);
     }
   }
 

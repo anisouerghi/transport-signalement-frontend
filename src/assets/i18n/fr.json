@@ -303,6 +303,7 @@
     "notFoundTitle": "Aucun signalement trouvé",
     "notFoundBody": "Ce lien de suivi est invalide ou le signalement n'existe plus.",
     "createdAt": "Créé le",
+    "description": "Description du signalement",
     "repliesTitle": "Réponses de TRANSTU",
     "replyFrom": "Réponse de TRANSTU",
     "noReplies": "Aucune réponse visible pour le moment."

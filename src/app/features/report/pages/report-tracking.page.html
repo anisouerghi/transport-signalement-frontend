@@ -41,6 +41,10 @@
       <dd class="col-7 mb-0">{{ r.creationDate | date: 'dd/MM/yyyy HH:mm' }}</dd>
       <dt class="col-5 text-secondary">{{ 'common.support' | translate }}</dt>
       <dd class="col-7 mb-0">{{ r.supportLabel || ('common.dash' | translate) }}</dd>
+      <dt class="col-5 text-secondary">{{ 'followUp.description' | translate }}</dt>
+      <dd class="col-7 mb-0" style="white-space: pre-wrap; word-break: break-word">{{
+        r.description || ('common.dash' | translate)
+      }}</dd>
     </dl>
   </section>
 
