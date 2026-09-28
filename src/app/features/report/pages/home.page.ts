@@ -6,7 +6,7 @@ import { LanguageService } from '../../../core/services/language.service';
 import { PublicHomepageReply } from '../models/report.model';
 import { ReportService } from '../services/report.service';
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 4;
 const EXCERPT_LENGTH = 110;
 
 @Component({
@@ -49,7 +49,12 @@ export class HomePage implements OnInit, OnDestroy {
     this.reportService.listHomepageReplies(page, PAGE_SIZE).subscribe({
       next: (res) => {
         const content = Array.isArray(res?.content) ? res.content : [];
-        this.replies.set(content);
+        const sorted = [...content].sort((a, b) => {
+          const da = a.replyDate ? Date.parse(a.replyDate) : 0;
+          const db = b.replyDate ? Date.parse(b.replyDate) : 0;
+          return db - da;
+        });
+        this.replies.set(sorted);
         this.totalPages.set(res?.totalPages ?? 0);
         this.page.set(res?.page ?? page);
         this.loading.set(false);
