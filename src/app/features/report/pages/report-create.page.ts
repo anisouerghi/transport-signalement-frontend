@@ -283,6 +283,7 @@ export class ReportCreatePage implements OnInit {
       anonymousMode: this.anonymousMode(),
       files: [...this.selectedFiles()],
       voiceFile: this.voiceFile(),
+      turnstileToken: this.turnstileToken(),
       withTracking: true,
     });
     const type = this.route.snapshot.queryParamMap.get('type');
@@ -307,6 +308,14 @@ export class ReportCreatePage implements OnInit {
     this.form.patchValue(draft.formValue);
     this.selectedFiles.set(draft.files);
     this.voiceFile.set(draft.voiceFile);
+    if (draft.turnstileToken) {
+      this.turnstileToken.set(draft.turnstileToken);
+    }
+    // Pour une réclamation avec suivi, l'enregistrement se fait au nom
+    // du voyageur connecté : coordonnées issues de la session (champs verrouillés).
+    if (draft.withTracking && this.auth.isAuthenticated()) {
+      this.prefillFromSession();
+    }
     this.step.set('choice');
     if (draft.withTracking && this.auth.isAuthenticated()) {
       if (this.turnstileBlocksSubmit()) {

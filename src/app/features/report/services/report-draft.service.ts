@@ -12,6 +12,7 @@ export interface ReportDraft {
   anonymousMode: boolean;
   files: File[];
   voiceFile: File | null;
+  turnstileToken?: string | null;
   /** true → après connexion, enregistrer avec suivi automatiquement. */
   withTracking: boolean;
 }
