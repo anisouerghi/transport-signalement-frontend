@@ -13,11 +13,11 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
       <div class="public-header__inner">
         <a routerLink="/accueil" class="brand" [attr.aria-label]="'common.brandAria' | translate">
           <img
-            src="assets/images/transtu_logo.png"
-            [attr.alt]="'common.logoAlt' | translate"
+            src="assets/images/signalement_logo.jpg"
+            [attr.alt]="'common.appLogoAlt' | translate"
             class="brand__logo"
-            width="160"
-            height="48"
+            width="168"
+            height="68"
           />
         </a>
         <div class="public-header__tools">
@@ -92,13 +92,22 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
   styles: [
     `
       .public-header {
-        background: #ffffff;
-        color: #fff;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: rgba(248, 249, 255, 0.92);
+        backdrop-filter: blur(18px);
+        color: #131c28;
+        max-width: 100%;
+        overflow-x: clip;
+        box-shadow: 0 2px 8px rgba(27, 36, 48, 0.06);
       }
       .public-header__inner {
+        box-sizing: border-box;
         width: min(720px, 100%);
+        max-width: 100vw;
         margin: 0 auto;
-        padding: 0.7rem 1rem 0.45rem;
+        padding: 0.45rem 1rem 0.3rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -107,19 +116,30 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
       .brand {
         display: inline-flex;
         align-items: center;
+        justify-content: flex-start;
+        box-sizing: border-box;
+        width: 168px;
+        height: 68px;
+        margin: 0;
+        padding: 0;
         text-decoration: none;
+        flex: 0 0 auto;
+        min-width: 0;
+        overflow: hidden;
+        background: transparent;
       }
       .brand__logo {
-        height: 40px;
-        width: auto;
-        object-fit: contain;
-        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
+        display: block;
+        height: 68px;
+        width: 168px;
+        max-width: none;
+        object-fit: fill;
       }
       .public-header__tools {
         display: flex;
         align-items: center;
         gap: 0.65rem;
-        flex-wrap: wrap;
+        flex: 0 0 auto;
         justify-content: flex-end;
       }
       .public-header__links {
@@ -130,25 +150,26 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
         justify-content: flex-start;
       }
       .public-header__links a {
-        color: #0f2758;
+        color: #424752;
         text-decoration: none;
-        font-size: 0.92rem;
+        font-size: 0.875rem;
         font-weight: 600;
         padding-bottom: 0.15rem;
         border-bottom: 2px solid transparent;
       }
-      .public-header__links a.is-active,
-      .public-header__links a:hover {
-        // font-size: 0.95rem;
-        color: #0f2758af;
+      .public-header__links a:hover,
+      .public-header__links a.is-active {
+        color: #003b7f;
+        border-bottom-color: #003b7f;
       }
       .lang-switch {
         display: inline-flex;
         align-items: center;
         gap: 0.15rem;
-        padding: 0.15rem;
-        border-radius: 999px;
-        background: rgba(169, 214, 181, 0.47);
+        min-height: 2.75rem;
+        padding: 0.2rem;
+        border-radius: 0.5rem;
+        background: #eff4ff;
       }
       .lang-btn {
         background: transparent;
@@ -163,12 +184,18 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
         line-height: 1.2;
       }
       .lang-btn:hover {
-      font-size: 0.82rem;
-
+        color: #0f2758;
+      }
+      @media (max-width: 420px) {
+        .brand,
+        .brand__logo {
+          width: 132px;
+          height: 52px;
+        }
       }
       .lang-btn--active {
         background: #fff;
-        color: #0f2758;
+        color: #003b7f;
       }
       .nav-link-muted {
         color: rgba(255, 255, 255, 0.9);
@@ -180,15 +207,16 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
         position: relative;
       }
       .user-menu__trigger {
-        width: 2.35rem;
-        height: 2.35rem;
+        width: 2.5rem;
+        height: 2.5rem;
         border: 0;
         border-radius: 50%;
-        background: #0b8a3e;
+        background: #0b52a8;
         color: #fff;
         font-size: 0.78rem;
         font-weight: 700;
         cursor: pointer;
+        box-shadow: 0 0 0 2px rgba(0, 59, 127, 0.18);
       }
       .user-menu__trigger i {
         font-size: 1.35rem;
@@ -196,7 +224,7 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
       .user-menu__dropdown {
         position: absolute;
         top: calc(100% + 0.5rem);
-        right: 0;
+        inset-inline-end: 0;
         z-index: 40;
         min-width: 9rem;
         padding: 0.35rem;
@@ -214,7 +242,7 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
         border-radius: 0.3rem;
         background: transparent;
         color: #0f2758;
-        text-align: left;
+        text-align: start;
         text-decoration: none;
         font: inherit;
         cursor: pointer;
@@ -246,39 +274,42 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
         cursor: pointer;
       }
       .gold-bar {
-        height: 3px;
-        background: linear-gradient(90deg, #e8a317, #0b8a3e 55%, #1a3a7a);
+        height: 4px;
+        background: linear-gradient(90deg, #006e2f 0 33.33%, #f5bf00 33.33% 66.66%, #0b52a8 66.66% 100%);
       }
       .public-bottom-nav {
         position: fixed;
-        left: 0.75rem;
-        right: 0.75rem;
-        bottom: calc(0.75rem + env(safe-area-inset-bottom));
-        z-index: 30;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 50;
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        background: #0f2758;
-        padding: 0.4rem 0.2rem;
-        border-radius: 2rem;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+        background: rgba(248, 249, 255, 0.92);
+        backdrop-filter: blur(18px);
+        padding: 0.25rem 0.35rem calc(0.25rem + env(safe-area-inset-bottom));
+        border-radius: 0;
+        box-shadow: 0 -4px 16px rgba(27, 36, 48, 0.06);
       }
       .public-bottom-nav a {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 0.15rem;
-        color: rgba(255, 255, 255, 0.7);
+        gap: 0.1rem;
+        color: #424752;
         text-decoration: none;
-        font-size: 0.68rem;
-        font-weight: 600;
-        min-height: 2.85rem;
+        font-size: 0.625rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        min-height: 3rem;
         justify-content: center;
       }
       .public-bottom-nav a i {
-        font-size: 1.15rem;
+        font-size: 1.35rem;
       }
-      .public-bottom-nav a.is-active {
-        color: #fff;
+      .public-bottom-nav a.is-active,
+      .public-bottom-nav a:hover {
+        color: #003b7f;
       }
     `,
   ],

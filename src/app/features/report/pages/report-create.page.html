@@ -58,11 +58,26 @@
             [attr.aria-checked]="isNatureSelected(type)"
             [class.is-selected]="isNatureSelected(type)"
             [class.is-invalid]="controlInvalid('reportTypeId')"
+            [class.nature-card--blue]="natureTone(type) === 'blue'"
+            [class.nature-card--red]="natureTone(type) === 'red'"
+            [class.nature-card--gold]="natureTone(type) === 'gold'"
+            [class.nature-card--green]="natureTone(type) === 'green'"
+            [class.nature-card--gray]="natureTone(type) === 'gray'"
             [disabled]="submitting()"
             (click)="selectNature(type)"
           >
+            @if (natureIcon(type); as icon) {
+              <span class="nature-card__icon" aria-hidden="true">
+                <span class="material-symbols-outlined">{{ icon }}</span>
+              </span>
+            }
+            <span class="nature-card__text">
+              <span class="nature-card__name">{{ type.label }}</span>
+              @if (natureIcon(type)) {
+                <span class="nature-card__desc">{{ 'home.natures.' + natureCode(type) + '.description' | translate }}</span>
+              }
+            </span>
             <span class="nature-card__check" aria-hidden="true"><i class="bi bi-check-lg"></i></span>
-            <span>{{ type.label }}</span>
           </button>
         }
       </div>

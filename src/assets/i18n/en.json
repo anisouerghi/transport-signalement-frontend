@@ -1,7 +1,8 @@
 {
   "common": {
     "brand": "TRANSTU",
-    "brandAria": "TRANSTU — Home",
+    "brandAria": "Reporting — Home",
+    "appLogoAlt": "Traveler reporting logo",
     "logoAlt": "TRANSTU logo",
     "backHome": "Back to home",
     "back": "Back",
@@ -55,6 +56,12 @@
   },
   "home": {
     "title": "Traveler reporting",
+    "ehouwiyaTitle": "E-Houwiya digital identity",
+    "ehouwiyaChip": "Digital Tunisia",
+    "ehouwiyaText": "Sign in with the citizen digital identity for instant tracking, full access to your previous requests, and an SMS each time a request is updated.",
+    "ehouwiyaLogin": "Sign in with E-Houwiya",
+    "voiceTitle": "Make your voice heard at TRANSTU",
+    "voiceText": "Your participatory platform for complaints, field reports, suggestions and thanks, to improve the bus fleet, the light metro and the TGM line.",
     "intro": "Scan the QR code on your transport support to submit a report quickly and securely.",
     "followHint": "You can track replies via the secure link emailed when our team responds.",
     "step1": "Scan a QR code",
@@ -71,7 +78,42 @@
     "repliesNext": "Next",
     "repliesPagination": "Public replies pagination",
     "seeMore": "See more",
-    "seeLess": "Show less"
+    "seeLess": "Show less",
+    "referenceTitle": "Search by reference",
+    "referenceHint": "Enter your request reference to open its follow-up.",
+    "referencePlaceholder": "Example: SIG-20261002-100001",
+    "referenceSearch": "Search",
+    "referenceRequired": "Please enter a reference.",
+    "natureTitle": "What would you like to tell us today?",
+    "natureSubtitle": "Direct service 24/7",
+    "natures": {
+      "COMPLAINT": {
+        "title": "File a complaint",
+        "subtitle": "Complaint",
+        "description": "Delay, inappropriate behavior, breakdown or a ticket issue."
+      },
+      "INCIDENT": {
+        "title": "Immediate report",
+        "subtitle": "Incident",
+        "badge": "Live",
+        "description": "Station damage, broken glass, cleanliness or safety."
+      },
+      "SUGGESTION": {
+        "title": "Improvement idea",
+        "subtitle": "Suggestion",
+        "description": "Schedules, new routes or the station experience."
+      },
+      "THANKS": {
+        "title": "Thank-you message",
+        "subtitle": "Thanks",
+        "description": "Encourage a driver, an inspector or a team."
+      },
+      "OTHER": {
+        "title": "Other request",
+        "subtitle": "Other",
+        "description": "Subscriptions, lost property and administrative services."
+      }
+    }
   },
   "welcome": {
     "title": "Your feedback matters",

@@ -1,7 +1,8 @@
 {
   "common": {
     "brand": "TRANSTU",
-    "brandAria": "TRANSTU — Accueil",
+    "brandAria": "Signalement — Accueil",
+    "appLogoAlt": "Logo Signalement voyageur",
     "logoAlt": "Logo TRANSTU",
     "backHome": "Retour à l'accueil",
     "back": "Retour",
@@ -55,6 +56,12 @@
   },
   "home": {
     "title": "Signalement voyageur",
+    "ehouwiyaTitle": "Identité numérique E-Houwiya",
+    "ehouwiyaChip": "Tunisie digitale",
+    "ehouwiyaText": "Connectez-vous avec l'identité numérique du citoyen pour un suivi immédiat, retrouver toutes vos demandes et recevoir un SMS à chaque mise à jour.",
+    "ehouwiyaLogin": "Connexion avec E-Houwiya",
+    "voiceTitle": "Faites entendre votre voix à la TRANSTU",
+    "voiceText": "Votre plateforme participative pour les réclamations, les signalements de terrain, les suggestions et les remerciements, afin d'améliorer la flotte de bus, le métro léger et la ligne TGM.",
     "intro": "Scannez le QR Code présent sur votre support de transport pour déposer un signalement rapidement et en toute sécurité.",
     "followHint": "Le suivi des réponses s'effectue via le lien sécurisé envoyé par e-mail lorsque notre équipe vous répond.",
     "step1": "Scanner un QR Code",
@@ -71,7 +78,42 @@
     "repliesNext": "Suivant",
     "repliesPagination": "Pagination des réponses publiques",
     "seeMore": "Voir plus",
-    "seeLess": "Réduire"
+    "seeLess": "Réduire",
+    "referenceTitle": "Rechercher par référence",
+    "referenceHint": "Entrez la référence de votre demande pour consulter son suivi.",
+    "referencePlaceholder": "Exemple : SIG-20261002-100001",
+    "referenceSearch": "Rechercher",
+    "referenceRequired": "Veuillez saisir une référence.",
+    "natureTitle": "De quoi souhaitez-vous nous informer aujourd'hui ?",
+    "natureSubtitle": "Service direct 24/7",
+    "natures": {
+      "COMPLAINT": {
+        "title": "Déposer une réclamation",
+        "subtitle": "Réclamation",
+        "description": "Retard, comportement inapproprié, panne ou question liée aux titres."
+      },
+      "INCIDENT": {
+        "title": "Signalement immédiat",
+        "subtitle": "Incident",
+        "badge": "Direct",
+        "description": "Dégâts aux stations, bris de vitre, propreté ou sécurité."
+      },
+      "SUGGESTION": {
+        "title": "Suggestion d'amélioration",
+        "subtitle": "Suggestion",
+        "description": "Horaires, nouveaux itinéraires ou expérience des stations."
+      },
+      "THANKS": {
+        "title": "Message de remerciement",
+        "subtitle": "Remerciement",
+        "description": "Encourager un conducteur, un contrôleur ou une équipe."
+      },
+      "OTHER": {
+        "title": "Autre demande",
+        "subtitle": "Autre demande",
+        "description": "Abonnements, objets perdus et services administratifs."
+      }
+    }
   },
   "welcome": {
     "title": "Votre avis nous intéresse",

@@ -35,6 +35,15 @@ const NATURE_ORDER = [
   'OTHER',
 ] as const;
 
+/** Mêmes icônes et tons que les cartes de l'accueil. Affichage uniquement. */
+const NATURE_VISUAL: Record<string, { icon: string; tone: string }> = {
+  COMPLAINT: { icon: 'rate_review', tone: 'blue' },
+  INCIDENT: { icon: 'photo_camera', tone: 'red' },
+  SUGGESTION: { icon: 'tips_and_updates', tone: 'gold' },
+  THANKS: { icon: 'thumb_up', tone: 'green' },
+  OTHER: { icon: 'contact_support', tone: 'gray' },
+};
+
 @Component({
   selector: 'app-report-create-page',
   standalone: true,
@@ -119,55 +128,94 @@ const NATURE_ORDER = [
     }
     .nature-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.65rem;
-    }
-    @media (min-width: 768px) {
-      .nature-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.5rem;
     }
     .nature-card {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 0.45rem;
-      min-height: 3.25rem;
+      justify-content: flex-start;
+      gap: 0.75rem;
       width: 100%;
-      padding: 0.7rem 0.75rem;
-      border: 1.5px solid var(--transtu-border, #d7dde7);
-      border-radius: 0.85rem;
+      min-height: 4.25rem;
+      padding: 0.85rem 1rem;
+      border: 1.5px solid #e5e8f0;
+      border-radius: 0.75rem;
       background: #fff;
-      color: #142033;
-      font-weight: 600;
-      font-size: 0.92rem;
-      text-align: center;
-      line-height: 1.25;
+      color: #131c28;
+      text-align: start;
+      line-height: 1.35;
       cursor: pointer;
-      transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+      box-shadow: 0 1px 2px rgba(19, 28, 40, 0.06);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
     .nature-card:hover:not(:disabled) {
-      border-color: rgba(11, 138, 62, 0.45);
-      background: var(--transtu-green-soft, #e8f6ee);
+      border-color: rgba(11, 82, 168, 0.35);
+      box-shadow: 0 4px 12px rgba(19, 28, 40, 0.08);
     }
     .nature-card:focus-visible {
-      outline: 3px solid rgba(232, 163, 23, 0.55);
+      outline: 3px solid rgba(11, 82, 168, 0.35);
       outline-offset: 2px;
     }
+    .nature-card:disabled {
+      cursor: default;
+      opacity: 0.7;
+    }
     .nature-card.is-selected {
-      border-color: var(--transtu-green, #0b8a3e);
-      background: var(--transtu-green-soft, #e8f6ee);
-      color: var(--transtu-green-dark, #066b30);
-      box-shadow: inset 0 0 0 1px var(--transtu-green, #0b8a3e);
+      border-color: #003b7f;
+      box-shadow: inset 0 0 0 1px #003b7f;
     }
     .nature-card.is-selected .nature-card__check {
       display: inline-flex;
     }
     .nature-card__check {
       display: none;
+      align-items: center;
+      justify-content: center;
       flex-shrink: 0;
-      font-size: 1rem;
+      width: 1.5rem;
+      height: 1.5rem;
+      margin-inline-start: auto;
+      border-radius: 999px;
+      background: #003b7f;
+      color: #fff;
+      font-size: 0.9rem;
       line-height: 1;
+    }
+    .nature-card__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 3rem;
+      height: 3rem;
+      border-radius: 0.75rem;
+      flex-shrink: 0;
+    }
+    .nature-card__icon .material-symbols-outlined {
+      font-size: 1.5rem;
+    }
+    .nature-card--blue .nature-card__icon { background: rgba(11, 82, 168, 0.1); color: #0b52a8; }
+    .nature-card--red .nature-card__icon { background: #ffdad6; color: #93000a; }
+    .nature-card--gold .nature-card__icon { background: rgba(255, 223, 149, 0.4); color: #6a5100; }
+    .nature-card--green .nature-card__icon { background: #8cfa9f; color: #007432; }
+    .nature-card--gray .nature-card__icon { background: #e5eeff; color: #424752; }
+    .nature-card__text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+      min-width: 0;
+    }
+    .nature-card__name {
+      color: #131c28;
+      font-size: 0.95rem;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+    .nature-card__desc {
+      color: #424752;
+      font-size: 0.75rem;
+      font-weight: 400;
+      line-height: 1.45;
     }
     .nature-card.is-invalid {
       border-color: #dc3545;
@@ -243,6 +291,18 @@ export class ReportCreatePage implements OnInit, OnDestroy {
   selectNature(type: ReportType): void {
     this.form.controls.reportTypeId.setValue(String(type.reportTypeId));
     this.form.controls.reportTypeId.markAsTouched();
+  }
+
+  natureIcon(type: ReportType): string | null {
+    return NATURE_VISUAL[type.code?.toUpperCase()]?.icon ?? null;
+  }
+
+  natureTone(type: ReportType): string | null {
+    return NATURE_VISUAL[type.code?.toUpperCase()]?.tone ?? null;
+  }
+
+  natureCode(type: ReportType): string {
+    return type.code?.toUpperCase() ?? '';
   }
 
   isNatureSelected(type: ReportType): boolean {
@@ -359,6 +419,7 @@ export class ReportCreatePage implements OnInit, OnDestroy {
     this.reportTypeService.getActive().subscribe({
       next: (types) => {
         this.applyTypes(types);
+        this.preselectNatureFromQuery();
         this.prefillFromSession();
         this.loading.set(false);
       },
@@ -378,6 +439,7 @@ export class ReportCreatePage implements OnInit, OnDestroy {
       next: ({ support, types }) => {
         this.support.set(support);
         this.applyTypes(types);
+        this.preselectNatureFromQuery();
         this.prefillFromSession();
         this.loading.set(false);
       },
@@ -401,6 +463,20 @@ export class ReportCreatePage implements OnInit, OnDestroy {
         this.applyTypes(types, selectedId);
       },
     });
+  }
+
+  private preselectNatureFromQuery(): void {
+    if (this.form.controls.reportTypeId.value) {
+      return;
+    }
+    const code = this.route.snapshot.queryParamMap.get('nature')?.trim().toUpperCase();
+    if (!code || !NATURE_ORDER.includes(code as (typeof NATURE_ORDER)[number])) {
+      return;
+    }
+    const match = this.reportTypes().find((type) => type.code?.toUpperCase() === code);
+    if (match) {
+      this.selectNature(match);
+    }
   }
 
   private applyTypes(types: ReportType[], preserveId?: string): void {

@@ -7,10 +7,10 @@
   <section class="panel p-4">
     <p class="mb-4">{{ 'myReports.anonymousHint' | translate }}</p>
     <div class="d-grid gap-2">
-      <a routerLink="/inscription" [queryParams]="{ returnUrl: '/mes-signalements' }" class="btn btn-transtu btn-lg">
+      <a routerLink="/inscription" [queryParams]="{ returnUrl: authReturnUrl() }" class="btn btn-transtu btn-lg">
         {{ 'welcome.createAccount' | translate }}
       </a>
-      <a routerLink="/connexion" [queryParams]="{ returnUrl: '/mes-signalements' }" class="btn btn-transtu-outline btn-lg">
+      <a routerLink="/connexion" [queryParams]="{ returnUrl: authReturnUrl() }" class="btn btn-transtu-outline btn-lg">
         {{ 'welcome.signIn' | translate }}
       </a>
       <a routerLink="/signalement" class="btn btn-link">{{ 'home.cta' | translate }}</a>

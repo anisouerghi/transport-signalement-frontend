@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { LanguageService } from '../../../core/services/language.service';
@@ -8,6 +8,14 @@ import { ReportService } from '../services/report.service';
 
 const PAGE_SIZE = 4;
 const EXCERPT_LENGTH = 110;
+
+const NATURE_CARDS = [
+  { code: 'COMPLAINT', icon: 'rate_review', tone: 'blue', badge: false },
+  { code: 'INCIDENT', icon: 'photo_camera', tone: 'red', badge: true },
+  { code: 'SUGGESTION', icon: 'tips_and_updates', tone: 'gold', badge: false },
+  { code: 'THANKS', icon: 'thumb_up', tone: 'green', badge: false },
+  { code: 'OTHER', icon: 'contact_support', tone: 'gray', badge: false },
+] as const;
 
 @Component({
   selector: 'app-home-page',
@@ -19,7 +27,11 @@ const EXCERPT_LENGTH = 110;
 export class HomePage implements OnInit, OnDestroy {
   private readonly reportService = inject(ReportService);
   private readonly language = inject(LanguageService);
+  private readonly router = inject(Router);
   private langSub?: Subscription;
+
+  readonly referenceError = signal(false);
+  readonly natureCards = NATURE_CARDS;
 
   readonly loading = signal(true);
   readonly error = signal(false);
@@ -40,6 +52,16 @@ export class HomePage implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.langSub?.unsubscribe();
+  }
+
+  searchByReference(raw: string): void {
+    const reference = raw.trim();
+    if (!reference) {
+      this.referenceError.set(true);
+      return;
+    }
+    this.referenceError.set(false);
+    void this.router.navigate(['/mes-signalements'], { queryParams: { reference } });
   }
 
   load(page: number): void {

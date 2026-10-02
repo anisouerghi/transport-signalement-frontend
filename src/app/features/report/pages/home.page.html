@@ -1,28 +1,100 @@
 <section class="home-page">
-  <section class="panel p-4 text-center home-hero">
-    <h1 class="h4 mb-2">{{ 'home.title' | translate }}</h1>
-    <p class="text-secondary mb-4 home-hero__intro mx-auto">{{ 'home.intro' | translate }}</p>
+  <section class="home-voice">
+    <h1 class="home-voice__title">{{ 'home.voiceTitle' | translate }}</h1>
+    <p class="home-voice__text">{{ 'home.voiceText' | translate }}</p>
+  </section>
 
-    <ol class="home-steps list-unstyled mb-4">
-      <li class="home-steps__item">
-        <span class="home-steps__icon" aria-hidden="true"><i class="bi bi-qr-code-scan"></i></span>
-        <span class="home-steps__label">{{ 'home.step1' | translate }}</span>
-      </li>
-      <li class="home-steps__sep" aria-hidden="true"><i class="bi bi-arrow-right"></i></li>
-      <li class="home-steps__item">
-        <span class="home-steps__icon" aria-hidden="true"><i class="bi bi-send"></i></span>
-        <span class="home-steps__label">{{ 'home.step2' | translate }}</span>
-      </li>
-      <li class="home-steps__sep" aria-hidden="true"><i class="bi bi-arrow-right"></i></li>
-      <li class="home-steps__item">
-        <span class="home-steps__icon" aria-hidden="true"><i class="bi bi-lightbulb"></i></span>
-        <span class="home-steps__label">{{ 'home.step3' | translate }}</span>
-      </li>
-    </ol>
+  <section class="home-reference" aria-labelledby="home-reference-label">
+    <label class="home-reference__label" id="home-reference-label" for="home-reference-input">
+      <span class="material-symbols-outlined home-reference__icon" aria-hidden="true">qr_code_scanner</span>
+      <span>{{ 'home.referenceTitle' | translate }}</span>
+    </label>
+    <p class="home-reference__hint">{{ 'home.referenceHint' | translate }}</p>
+    <form class="home-reference__form" (submit)="$event.preventDefault(); searchByReference(referenceInput.value)">
+      <div class="home-reference__field">
+        <input
+          #referenceInput
+          id="home-reference-input"
+          class="home-reference__input"
+          type="search"
+          dir="ltr"
+          autocomplete="off"
+          [attr.placeholder]="'home.referencePlaceholder' | translate"
+          [attr.aria-invalid]="referenceError()"
+          (input)="referenceError.set(false)"
+        />
+        <span class="material-symbols-outlined home-reference__tag" aria-hidden="true">tag</span>
+      </div>
+      <button class="home-reference__submit" type="submit">
+        <span>{{ 'home.referenceSearch' | translate }}</span>
+        <span class="material-symbols-outlined home-reference__search-icon" aria-hidden="true">search</span>
+      </button>
+    </form>
+    @if (referenceError()) {
+      <p class="home-reference__error" role="alert">{{ 'home.referenceRequired' | translate }}</p>
+    }
+  </section>
 
-    <!-- <a routerLink="/signalement" class="btn btn-transtu home-hero__cta">
-      {{ 'home.cta' | translate }}
-    </a> -->
+  <section class="home-natures" [attr.aria-label]="'home.natureTitle' | translate">
+    <div class="home-natures__head">
+      <h2 class="home-natures__title">{{ 'home.natureTitle' | translate }}</h2>
+      <span class="home-natures__aside">{{ 'home.natureSubtitle' | translate }}</span>
+    </div>
+    <div class="home-natures__list">
+      @for (card of natureCards; track card.code) {
+        <a
+          [class]="'nature-card nature-card--' + card.tone"
+          [routerLink]="['/signalement/anonyme']"
+          [queryParams]="{ nature: card.code }"
+        >
+          <span class="nature-card__accent" aria-hidden="true"></span>
+          <span class="nature-card__main">
+            <span class="nature-card__icon" aria-hidden="true">
+              <span class="material-symbols-outlined">{{ card.icon }}</span>
+            </span>
+            <span class="nature-card__text">
+              <span class="nature-card__titles">
+                <span class="nature-card__name">{{ 'home.natures.' + card.code + '.title' | translate }}</span>
+                @if (card.badge) {
+                  <span class="nature-card__badge">{{ 'home.natures.' + card.code + '.badge' | translate }}</span>
+                } @else {
+                  <span class="nature-card__subtitle">{{ 'home.natures.' + card.code + '.subtitle' | translate }}</span>
+                }
+              </span>
+              <span class="nature-card__desc">{{ 'home.natures.' + card.code + '.description' | translate }}</span>
+            </span>
+          </span>
+          <span class="nature-card__go" aria-hidden="true">
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </span>
+        </a>
+      }
+    </div>
+  </section>
+
+  <section class="home-ehouwiya">
+    <div class="home-ehouwiya__head">
+      <div class="home-ehouwiya__identity">
+        <span class="home-ehouwiya__mark" aria-hidden="true">
+          <span class="material-symbols-outlined">verified_user</span>
+        </span>
+        <span class="home-ehouwiya__titles">
+          <span class="home-ehouwiya__name-row">
+            <span class="home-ehouwiya__name">{{ 'home.ehouwiyaTitle' | translate }}</span>
+            <span class="home-ehouwiya__chip">{{ 'home.ehouwiyaChip' | translate }}</span>
+          </span>
+          <span class="home-ehouwiya__brand">E-Houwiya Mobile ID</span>
+        </span>
+      </div>
+      <span class="home-ehouwiya__shield" aria-hidden="true">
+        <span class="material-symbols-outlined">shield</span>
+      </span>
+    </div>
+    <p class="home-ehouwiya__text">{{ 'home.ehouwiyaText' | translate }}</p>
+    <span class="home-ehouwiya__login">
+      <span class="material-symbols-outlined" aria-hidden="true">login</span>
+      <span>{{ 'home.ehouwiyaLogin' | translate }}</span>
+    </span>
   </section>
 
   <section class="home-replies" aria-labelledby="home-replies-title">

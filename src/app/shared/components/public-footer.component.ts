@@ -24,10 +24,16 @@ import { NotificationService } from '../../core/services/notification.service';
         ></button>
       </div>
     }
-    <footer class="public-footer d-none d-md-block">
+    <footer class="public-footer">
       <div class="gold-bar" aria-hidden="true"></div>
       <div class="public-footer__inner">
-        <strong>{{ 'common.brand' | translate }}</strong>
+        <img
+          src="assets/images/transtu_logo.png"
+          [attr.alt]="'common.logoAlt' | translate"
+          class="public-footer__logo"
+          width="106"
+          height="36"
+        />
         <span class="tagline">{{ 'footer.tagline' | translate }}</span>
       </div>
     </footer>
@@ -36,25 +42,41 @@ import { NotificationService } from '../../core/services/notification.service';
     `
       .public-footer {
         margin-top: auto;
-        background: #ffffff;
-        color: #142033;
-        font-size: 0.85rem;
-        border-top: 1px solid #e9ecef;
+        background: rgba(248, 249, 255, 0.92);
+        color: #131c28;
+        font-size: 0.75rem;
+        border-top: 0;
+        box-shadow: 0 -1px 0 rgba(194, 198, 212, 0.7);
       }
       .public-footer__inner {
         width: min(720px, 100%);
         margin: 0 auto;
-        padding: 1rem;
+        padding: 0.85rem 1rem;
         display: flex;
-        flex-direction: column;
-        gap: 0.2rem;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.65rem 1rem;
+      }
+      .public-footer__logo {
+        display: block;
+        height: 36px;
+        width: auto;
+        max-width: 100%;
+        object-fit: contain;
+        flex-shrink: 0;
       }
       .tagline {
         color: #5a6b7d;
+        line-height: 1.4;
+      }
+      @media (max-width: 767.98px) {
+        .public-footer {
+          margin-bottom: calc(5.25rem + env(safe-area-inset-bottom));
+        }
       }
       .gold-bar {
-        height: 3px;
-        background: linear-gradient(90deg, #e8a317, #0b8a3e 55%, #1a3a7a);
+        height: 4px;
+        background: linear-gradient(90deg, #006e2f 0 33.33%, #f5bf00 33.33% 66.66%, #0b52a8 66.66% 100%);
       }
       .toast-banner {
         position: sticky;
