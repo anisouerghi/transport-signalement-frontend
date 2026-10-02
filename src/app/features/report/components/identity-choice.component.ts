@@ -49,25 +49,28 @@ import { AuthService } from '../../../core/services/auth.service';
         align-items: flex-start;
         gap: 0.85rem;
         text-align: start;
-        background: #fff;
-        border: 1px solid var(--transtu-border);
-        border-radius: 0.95rem;
+        background: var(--surface-container-lowest);
+        border: 1px solid rgba(194, 198, 212, 0.55);
+        border-radius: 0.75rem;
         padding: 1rem 1.05rem;
         min-height: 4.5rem;
         cursor: pointer;
+        box-shadow: 0 1px 3px rgba(19, 28, 40, 0.08);
+        transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
       }
       .choice-card:hover {
-        border-color: rgba(11, 138, 62, 0.45);
-        background: var(--transtu-green-soft);
+        border-color: rgba(11, 82, 168, 0.4);
+        background: var(--surface-container-low);
+        box-shadow: 0 4px 12px rgba(19, 28, 40, 0.1);
       }
       .choice-card__icon {
         width: 2.4rem;
         height: 2.4rem;
-        border-radius: 50%;
+        border-radius: 0.5rem;
         display: grid;
         place-items: center;
-        background: var(--transtu-green-soft);
-        color: var(--transtu-green-dark);
+        background: var(--surface-container);
+        color: var(--primary-container);
         font-size: 1.15rem;
         flex-shrink: 0;
       }

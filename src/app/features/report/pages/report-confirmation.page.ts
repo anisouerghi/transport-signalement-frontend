@@ -15,17 +15,17 @@ import { NotificationService } from '../../../core/services/notification.service
       <div class="stepper">
         <div class="step completed">
           <div class="step__icon"><i class="bi bi-check-lg"></i></div>
-          <div class="step__label">Type</div>
+          <div class="step__label">{{ 'confirmation.stepDetails' | translate }}</div>
         </div>
         <div class="step-line completed"></div>
         <div class="step completed">
           <div class="step__icon"><i class="bi bi-check-lg"></i></div>
-          <div class="step__label">Détails</div>
+          <div class="step__label">{{ 'confirmation.stepSummary' | translate }}</div>
         </div>
         <div class="step-line completed"></div>
         <div class="step active">
           <div class="step__icon">3</div>
-          <div class="step__label">Succès</div>
+          <div class="step__label">{{ 'confirmation.stepSuccess' | translate }}</div>
         </div>
       </div>
     </div>
@@ -61,6 +61,12 @@ import { NotificationService } from '../../../core/services/notification.service
 
         <p class="text-secondary small mb-3 px-1">{{ 'confirmation.keepRef' | translate }}</p>
 
+        @if (state()!.withTracking) {
+          <p class="text-secondary small mb-3 px-1">{{ 'confirmation.trackedNote' | translate }}</p>
+        } @else {
+          <p class="text-secondary small mb-3 px-1">{{ 'confirmation.anonymousNote' | translate }}</p>
+        }
+
         @if (state()!.email) {
           <p class="small text-secondary mb-4 px-1">
             {{ 'confirmation.notifyTo' | translate: { email: state()!.email } }}
@@ -68,6 +74,11 @@ import { NotificationService } from '../../../core/services/notification.service
         }
 
         <div class="d-grid gap-2 col-md-10 mx-auto">
+          @if (state()!.withTracking && state()!.uuid) {
+            <a class="btn btn-transtu" [routerLink]="['/report-followup', state()!.uuid]">
+              {{ 'confirmation.trackCta' | translate }}
+            </a>
+          }
           @if (auth.isAuthenticated()) {
             <a class="btn btn-transtu" routerLink="/mes-signalements">{{ 'nav.myReports' | translate }}</a>
           }
@@ -94,33 +105,34 @@ import { NotificationService } from '../../../core/services/notification.service
       padding: 0;
       border: 0;
       background: transparent;
-      color: #6c757d;
+      color: var(--on-surface-variant);
       cursor: pointer;
       font-size: 0.95rem;
     }
     .copy-reference:hover,
     .copy-reference:focus-visible {
-      color: #495057;
-      outline: 2px solid rgba(108, 117, 125, 0.3);
+      color: var(--on-surface);
+      outline: 2px solid rgba(115, 119, 131, 0.3);
       outline-offset: 2px;
     }
     .confirmation-home-button {
       background: #fff;
-      border: 1px solid var(--transtu-green);
-      color: var(--transtu-green);
+      border: 1px solid var(--primary);
+      color: var(--primary);
       font-weight: 600;
     }
     .confirmation-home-button:hover,
     .confirmation-home-button:focus-visible {
-      background: var(--transtu-green);
-      border-color: var(--transtu-green);
-      color: #fff;
+      background: var(--primary);
+      border-color: var(--primary);
+      color: var(--on-primary);
     }
     .stepper-container {
-      background: #ffffff;
+      background: var(--surface-container-lowest);
       padding: 1rem;
-      border-radius: 0.85rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      border-radius: 0.75rem;
+      box-shadow: 0 1px 3px rgba(19, 28, 40, 0.08);
+      border: 1px solid rgba(194, 198, 212, 0.55);
     }
     .stepper {
       display: flex;
@@ -141,8 +153,8 @@ import { NotificationService } from '../../../core/services/notification.service
       width: 38px;
       height: 38px;
       border-radius: 50%;
-      background: #e9ecef;
-      color: #6c757d;
+      background: var(--surface-container-high);
+      color: var(--on-surface-variant);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -153,35 +165,35 @@ import { NotificationService } from '../../../core/services/notification.service
     .step__label {
       font-size: 0.78rem;
       font-weight: 600;
-      color: #6c757d;
+      color: var(--on-surface-variant);
       text-align: center;
       white-space: nowrap;
     }
     .step.completed .step__icon {
-      background: #0b8a3e;
-      color: #fff;
+      background: var(--secondary);
+      color: var(--on-secondary);
     }
     .step.completed .step__label {
-      color: #0b8a3e;
+      color: var(--secondary);
     }
     .step.active .step__icon {
-      background: #0b8a3e;
-      color: #fff;
-      box-shadow: 0 0 0 4px rgba(11, 138, 62, 0.25);
+      background: var(--secondary);
+      color: var(--on-secondary);
+      box-shadow: 0 0 0 4px rgba(0, 110, 47, 0.25);
     }
     .step.active .step__label {
-      color: #0b8a3e;
+      color: var(--secondary);
       font-weight: 700;
     }
     .step-line {
       flex: 1;
       height: 3px;
-      background: #e9ecef;
+      background: var(--surface-container-high);
       margin: 0 0.5rem;
       margin-bottom: 1.5rem;
     }
     .step-line.completed {
-      background: #0b8a3e;
+      background: var(--secondary);
     }
   `]
 })
@@ -197,8 +209,10 @@ export class ReportConfirmationPage implements OnInit {
     if (fromHistory?.reference) {
       this.state.set({
         reference: fromHistory.reference,
+        uuid: fromHistory.uuid,
         email: fromHistory.email,
         supportUuid: fromHistory.supportUuid,
+        withTracking: fromHistory.withTracking,
       });
     }
   }

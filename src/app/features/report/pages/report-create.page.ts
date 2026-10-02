@@ -10,6 +10,7 @@ import { NotificationService } from '../../../core/services/notification.service
 import { EmailNudgeComponent } from '../components/email-nudge.component';
 import { AttachmentPickerComponent } from '../components/attachment-picker.component';
 import { SupportSummaryComponent } from '../components/support-summary.component';
+import { ReportSummaryComponent } from '../components/report-summary.component';
 import { TurnstileWidgetComponent } from '../components/turnstile-widget.component';
 import { VoiceRecorderComponent } from '../components/voice-recorder.component';
 import {
@@ -19,6 +20,7 @@ import {
 } from '../models/report.model';
 import { ReportService } from '../services/report.service';
 import { ReportTypeService } from '../services/report-type.service';
+import { ReportDraftService } from '../services/report-draft.service';
 import { SupportService } from '../services/support.service';
 
 const UUID_RE =
@@ -31,6 +33,7 @@ const UUID_RE =
     ReactiveFormsModule,
     RouterLink,
     SupportSummaryComponent,
+    ReportSummaryComponent,
     EmailNudgeComponent,
     AttachmentPickerComponent,
     VoiceRecorderComponent,
@@ -64,8 +67,8 @@ const UUID_RE =
       width: 38px;
       height: 38px;
       border-radius: 50%;
-      background: #e9ecef;
-      color: #6c757d;
+      background: var(--surface-container-high);
+      color: var(--on-surface-variant);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -76,35 +79,35 @@ const UUID_RE =
     .step__label {
       font-size: 0.78rem;
       font-weight: 600;
-      color: #6c757d;
+      color: var(--on-surface-variant);
       text-align: center;
       white-space: nowrap;
     }
     .step.completed .step__icon {
-      background: #0b8a3e;
-      color: #fff;
+      background: var(--secondary);
+      color: var(--on-secondary);
     }
     .step.completed .step__label {
-      color: #0b8a3e;
+      color: var(--secondary);
     }
     .step.active .step__icon {
-      background: #e8a317;
-      color: #fff;
-      box-shadow: 0 0 0 4px rgba(232, 163, 23, 0.25);
+      background: var(--tertiary-fixed-dim);
+      color: var(--on-tertiary-fixed);
+      box-shadow: 0 0 0 4px rgba(245, 191, 0, 0.3);
     }
     .step.active .step__label {
-      color: #142033;
+      color: var(--on-surface);
       font-weight: 700;
     }
     .step-line {
       flex: 1;
       height: 3px;
-      background: #e9ecef;
+      background: var(--surface-container-high);
       margin: 0 0.5rem;
       margin-bottom: 1.5rem;
     }
     .step-line.completed {
-      background: #0b8a3e;
+      background: var(--secondary);
     }
   `]
 })
@@ -116,6 +119,7 @@ export class ReportCreatePage implements OnInit {
   private readonly reportTypeService = inject(ReportTypeService);
   private readonly reportService = inject(ReportService);
   private readonly notifications = inject(NotificationService);
+  private readonly draftService = inject(ReportDraftService);
   readonly auth = inject(AuthService);
   private readonly translate = inject(TranslateService);
   private readonly config = inject(ConfigService);
@@ -127,6 +131,7 @@ export class ReportCreatePage implements OnInit {
   readonly submitted = signal(false);
   readonly invalidQr = signal(false);
   readonly errorMessage = signal<string | null>(null);
+  readonly step = signal<'form' | 'summary' | 'choice'>('form');
   readonly support = signal<TransportSupport | null>(null);
   readonly reportTypes = signal<ReportType[]>([]);
   readonly supportUuid = signal('');
@@ -155,11 +160,10 @@ export class ReportCreatePage implements OnInit {
       this.reportTypeService.getActive().subscribe({
         next: (types) => {
           this.reportTypes.set(types);
-          if (types.length > 0) {
-            this.form.controls.reportTypeId.setValue(String(types[0].reportTypeId));
-          }
+          this.preselectType(types);
           this.prefillFromSession();
           this.loading.set(false);
+          this.maybeResumeDraft();
         },
         error: () => {
           this.loading.set(false);
@@ -184,11 +188,10 @@ export class ReportCreatePage implements OnInit {
       next: ({ support, types }) => {
         this.support.set(support);
         this.reportTypes.set(types);
-        if (types.length > 0) {
-          this.form.controls.reportTypeId.setValue(String(types[0].reportTypeId));
-        }
+        this.preselectType(types);
         this.prefillFromSession();
         this.loading.set(false);
+        this.maybeResumeDraft();
       },
       error: (err: HttpErrorResponse) => {
         this.loading.set(false);
@@ -222,7 +225,118 @@ export class ReportCreatePage implements OnInit {
     return this.config.cloudflareEnabled && !!this.config.cloudflareSiteKey && !this.turnstileToken();
   }
 
+  /** Présélectionne le type depuis ?type=CODE, sinon le premier actif. */
+  private preselectType(types: ReportType[]): void {
+    const code = this.route.snapshot.queryParamMap.get('type')?.trim();
+    const match = code
+      ? types.find((t) => t.code?.toUpperCase() === code.toUpperCase())
+      : undefined;
+    const chosen = match ?? types[0];
+    if (chosen) {
+      this.form.controls.reportTypeId.setValue(String(chosen.reportTypeId));
+    }
+  }
+
+  /** Étape 1 → validation du formulaire puis passage au récapitulatif. */
+  goToSummary(): void {
+    this.submitted.set(true);
+    this.turnstileError.set(null);
+    if (this.form.invalid || (!this.anonymousMode() && !this.support())) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    if (this.turnstileBlocksSubmit()) {
+      this.turnstileError.set(this.translate.instant('turnstile.required'));
+      this.notifications.error(this.translate.instant('turnstile.required'));
+      return;
+    }
+    this.step.set('summary');
+  }
+
+  backToForm(): void {
+    this.step.set('form');
+  }
+
+  backToSummary(): void {
+    this.step.set('summary');
+  }
+
+  /** Étape 2 validée → étape 3 : choix suivi ou sans suivi. */
+  goToChoice(): void {
+    this.step.set('choice');
+  }
+
+  /** Sans suivi : enregistrement immédiat en mode anonyme. */
+  submitAnonymous(): void {
+    this.doSubmit(false);
+  }
+
+  /** Avec suivi : connexion requise, puis enregistrement. */
+  submitTracking(): void {
+    if (this.auth.isAuthenticated()) {
+      this.doSubmit(true);
+      return;
+    }
+    this.draftService.save({
+      formValue: this.form.getRawValue(),
+      supportUuid: this.supportUuid(),
+      anonymousMode: this.anonymousMode(),
+      files: [...this.selectedFiles()],
+      voiceFile: this.voiceFile(),
+      withTracking: true,
+    });
+    const type = this.route.snapshot.queryParamMap.get('type');
+    const params = type ? `?type=${encodeURIComponent(type)}&resume=1` : '?resume=1';
+    void this.router.navigate(['/connexion'], {
+      queryParams: { returnUrl: `/signalement/anonyme${params}` },
+    });
+  }
+
+  /** Reprend un brouillon après redirection vers la connexion. */
+  private maybeResumeDraft(): void {
+    const resume = this.route.snapshot.queryParamMap.get('resume');
+    if (!resume) {
+      return;
+    }
+    const draft = this.draftService.take();
+    if (!draft) {
+      return;
+    }
+    this.supportUuid.set(draft.supportUuid);
+    this.anonymousMode.set(draft.anonymousMode);
+    this.form.patchValue(draft.formValue);
+    this.selectedFiles.set(draft.files);
+    this.voiceFile.set(draft.voiceFile);
+    this.step.set('choice');
+    if (draft.withTracking && this.auth.isAuthenticated()) {
+      if (this.turnstileBlocksSubmit()) {
+        // Le token Turnstile n'est plus valide : retour au formulaire pour le revalider.
+        this.step.set('form');
+        this.turnstileError.set(this.translate.instant('turnstile.required'));
+        return;
+      }
+      this.doSubmit(true);
+    }
+  }
+
+  selectedReportType(): ReportType | undefined {
+    return this.reportTypes().find(
+      (t) => String(t.reportTypeId) === this.form.controls.reportTypeId.value,
+    );
+  }
+
   submit(): void {
+    if (this.step() === 'form') {
+      this.goToSummary();
+      return;
+    }
+    if (this.step() === 'summary') {
+      this.goToChoice();
+      return;
+    }
+  }
+
+  doSubmit(withTracking: boolean): void {
     this.submitted.set(true);
     this.turnstileError.set(null);
     if (this.form.invalid || (!this.anonymousMode() && !this.support())) {
@@ -268,8 +382,10 @@ export class ReportCreatePage implements OnInit {
         void this.router.navigate(['/confirmation'], {
           state: {
             reference: report.reference,
+            uuid: withTracking ? report.uuid : undefined,
             email: payload.passenger.email,
             supportUuid: this.supportUuid() || undefined,
+            withTracking,
           },
         });
       },

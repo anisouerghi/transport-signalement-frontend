@@ -1,15 +1,15 @@
 .dropzone {
-  border: 2px dashed rgba(11, 138, 62, 0.35);
-  border-radius: 0.85rem;
+  border: 2px dashed rgba(0, 59, 127, 0.35);
+  border-radius: 0.75rem;
   padding: 1.25rem 1rem;
   text-align: center;
-  background: rgba(232, 246, 238, 0.45);
+  background: var(--surface-container-low);
   transition: border-color 0.15s ease, background 0.15s ease;
 }
 
 .dropzone--active {
-  border-color: var(--transtu-green);
-  background: rgba(232, 246, 238, 0.9);
+  border-color: var(--primary);
+  background: var(--surface-container);
 }
 
 .dropzone--disabled {
@@ -28,7 +28,7 @@
   max-height: 20rem;
   object-fit: cover;
   border-radius: 0.65rem;
-  background: #101820;
+  background: var(--inverse-surface);
 }
 
 .file-row {
@@ -56,8 +56,8 @@
   border-radius: 0.45rem;
   display: grid;
   place-items: center;
-  background: #f0f4fb;
-  color: #b42318;
+  background: var(--surface-container);
+  color: var(--on-error-container);
   font-size: 1.35rem;
   flex-shrink: 0;
 }

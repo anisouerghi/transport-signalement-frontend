@@ -15,6 +15,9 @@ export interface ReportType {
   reportTypeId: number;
   code: string;
   label: string;
+  labelFr?: string;
+  labelAr?: string;
+  labelEn?: string;
   description?: string;
   active?: boolean;
 }
@@ -79,6 +82,7 @@ export interface ConfirmationState {
   uuid?: string;
   email?: string;
   supportUuid?: string;
+  withTracking?: boolean;
 }
 
 /** Suivi public sécurisé (API /api/public/suivi/{uuid}). */

@@ -24,14 +24,15 @@
   border-radius: 50%;
   display: inline-grid;
   place-items: center;
-  background: #eef2f6;
+  background: var(--surface-container);
+  color: var(--on-surface-variant);
   font-size: 0.75rem;
   font-weight: 700;
 }
 
 .entry-steps__item--active .entry-steps__num {
-  background: var(--transtu-green-soft);
-  color: var(--transtu-green-dark);
+  background: var(--primary);
+  color: var(--on-primary);
 }
 
 .entry-steps__sep {

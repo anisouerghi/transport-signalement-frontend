@@ -1,41 +1,110 @@
-/* TRANSTU public theme — inspired by official logo (green / blue / gold) */
-$transtu-green: #0b8a3e;
-$transtu-green-dark: #066b2f;
-$transtu-green-soft: #e8f6ee;
-$transtu-blue: #1a3a7a;
-$transtu-blue-deep: #0f2758;
-$transtu-gold: #e8a317;
-$transtu-gold-soft: #fff6e0;
-$transtu-ink: #142033;
-$transtu-muted: #5a6b7d;
-$transtu-surface: #f4f7f5;
-$transtu-border: #d5e0d9;
+/* -------------------------------------------------------------------------- */
+/* TRANSTU public theme — Material Design 3 (référence code.html)             */
+/* -------------------------------------------------------------------------- */
 
-:root {
-  --transtu-green: #{$transtu-green};
-  --transtu-green-dark: #{$transtu-green-dark};
-  --transtu-green-soft: #{$transtu-green-soft};
-  --transtu-blue: #{$transtu-blue};
-  --transtu-blue-deep: #{$transtu-blue-deep};
-  --transtu-gold: #{$transtu-gold};
-  --transtu-gold-soft: #{$transtu-gold-soft};
-  --transtu-ink: #{$transtu-ink};
-  --transtu-muted: #{$transtu-muted};
-  --transtu-surface: #{$transtu-surface};
-  --transtu-border: #{$transtu-border};
-  --bs-primary: #{$transtu-green};
-  --bs-primary-rgb: 11, 138, 62;
-  --bs-link-color: #{$transtu-green-dark};
-  --bs-body-font-family: 'Source Sans 3', system-ui, sans-serif;
-  --bs-heading-font-family: 'Manrope', system-ui, sans-serif;
-  --bs-body-color: #{$transtu-ink};
-  --bs-body-bg: transparent;
-  --bs-border-radius: 0.85rem;
-  --bs-border-radius-lg: 1.15rem;
-}
+/* Bootstrap SCSS overrides (avant l'import) */
+$primary: #003b7f;
+$secondary: #424752;
+$success: #006e2f;
+$danger: #ba1a1a;
+$warning: #b26a00;
+$info: #0b52a8;
+$light: #eff4ff;
+$dark: #28313d;
+
+$font-family-base: 'Inter', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+$headings-font-family: 'Inter', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+
+$border-radius: 0.5rem;
+$border-radius-sm: 0.375rem;
+$border-radius-lg: 0.75rem;
+$border-radius-xl: 1rem;
+
+$btn-border-radius: 0.5rem;
+$btn-border-radius-lg: 0.5rem;
+$btn-border-radius-sm: 0.375rem;
+$btn-font-weight: 600;
+
+$input-border-radius: 0.5rem;
+$input-border-radius-lg: 0.5rem;
+$input-focus-border-color: rgba(0, 59, 127, 0.55);
+$input-focus-box-shadow: 0 0 0 0.22rem rgba(0, 59, 127, 0.16);
+
+$card-border-radius: 0.75rem;
 
 @import 'bootstrap/scss/bootstrap';
 @import 'bootstrap-icons/font/bootstrap-icons.css';
+
+/* Jetons M3 (palette issue de la maquette code.html) */
+:root {
+  --primary: #003b7f;
+  --on-primary: #ffffff;
+  --primary-container: #0b52a8;
+  --on-primary-container: #b0c9ff;
+  --primary-fixed: #d7e2ff;
+  --primary-fixed-dim: #acc7ff;
+  --on-primary-fixed: #001a40;
+  --on-primary-fixed-variant: #004491;
+
+  --secondary: #006e2f;
+  --on-secondary: #ffffff;
+  --secondary-container: #8cfa9f;
+  --on-secondary-container: #007432;
+  --secondary-fixed: #8cfa9f;
+  --secondary-fixed-dim: #70dd86;
+  --on-secondary-fixed: #002109;
+  --on-secondary-fixed-variant: #005321;
+
+  --tertiary: #4e3b00;
+  --on-tertiary: #ffffff;
+  --tertiary-container: #6a5100;
+  --on-tertiary-container: #f9c200;
+  --tertiary-fixed: #ffdf95;
+  --tertiary-fixed-dim: #f5bf00;
+  --on-tertiary-fixed: #251a00;
+  --on-tertiary-fixed-variant: #594400;
+
+  --error: #ba1a1a;
+  --on-error: #ffffff;
+  --error-container: #ffdad6;
+  --on-error-container: #93000a;
+
+  --surface: #f8f9ff;
+  --surface-bright: #f8f9ff;
+  --surface-dim: #d1daeb;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #eff4ff;
+  --surface-container: #e5eeff;
+  --surface-container-high: #e0e9f9;
+  --surface-container-highest: #dae3f4;
+  --surface-variant: #dae3f4;
+  --on-surface: #131c28;
+  --on-surface-variant: #424752;
+  --outline: #737783;
+  --outline-variant: #c2c6d4;
+  --inverse-surface: #28313d;
+  --inverse-on-surface: #eaf1ff;
+  --inverse-primary: #acc7ff;
+  --surface-tint: #1f5cb3;
+
+  /* Alias legacy — conservés pour les SCSS existants */
+  --transtu-green: var(--secondary);
+  --transtu-green-dark: var(--on-secondary-fixed-variant);
+  --transtu-green-soft: #e1f5e7;
+  --transtu-blue: var(--primary-container);
+  --transtu-blue-deep: var(--primary);
+  --transtu-gold: var(--tertiary-fixed-dim);
+  --transtu-gold-soft: #fff6db;
+  --transtu-ink: var(--on-surface);
+  --transtu-muted: var(--on-surface-variant);
+  --transtu-surface: var(--surface);
+  --transtu-border: var(--outline-variant);
+
+  --bs-body-font-family: #{$font-family-base};
+  --bs-heading-font-family: #{$headings-font-family};
+  --bs-body-color: var(--on-surface);
+  --bs-body-bg: transparent;
+}
 
 *,
 *::before,
@@ -50,12 +119,9 @@ body {
 
 body {
   margin: 0;
-  color: var(--transtu-ink);
+  color: var(--on-surface);
   font-family: var(--bs-body-font-family);
-  background:
-    radial-gradient(ellipse 80% 50% at 10% -10%, rgba(11, 138, 62, 0.14), transparent 55%),
-    radial-gradient(ellipse 70% 45% at 100% 0%, rgba(26, 58, 122, 0.12), transparent 50%),
-    linear-gradient(180deg, #eef5f1 0%, var(--transtu-surface) 42%, #e8eef6 100%);
+  background: var(--surface);
   background-attachment: fixed;
 }
 
@@ -69,8 +135,37 @@ h5,
 .h3,
 .h4,
 .h5 {
-  font-family: 'Manrope', system-ui, sans-serif;
-  letter-spacing: -0.02em;
+  font-family: var(--bs-heading-font-family);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--on-surface);
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  line-height: 1;
+}
+
+/* Ruban tricolore TRANSTU (vert / or / bleu) */
+.brand-ribbon {
+  display: flex;
+  height: 4px;
+  width: 100%;
+
+  > span {
+    flex: 1;
+    height: 100%;
+  }
+
+  .brand-ribbon__green {
+    background: var(--secondary);
+  }
+  .brand-ribbon__gold {
+    background: var(--tertiary-fixed-dim);
+  }
+  .brand-ribbon__blue {
+    background: var(--primary-container);
+  }
 }
 
 .app-shell {
@@ -92,45 +187,110 @@ h5,
   }
 }
 
+/* -------------------------------------------------------------------------- */
+/* Boutons                                                                     */
+/* -------------------------------------------------------------------------- */
+.btn {
+  --bs-btn-border-radius: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: all 0.15s ease;
+
+  &:active {
+    transform: scale(0.99);
+  }
+}
+
 .btn-transtu {
-  --bs-btn-bg: var(--transtu-green);
-  --bs-btn-border-color: var(--transtu-green);
-  --bs-btn-hover-bg: var(--transtu-green-dark);
-  --bs-btn-hover-border-color: var(--transtu-green-dark);
-  --bs-btn-active-bg: var(--transtu-green-dark);
-  --bs-btn-active-border-color: var(--transtu-green-dark);
-  --bs-btn-color: #fff;
-  --bs-btn-hover-color: #fff;
+  --bs-btn-bg: var(--primary);
+  --bs-btn-border-color: var(--primary);
+  --bs-btn-hover-bg: var(--primary-container);
+  --bs-btn-hover-border-color: var(--primary-container);
+  --bs-btn-active-bg: var(--primary-container);
+  --bs-btn-active-border-color: var(--primary-container);
+  --bs-btn-color: var(--on-primary);
+  --bs-btn-hover-color: var(--on-primary);
+  --bs-btn-active-color: var(--on-primary);
+  --bs-btn-disabled-bg: var(--primary);
+  --bs-btn-disabled-border-color: var(--primary);
   font-weight: 700;
   letter-spacing: 0.01em;
   padding: 0.75rem 1.25rem;
+  box-shadow: 0 1px 3px rgba(19, 28, 40, 0.12);
 }
 
 .btn-transtu-outline {
-  --bs-btn-color: var(--transtu-blue);
-  --bs-btn-border-color: var(--transtu-blue);
-  --bs-btn-hover-bg: var(--transtu-blue);
-  --bs-btn-hover-border-color: var(--transtu-blue);
-  --bs-btn-hover-color: #fff;
+  --bs-btn-color: var(--primary);
+  --bs-btn-border-color: var(--primary);
+  --bs-btn-hover-bg: var(--primary);
+  --bs-btn-hover-border-color: var(--primary);
+  --bs-btn-hover-color: var(--on-primary);
+  --bs-btn-active-bg: var(--primary-container);
+  --bs-btn-active-border-color: var(--primary-container);
+  --bs-btn-active-color: var(--on-primary);
   font-weight: 700;
   letter-spacing: 0.01em;
   padding: 0.75rem 1.25rem;
 }
 
-.panel {
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(213, 224, 217, 0.9);
-  border-radius: var(--bs-border-radius-lg);
-  box-shadow: 0 18px 40px rgba(15, 39, 88, 0.06);
-  backdrop-filter: blur(8px);
+.btn-link {
+  --bs-link-color: var(--primary);
+  --bs-btn-color: var(--primary);
+  --bs-btn-hover-color: var(--primary-container);
+  font-weight: 600;
 }
 
+/* -------------------------------------------------------------------------- */
+/* Panneaux / cartes                                                           */
+/* -------------------------------------------------------------------------- */
+.panel {
+  background: var(--surface-container-lowest);
+  border: 1px solid rgba(194, 198, 212, 0.55);
+  border-radius: var(--bs-border-radius-lg);
+  box-shadow: 0 1px 3px rgba(19, 28, 40, 0.08);
+}
 
+.report-card {
+  display: block;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.report-card:hover {
+  border-color: rgba(11, 82, 168, 0.4);
+  box-shadow: 0 4px 12px rgba(19, 28, 40, 0.1);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Formulaires                                                                 */
+/* -------------------------------------------------------------------------- */
+.form-control,
+.form-select {
+  background-color: var(--surface-container-lowest);
+  border-color: var(--outline-variant);
+  color: var(--on-surface);
+
+  &::placeholder {
+    color: var(--outline);
+  }
+}
 
 .form-control:focus,
 .form-select:focus {
-  border-color: rgba(11, 138, 62, 0.55);
-  box-shadow: 0 0 0 0.22rem rgba(11, 138, 62, 0.18);
+  border-color: rgba(0, 59, 127, 0.55);
+  box-shadow: 0 0 0 0.22rem rgba(0, 59, 127, 0.16);
+}
+
+.form-label {
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.01em;
+  color: var(--on-surface);
+}
+
+.input-group-text {
+  background: var(--surface-container);
+  border-color: var(--outline-variant);
+  color: var(--on-surface-variant);
 }
 
 .invalid-feedback,
@@ -138,24 +298,72 @@ h5,
   display: block;
 }
 
+.form-check-input:checked {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.form-check-input:focus {
+  border-color: rgba(0, 59, 127, 0.55);
+  box-shadow: 0 0 0 0.22rem rgba(0, 59, 127, 0.16);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Tableaux                                                                    */
+/* -------------------------------------------------------------------------- */
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--on-surface);
+  --bs-table-border-color: rgba(194, 198, 212, 0.55);
+  --bs-table-striped-bg: var(--surface-container-low);
+  --bs-table-hover-bg: var(--surface-container);
+  --bs-table-hover-color: var(--on-surface);
+  border-radius: var(--bs-border-radius-lg);
+  overflow: hidden;
+
+  > thead {
+    background: var(--surface-container);
+
+    th {
+      background: var(--surface-container);
+      color: var(--on-surface-variant);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--outline-variant);
+      white-space: nowrap;
+    }
+  }
+
+  > :not(caption) > * > * {
+    padding: 0.65rem 0.75rem;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Chips, badges & éléments divers                                             */
+/* -------------------------------------------------------------------------- */
 .support-chip {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
   padding: 0.35rem 0.75rem;
   border-radius: 999px;
-  background: var(--transtu-green-soft);
-  color: var(--transtu-green-dark);
-  font-weight: 600;
-  font-size: 0.875rem;
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
 }
 
 .email-nudge {
-  background: linear-gradient(135deg, var(--transtu-gold-soft), #fff);
-  border: 1px solid rgba(232, 163, 23, 0.35);
-  border-left: 4px solid var(--transtu-gold);
-  border-radius: 0.85rem;
+  background: linear-gradient(135deg, var(--tertiary-fixed) 0%, #fffaf0 60%);
+  border: 1px solid rgba(245, 191, 0, 0.4);
+  border-left: 4px solid var(--tertiary-fixed-dim);
+  border-radius: var(--bs-border-radius-lg);
   padding: 1rem 1.1rem;
+  color: var(--on-tertiary-fixed);
 }
 
 .page-state {
@@ -174,38 +382,38 @@ h5,
 }
 
 .page-state .icon-wrap.error {
-  background: #fde8e8;
-  color: #b42318;
+  background: var(--error-container);
+  color: var(--on-error-container);
 }
 
 .page-state .icon-wrap.success {
   background: var(--transtu-green-soft);
-  color: var(--transtu-green-dark);
+  color: var(--secondary);
 }
 
 .page-state .icon-wrap.info {
-  background: #e8eef8;
-  color: var(--transtu-blue);
+  background: var(--surface-container);
+  color: var(--primary);
 }
 
 .ref-box {
-  font-family: 'Manrope', system-ui, sans-serif;
+  font-family: var(--bs-heading-font-family);
   font-weight: 800;
   font-size: clamp(1.15rem, 4vw, 1.5rem);
   letter-spacing: 0.04em;
-  color: var(--transtu-blue-deep);
-  background: #f0f4fb;
-  border: 1px dashed rgba(26, 58, 122, 0.35);
-  border-radius: 0.85rem;
+  color: var(--primary);
+  background: var(--surface-container-low);
+  border: 1px dashed rgba(0, 59, 127, 0.35);
+  border-radius: var(--bs-border-radius);
   padding: 0.9rem 1rem;
   word-break: break-all;
 }
 
 .skeleton {
-  background: linear-gradient(90deg, #e9eee9 25%, #f7faf7 50%, #e9eee9 75%);
+  background: linear-gradient(90deg, #e5eaf5 25%, #f4f7ff 50%, #e5eaf5 75%);
   background-size: 200% 100%;
   animation: shimmer 1.2s infinite linear;
-  border-radius: 0.65rem;
+  border-radius: 0.5rem;
 }
 
 @keyframes shimmer {
@@ -223,6 +431,9 @@ h5,
   }
 }
 
+/* -------------------------------------------------------------------------- */
+/* Home                                                                        */
+/* -------------------------------------------------------------------------- */
 .home-hero__logo {
   height: 56px;
   width: auto;
@@ -232,6 +443,7 @@ h5,
   max-width: 32rem;
   margin-inline: auto;
   line-height: 1.5;
+  color: var(--on-surface-variant);
 }
 
 .home-hero__cta {
@@ -268,21 +480,21 @@ h5,
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: var(--transtu-green-soft);
-  color: var(--transtu-green-dark);
+  background: var(--surface-container);
+  color: var(--primary-container);
   flex-shrink: 0;
   font-size: 0.9rem;
   font-weight: 800;
 }
 
 .home-steps__arrow {
-  color: var(--transtu-gold);
+  color: var(--tertiary-fixed-dim);
   line-height: 1;
   transform: rotate(90deg);
 }
 
 .home-replies__title {
-  color: var(--transtu-blue-deep);
+  color: var(--primary);
   text-align: center;
   font-weight: 700;
 }
@@ -306,7 +518,7 @@ h5,
   font-size: 0.75rem;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  color: var(--transtu-muted);
+  color: var(--on-surface-variant);
   font-weight: 600;
 }
 
@@ -317,7 +529,7 @@ h5,
 }
 
 .home-reply-card__more {
-  color: var(--transtu-blue);
+  color: var(--primary-container);
   text-decoration: none;
   font-weight: 600;
 }
@@ -356,7 +568,6 @@ h5,
 
   .home-reply-card {
     flex: 1 1 calc(33.333% - 0.75rem);
-    // max-width: calc(33.333% - 0.5rem);
     min-width: 12.5rem;
   }
 }
@@ -379,14 +590,9 @@ html[dir='rtl'] .home-steps__arrow {
   margin-top: 0.45rem;
 }
 
-.report-card {
-  display: block;
-}
-
-.report-card:hover {
-  border-color: rgba(11, 138, 62, 0.35);
-}
-
+/* -------------------------------------------------------------------------- */
+/* Pagination                                                                  */
+/* -------------------------------------------------------------------------- */
 .mine-pagination {
   display: flex;
   flex-wrap: wrap;
@@ -398,11 +604,12 @@ html[dir='rtl'] .home-steps__arrow {
   min-width: 2.75rem;
   min-height: 2.75rem;
   padding: 0.4rem 0.7rem;
-  border: 1px solid var(--transtu-border);
-  background: #fff;
-  border-radius: 0.7rem;
+  border: 1px solid var(--outline-variant);
+  background: var(--surface-container-lowest);
+  border-radius: 0.5rem;
   font-weight: 600;
-  color: var(--transtu-blue-deep);
+  color: var(--primary);
+  transition: all 0.15s ease;
 }
 
 .page-btn:disabled {
@@ -411,9 +618,9 @@ html[dir='rtl'] .home-steps__arrow {
 
 .page-btn--active,
 .page-btn:not(:disabled):hover {
-  background: var(--transtu-green);
-  border-color: var(--transtu-green);
-  color: #fff;
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--on-primary);
 }
 
 .form-select-lg,
@@ -425,7 +632,7 @@ html[dir='rtl'] .home-steps__arrow {
 /* RTL (arabe) — bascule via html[dir=rtl] définie par LanguageService        */
 /* -------------------------------------------------------------------------- */
 html[dir='rtl'] body {
-  font-family: 'Noto Sans Arabic', 'Source Sans 3', system-ui, sans-serif;
+  font-family: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
 }
 
 html[dir='rtl'] h1,
@@ -438,13 +645,13 @@ html[dir='rtl'] .h2,
 html[dir='rtl'] .h3,
 html[dir='rtl'] .h4,
 html[dir='rtl'] .h5 {
-  font-family: 'Noto Sans Arabic', 'Manrope', system-ui, sans-serif;
+  font-family: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
   letter-spacing: 0;
 }
 
 html[dir='rtl'] .email-nudge {
-  border-left: 1px solid rgba(232, 163, 23, 0.35);
-  border-right: 4px solid var(--transtu-gold);
+  border-left: 1px solid rgba(245, 191, 0, 0.4);
+  border-right: 4px solid var(--tertiary-fixed-dim);
 }
 
 html[dir='rtl'] .text-start {

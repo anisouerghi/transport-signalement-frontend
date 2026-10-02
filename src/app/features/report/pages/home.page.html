@@ -1,4 +1,100 @@
 <section class="home-page">
+  <!-- Bloc statique d'en-tête -->
+  <section class="home-banner" dir="rtl">
+    <div class="home-banner__stripe" aria-hidden="true"></div>
+    <div class="home-banner__alert">
+      <span class="home-banner__alert-icon" aria-hidden="true"><i class="bi bi-exclamation-lg"></i></span>
+      <span class="home-banner__alert-body">
+        <strong class="home-banner__alert-title">حالة طارئة أو خطر مباشر؟</strong>
+        <span class="home-banner__alert-text">اتصل فوراً بـ 197 / 198 أو اضغط هنا للاطوارئ</span>
+      </span>
+    </div>
+    <div class="home-banner__stripe home-banner__stripe--thick" aria-hidden="true"></div>
+
+    <div class="home-banner__head">
+      <img class="home-banner__logo" src="assets/images/logo_transtu.jpg" alt="Transtu logo" />
+      <div class="home-banner__titles">
+        <span class="home-banner__badges">
+          <span class="home-banner__badge">بوابة المواطن</span>
+          <span class="home-banner__brand">TRANSTU</span>
+        </span>
+        <h1 class="home-banner__title">وصّل صوتك لشركة نقل تونس</h1>
+        <p class="home-banner__lead">
+          منصتكم التشاركية لتقديم الشكاوي، البلاغات الميدانية، المقترحات ورسائل الشكر لتطوير أسطول الحافلات، شبكة المترو الخفيف وخط ج.م.ح.م.
+        </p>
+      </div>
+    </div>
+
+    <form class="home-banner__search" (submit)="onTrackSubmit($event)">
+      <label class="home-banner__search-label" for="banner-tracking-input">
+        <i class="bi bi-qr-code-scan" aria-hidden="true"></i>
+        تتبّع مطلبك برمز المتابعة (Code de suivi)
+      </label>
+      <div class="home-banner__search-row">
+        <div class="home-banner__search-field">
+          <span class="home-banner__search-hash" aria-hidden="true">#</span>
+          <input
+            id="banner-tracking-input"
+            type="text"
+            dir="ltr"
+            autocomplete="off"
+            placeholder="مثال: TR-2024-8841"
+            [value]="trackingCode()"
+            (input)="onTrackingInput($event)"
+          />
+        </div>
+        <button type="submit" class="home-banner__search-btn" [disabled]="!trackingCode().trim()">
+          <i class="bi bi-search" aria-hidden="true"></i>
+          بحث
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <section class="home-types" aria-labelledby="home-types-title">
+    <div class="home-types__header">
+      <h2 id="home-types-title" class="h5 mb-0">{{ 'home.typesTitle' | translate }}</h2>
+      <span class="home-types__hint">{{ 'home.typesHint' | translate }}</span>
+    </div>
+
+    @if (typesLoading()) {
+      <div class="home-type-card home-type-card--skeleton"></div>
+      <div class="home-type-card home-type-card--skeleton"></div>
+    } @else if (typesError()) {
+      <div class="panel p-3 text-center text-secondary">{{ 'home.typesError' | translate }}</div>
+    } @else if (reportTypes().length === 0) {
+      <div class="panel p-3 text-center text-secondary">{{ 'home.typesEmpty' | translate }}</div>
+    } @else {
+      <div class="home-types__list" role="list">
+        @for (type of reportTypes(); track trackType($index, type)) {
+          <button
+            type="button"
+            class="home-type-card"
+            role="listitem"
+            [style.borderInlineStartColor]="typeAccent(type.code)"
+            (click)="goToType(type)"
+          >
+            <span class="home-type-card__icon" [style.color]="typeAccent(type.code)" [style.background]="typeIconBg(type.code)" aria-hidden="true">
+              <i [class]="typeIcon(type.code)"></i>
+            </span>
+            <span class="home-type-card__body">
+              <span class="home-type-card__titles">
+                <strong class="home-type-card__label">{{ typeLabel(type) }}</strong>
+                <span class="home-type-card__secondary">{{ typeSecondaryLabel(type) }}</span>
+              </span>
+              @if (type.description) {
+                <span class="home-type-card__desc">{{ type.description }}</span>
+              }
+            </span>
+            <span class="home-type-card__arrow" aria-hidden="true">
+              <i class="bi bi-arrow-right"></i>
+            </span>
+          </button>
+        }
+      </div>
+    }
+  </section>
+
   <section class="panel p-4 text-center home-hero">
     <h1 class="h4 mb-2">{{ 'home.title' | translate }}</h1>
     <p class="text-secondary mb-4 home-hero__intro mx-auto">{{ 'home.intro' | translate }}</p>

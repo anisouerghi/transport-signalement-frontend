@@ -26,7 +26,8 @@
     "home": "Accueil",
     "report": "Signalement",
     "myReports": "Mes signalements",
-    "scan": "Scanner"
+    "scan": "Scanner",
+    "profile": "Compte"
   },
   "header": {
     "login": "Se connecter",
@@ -71,7 +72,15 @@
     "repliesNext": "Suivant",
     "repliesPagination": "Pagination des réponses publiques",
     "seeMore": "Voir plus",
-    "seeLess": "Réduire"
+    "seeLess": "Réduire",
+    "trackingLabel": "Suivez votre demande avec le code de suivi (Code de suivi)",
+    "trackingPlaceholder": "Ex. : 123e4567-e89b-12d3-a456-426614174000",
+    "trackingSearch": "Rechercher",
+    "trackingAria": "Suivi de réclamation par code de suivi",
+    "typesTitle": "Que souhaitez-vous nous signaler ?",
+    "typesHint": "24/7 — service direct",
+    "typesError": "Impossible de charger les types de signalements.",
+    "typesEmpty": "Aucun type de signalement disponible."
   },
   "welcome": {
     "title": "Votre avis nous intéresse",
@@ -180,6 +189,16 @@
     "emailInvalid": "Adresse e-mail invalide.",
     "phoneInvalid": "Numéro de téléphone invalide.",
     "submit": "Soumettre",
+    "stepDetails": "Détails",
+    "stepSummary": "Récapitulatif",
+    "stepSuccess": "Succès",
+    "stepChoice": "Suivi",
+    "choiceTitle": "Comment souhaitez-vous enregistrer votre réclamation ?",
+    "choiceSubtitle": "Choisissez le mode d'enregistrement de votre réclamation.",
+    "choiceAnonymous": "Sans suivi (anonyme)",
+    "choiceAnonymousHint": "Enregistrer sans créer de compte ; seuls la référence et le code sont conservés.",
+    "choiceTracking": "Avec suivi",
+    "choiceTrackingHint": "Connexion requise pour suivre votre réclamation et recevoir les réponses.",
     "submitting": "Envoi en cours…",
     "success": "Réclamation envoyée avec succés.",
     "invalidQr": "QR Code non reconnu",
@@ -292,7 +311,30 @@
     "notifyTo": "Les notifications seront envoyées à {{email}}.",
     "backSupport": "",
     "copied": "Référence copiée dans le presse-papiers.",
-    "copyFailed": "Impossible de copier automatiquement. Sélectionnez la référence manuellement."
+    "copyFailed": "Impossible de copier automatiquement. Sélectionnez la référence manuellement.",
+    "stepDetails": "Détails",
+    "stepSummary": "Récapitulatif",
+    "stepSuccess": "Succès",
+    "withTracking": "Réclamation avec suivi",
+    "withoutTracking": "Réclamation anonyme",
+    "trackCta": "Suivre ma réclamation",
+    "anonymousNote": "Réclamation enregistrée sans suivi. Conservez la référence pour toute réclamation ultérieure.",
+    "trackedNote": "Votre réclamation est enregistrée. Vous pouvez la suivre à tout moment via le bouton ci-dessous."
+  },
+  "summary": {
+    "title": "Récapitulatif de votre réclamation",
+    "subtitle": "Vérifiez les informations avant de valider.",
+    "type": "Type",
+    "support": "Support",
+    "description": "Description",
+    "name": "Nom",
+    "phone": "Téléphone",
+    "email": "E-mail",
+    "attachments": "Pièces jointes",
+    "filesCount": "{{count}} fichier(s)",
+    "edit": "Modifier",
+    "next": "Continuer",
+    "confirm": "Valider"
   },
   "followUp": {
     "title": "Votre signalement",
@@ -301,8 +343,9 @@
     "invalidLinkBody": "Utilisez le lien sécurisé reçu par e-mail pour consulter votre signalement.",
     "loading": "Chargement du suivi…",
     "notFoundTitle": "Aucun signalement trouvé",
-    "notFoundBody": "Ce lien de suivi est invalide ou le signalement n'existe plus.",
+    "notFoundBody": "Ce code de suivi est invalide ou le signalement n'existe plus.",
     "createdAt": "Créé le",
+    "description": "Description du signalement",
     "repliesTitle": "Réponses de TRANSTU",
     "replyFrom": "Réponse de TRANSTU",
     "noReplies": "Aucune réponse visible pour le moment."

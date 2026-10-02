@@ -26,7 +26,8 @@
     "home": "الرئيسية",
     "report": "تبليغ",
     "myReports": "تبليغاتي",
-    "scan": "مسح الرمز"
+    "scan": "مسح الرمز",
+    "profile": "حسابي"
   },
   "header": {
     "login": "تسجيل الدخول",
@@ -71,7 +72,15 @@
     "repliesNext": "التالي",
     "repliesPagination": "ترقيم صفحات الردود العامة",
     "seeMore": "عرض المزيد",
-    "seeLess": "عرض أقل"
+    "seeLess": "عرض أقل",
+    "trackingLabel": "تتبّع مطلبك برمز المتابعة (Code de suivi)",
+    "trackingPlaceholder": "مثال: 123e4567-e89b-12d3-a456-426614174000",
+    "trackingSearch": "بحث",
+    "trackingAria": "تتبّع الشكوى بواسطة رمز المتابعة",
+    "typesTitle": "بم ترغب في إعلامنا اليوم؟",
+    "typesHint": "24/7 خدمة مباشرة",
+    "typesError": "تعذّر تحميل أنواع التبليغ.",
+    "typesEmpty": "لا توجد أنواع تبليغ متاحة."
   },
   "welcome": {
     "title": "رأيكم يهمنا",
@@ -169,6 +178,16 @@
     "emailInvalid": "عنوان بريد إلكتروني غير صالح.",
     "phoneInvalid": "رقم هاتف غير صالح.",
     "submit": "إرسال تبليغي",
+    "stepDetails": "التفاصيل",
+    "stepSummary": "ملخص",
+    "stepSuccess": "نجاح",
+    "stepChoice": "المتابعة",
+    "choiceTitle": "كيف تريد تسجيل شكواك؟",
+    "choiceSubtitle": "اختر طريقة تسجيل شكواك.",
+    "choiceAnonymous": "بدون متابعة (مجهولة)",
+    "choiceAnonymousHint": "تسجيل بدون حساب؛ يتم الاحتفاظ فقط بالمرجع والرمز.",
+    "choiceTracking": "مع متابعة",
+    "choiceTrackingHint": "تسجيل الدخول مطلوب لمتابعة شكواك وتلقي الردود.",
     "submitting": "جاري الإرسال…",
     "success": "تم تسجيل تبليغك بنجاح.",
     "invalidQr": "رمز QR غير معروف",
@@ -278,7 +297,30 @@
     "notifyTo": "ستُرسل الإشعارات إلى {{email}}.",
     "backSupport": "العودة إلى صفحة الوسيلة",
     "copied": "تم نسخ المرجع إلى الحافظة.",
-    "copyFailed": "تعذر النسخ تلقائياً. يرجى تحديد المرجع يدوياً."
+    "copyFailed": "تعذر النسخ تلقائياً. يرجى تحديد المرجع يدوياً.",
+    "stepDetails": "التفاصيل",
+    "stepSummary": "ملخص",
+    "stepSuccess": "نجاح",
+    "withTracking": "شكوى مع متابعة",
+    "withoutTracking": "شكوى مجهولة",
+    "trackCta": "متابعة شكواي",
+    "anonymousNote": "تم تسجيل الشكوى بدون متابعة. احتفظ بالمرجع للرجوع إليه لاحقاً.",
+    "trackedNote": "تم تسجيل شكواك. يمكنك متابعتها في أي وقت عبر الزر أدناه."
+  },
+  "summary": {
+    "title": "ملخص شكواك",
+    "subtitle": "يرجى التحقق من المعلومات قبل التأكيد.",
+    "type": "النوع",
+    "support": "الوسيلة",
+    "description": "الوصف",
+    "name": "الاسم",
+    "phone": "الهاتف",
+    "email": "البريد الإلكتروني",
+    "attachments": "المرفقات",
+    "filesCount": "{{count}} ملف(ات)",
+    "edit": "تعديل",
+    "next": "متابعة",
+    "confirm": "تأكيد"
   },
   "followUp": {
     "title": "تبليغك",
@@ -287,8 +329,9 @@
     "invalidLinkBody": "استخدم الرابط الآمن المستلم بالبريد للاطلاع على تبليغك.",
     "loading": "جاري تحميل المتابعة…",
     "notFoundTitle": "لم يتم العثور على تبليغ",
-    "notFoundBody": "رابط المتابعة غير صالح أو لم يعد التبليغ موجوداً.",
+    "notFoundBody": "رمز المتابعة غير صالح أو لم يعد التبليغ موجوداً.",
     "createdAt": "تاريخ الإنشاء",
+    "description": "وصف التبليغ",
     "repliesTitle": "ردود TRANSTU",
     "replyFrom": "رد من TRANSTU",
     "noReplies": "لا توجد ردود ظاهرة حالياً."

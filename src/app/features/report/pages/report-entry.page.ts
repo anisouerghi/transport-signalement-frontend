@@ -18,15 +18,21 @@ export class ReportEntryPage implements OnInit {
   ngOnInit(): void {
     if (this.auth.isAuthenticated()) {
       this.redirecting.set(true);
-      void this.router.navigate(['/signalement/anonyme']);
+      void this.router.navigate(['/signalement/anonyme'], {
+        queryParamsHandling: 'preserve',
+      });
     }
   }
 
   goToForm(): void {
-    void this.router.navigate(['/signalement/anonyme']);
+    void this.router.navigate(['/signalement/anonyme'], {
+      queryParamsHandling: 'preserve',
+    });
   }
 
   goToAnonymousForm(): void {
-    void this.router.navigate(['/signalement/anonyme']);
+    void this.router.navigate(['/signalement/anonyme'], {
+      queryParamsHandling: 'preserve',
+    });
   }
 }

@@ -26,7 +26,8 @@
     "home": "Home",
     "report": "Report",
     "myReports": "My reports",
-    "scan": "Scan"
+    "scan": "Scan",
+    "profile": "Profile"
   },
   "header": {
     "login": "Sign in",
@@ -71,7 +72,15 @@
     "repliesNext": "Next",
     "repliesPagination": "Public replies pagination",
     "seeMore": "See more",
-    "seeLess": "Show less"
+    "seeLess": "Show less",
+    "trackingLabel": "Track your request with the tracking code (Code de suivi)",
+    "trackingPlaceholder": "E.g.: 123e4567-e89b-12d3-a456-426614174000",
+    "trackingSearch": "Search",
+    "trackingAria": "Track a claim by tracking code",
+    "typesTitle": "What would you like to tell us today?",
+    "typesHint": "24/7 direct service",
+    "typesError": "Unable to load report types.",
+    "typesEmpty": "No report type available."
   },
   "welcome": {
     "title": "Your feedback matters",
@@ -180,6 +189,16 @@
     "emailInvalid": "Invalid email address.",
     "phoneInvalid": "Invalid phone number.",
     "submit": "Send my report",
+    "stepDetails": "Details",
+    "stepSummary": "Summary",
+    "stepSuccess": "Success",
+    "stepChoice": "Tracking",
+    "choiceTitle": "How would you like to file your claim?",
+    "choiceSubtitle": "Choose how to register your claim.",
+    "choiceAnonymous": "Without tracking (anonymous)",
+    "choiceAnonymousHint": "Register without an account; only the reference and code are kept.",
+    "choiceTracking": "With tracking",
+    "choiceTrackingHint": "Sign in required to track your claim and receive replies.",
     "submitting": "Sending…",
     "success": "Your report has been recorded.",
     "invalidQr": "Unrecognized QR code",
@@ -289,7 +308,30 @@
     "notifyTo": "Notifications will be sent to {{email}}.",
     "backSupport": "Back to support home",
     "copied": "Reference copied to clipboard.",
-    "copyFailed": "Unable to copy automatically. Please select the reference manually."
+    "copyFailed": "Unable to copy automatically. Please select the reference manually.",
+    "stepDetails": "Details",
+    "stepSummary": "Summary",
+    "stepSuccess": "Success",
+    "withTracking": "Claim with tracking",
+    "withoutTracking": "Anonymous claim",
+    "trackCta": "Track my claim",
+    "anonymousNote": "Claim registered without tracking. Keep the reference for any future exchange.",
+    "trackedNote": "Your claim is registered. You can track it anytime using the button below."
+  },
+  "summary": {
+    "title": "Your claim summary",
+    "subtitle": "Please review the information before validating.",
+    "type": "Type",
+    "support": "Support",
+    "description": "Description",
+    "name": "Name",
+    "phone": "Phone",
+    "email": "Email",
+    "attachments": "Attachments",
+    "filesCount": "{{count}} file(s)",
+    "edit": "Edit",
+    "next": "Continue",
+    "confirm": "Validate"
   },
   "followUp": {
     "title": "Your report",
@@ -298,8 +340,9 @@
     "invalidLinkBody": "Use the secure link received by email to view your report.",
     "loading": "Loading follow-up…",
     "notFoundTitle": "No report found",
-    "notFoundBody": "This tracking link is invalid or the report no longer exists.",
+    "notFoundBody": "This tracking code is invalid or the report no longer exists.",
     "createdAt": "Created on",
+    "description": "Report description",
     "repliesTitle": "TRANSTU replies",
     "replyFrom": "Reply from TRANSTU",
     "noReplies": "No visible reply yet."

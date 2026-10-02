@@ -1,9 +1,10 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LanguageService } from '../../../core/services/language.service';
-import { PublicHomepageReply } from '../models/report.model';
+import { PublicHomepageReply, ReportType } from '../models/report.model';
 import { ReportService } from '../services/report.service';
+import { ReportTypeService } from '../services/report-type.service';
 
 const PAGE_SIZE = 5;
 const EXCERPT_LENGTH = 110;
@@ -11,13 +12,15 @@ const EXCERPT_LENGTH = 110;
 @Component({
   selector: 'app-home-page',
   standalone: true,
-  imports: [RouterLink, TranslatePipe],
+  imports: [TranslatePipe],
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
   private readonly reportService = inject(ReportService);
+  private readonly reportTypeService = inject(ReportTypeService);
   private readonly language = inject(LanguageService);
+  private readonly router = inject(Router);
 
   readonly loading = signal(true);
   readonly error = signal(false);
@@ -25,6 +28,10 @@ export class HomePage implements OnInit {
   readonly page = signal(0);
   readonly totalPages = signal(0);
   readonly expanded = signal<ReadonlySet<number>>(new Set());
+  readonly trackingCode = signal('');
+  readonly reportTypes = signal<ReportType[]>([]);
+  readonly typesLoading = signal(true);
+  readonly typesError = signal(false);
 
   readonly pages = computed(() => {
     const n = this.totalPages();
@@ -33,6 +40,104 @@ export class HomePage implements OnInit {
 
   ngOnInit(): void {
     this.load(0);
+    this.loadReportTypes();
+  }
+
+  loadReportTypes(): void {
+    this.typesLoading.set(true);
+    this.typesError.set(false);
+    this.reportTypeService.getActive().subscribe({
+      next: (types) => {
+        this.reportTypes.set(types);
+        this.typesLoading.set(false);
+      },
+      error: () => {
+        this.typesError.set(true);
+        this.reportTypes.set([]);
+        this.typesLoading.set(false);
+      },
+    });
+  }
+
+  typeLabel(type: ReportType): string {
+    const lang = this.language.currentLang();
+    if (lang === 'ar' && type.labelAr) {
+      return type.labelAr;
+    }
+    if (lang === 'en' && type.labelEn) {
+      return type.labelEn;
+    }
+    return type.labelFr || type.label;
+  }
+
+  typeSecondaryLabel(type: ReportType): string {
+    return this.language.currentLang() === 'ar'
+      ? type.labelFr || type.label
+      : type.label;
+  }
+
+  typeIcon(code: string): string {
+    switch ((code ?? '').toUpperCase()) {
+      case 'INCIDENT':
+        return 'bi bi-exclamation-triangle';
+      case 'COMPLAINT':
+      case 'RECLAMATION':
+        return 'bi bi-chat-left-text';
+      case 'SUGGESTION':
+        return 'bi bi-lightbulb';
+      case 'MERCI':
+      case 'REMERCIEMENT':
+      case 'THANKS':
+        return 'bi bi-hand-thumbs-up';
+      default:
+        return 'bi bi-question-circle';
+    }
+  }
+
+  typeAccent(code: string): string {
+    switch ((code ?? '').toUpperCase()) {
+      case 'INCIDENT':
+        return '#c62828';
+      case 'COMPLAINT':
+      case 'RECLAMATION':
+        return '#003b7f';
+      case 'SUGGESTION':
+        return '#f0a500';
+      case 'MERCI':
+      case 'REMERCIEMENT':
+      case 'THANKS':
+        return '#2e7d32';
+      default:
+        return '#6c757d';
+    }
+  }
+
+  typeIconBg(code: string): string {
+    switch ((code ?? '').toUpperCase()) {
+      case 'INCIDENT':
+        return '#fdecea';
+      case 'COMPLAINT':
+      case 'RECLAMATION':
+        return '#e7eefb';
+      case 'SUGGESTION':
+        return '#fdf3d7';
+      case 'MERCI':
+      case 'REMERCIEMENT':
+      case 'THANKS':
+        return '#e6f4ea';
+      default:
+        return '#eef1f5';
+    }
+  }
+
+  goToType(type: ReportType): void {
+    void this.router.navigate(['/signalement/anonyme'], {
+      queryParams: { type: type.code },
+    });
+  }
+
+  trackType(index: number, type: ReportType): number {
+    return type.reportTypeId;
   }
 
   load(page: number): void {
@@ -53,6 +158,23 @@ export class HomePage implements OnInit {
         this.loading.set(false);
       },
     });
+  }
+
+  onTrackingInput(event: Event): void {
+    this.trackingCode.set((event.target as HTMLInputElement).value);
+  }
+
+  onTrackSubmit(event: Event): void {
+    event.preventDefault();
+    this.track();
+  }
+
+  track(): void {
+    const code = this.trackingCode().trim();
+    if (!code) {
+      return;
+    }
+    void this.router.navigate(['/report-followup', code]);
   }
 
   trackReply(index: number, reply: PublicHomepageReply): string {

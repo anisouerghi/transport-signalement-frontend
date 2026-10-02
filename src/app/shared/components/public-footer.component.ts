@@ -15,7 +15,20 @@ import { NotificationService } from '../../core/services/notification.service';
         role="status"
         aria-live="polite"
       >
-        <span>{{ msg }}</span>
+        <span class="material-symbols-outlined toast-banner__icon" aria-hidden="true">
+          @switch (notifications.type()) {
+            @case ('error') {
+              error
+            }
+            @case ('success') {
+              check_circle
+            }
+            @default {
+              info
+            }
+          }
+        </span>
+        <span class="toast-banner__msg">{{ msg }}</span>
         <button
           type="button"
           class="btn-close btn-close-white btn-sm"
@@ -25,7 +38,11 @@ import { NotificationService } from '../../core/services/notification.service';
       </div>
     }
     <footer class="public-footer d-none d-md-block">
-      <div class="gold-bar" aria-hidden="true"></div>
+      <div class="brand-ribbon" aria-hidden="true">
+        <span class="brand-ribbon__green"></span>
+        <span class="brand-ribbon__gold"></span>
+        <span class="brand-ribbon__blue"></span>
+      </div>
       <div class="public-footer__inner">
         <strong>{{ 'common.brand' | translate }}</strong>
         <span class="tagline">{{ 'footer.tagline' | translate }}</span>
@@ -36,10 +53,10 @@ import { NotificationService } from '../../core/services/notification.service';
     `
       .public-footer {
         margin-top: auto;
-        background: #ffffff;
-        color: #142033;
+        background: var(--surface-container-lowest);
+        color: var(--on-surface);
         font-size: 0.85rem;
-        border-top: 1px solid #e9ecef;
+        box-shadow: 0 -2px 8px rgba(27, 36, 48, 0.05);
       }
       .public-footer__inner {
         width: min(720px, 100%);
@@ -49,34 +66,49 @@ import { NotificationService } from '../../core/services/notification.service';
         flex-direction: column;
         gap: 0.2rem;
       }
-      .tagline {
-        color: #5a6b7d;
+      .public-footer__inner strong {
+        color: var(--primary);
+        font-weight: 700;
       }
-      .gold-bar {
-        height: 3px;
-        background: linear-gradient(90deg, #e8a317, #0b8a3e 55%, #1a3a7a);
+      .tagline {
+        color: var(--on-surface-variant);
       }
       .toast-banner {
         position: sticky;
-        bottom: 4.4rem;
-        z-index: 20;
+        bottom: calc(4.75rem + env(safe-area-inset-bottom));
+        z-index: 60;
+        width: min(720px, calc(100% - 2rem));
+        margin: 0 auto;
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: 0.75rem;
         padding: 0.85rem 1rem;
-        background: #1a3a7a;
-        color: #fff;
+        border-radius: 0.75rem;
+        background: var(--primary);
+        color: var(--on-primary);
+        box-shadow: 0 8px 24px rgba(19, 28, 40, 0.25);
+      }
+      .toast-banner__icon {
+        font-size: 1.35rem;
+        flex-shrink: 0;
+      }
+      .toast-banner__msg {
+        flex: 1;
+        font-weight: 600;
+        font-size: 0.9rem;
       }
       .toast-banner--error {
-        background: #b42318;
+        background: var(--error);
+        color: var(--on-error);
       }
       .toast-banner--success {
-        background: #0b8a3e;
+        background: var(--secondary);
+        color: var(--on-secondary);
       }
       @media (min-width: 768px) {
         .toast-banner {
-          bottom: 0;
+          bottom: 1rem;
         }
       }
     `,

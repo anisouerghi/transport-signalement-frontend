@@ -8,11 +8,11 @@
 .voice-panel {
   border-radius: 0.75rem;
   padding: 0.85rem;
-  background: rgba(232, 246, 238, 0.45);
+  background: var(--surface-container-low);
 }
 
 .voice-panel--recording {
-  background: rgba(220, 53, 69, 0.08);
+  background: rgba(186, 26, 26, 0.08);
 }
 
 .voice-timer {
@@ -28,7 +28,7 @@
   width: 0.65rem;
   height: 0.65rem;
   border-radius: 50%;
-  background: #dc3545;
+  background: var(--error);
   flex-shrink: 0;
   animation: voice-pulse 1s ease-in-out infinite;
 }
