@@ -1,21 +1,41 @@
 import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { LanguageService } from '../../../core/services/language.service';
-import { PublicHomepageReply } from '../models/report.model';
+import { PublicHomepageReply, ReportType } from '../models/report.model';
 import { ReportService } from '../services/report.service';
+import { ReportTypeService } from '../services/report-type.service';
 
 const PAGE_SIZE = 4;
 const EXCERPT_LENGTH = 110;
 
-const NATURE_CARDS = [
-  { code: 'COMPLAINT', icon: 'rate_review', tone: 'blue', badge: false },
-  { code: 'INCIDENT', icon: 'photo_camera', tone: 'red', badge: true },
-  { code: 'SUGGESTION', icon: 'tips_and_updates', tone: 'gold', badge: false },
-  { code: 'THANKS', icon: 'thumb_up', tone: 'green', badge: false },
-  { code: 'OTHER', icon: 'contact_support', tone: 'gray', badge: false },
-] as const;
+/** Icônes et couleurs déjà utilisées sur l'accueil. Affichage uniquement. */
+const NATURE_VISUAL: Record<string, { icon: string; tone: string; badge?: boolean }> = {
+  COMPLAINT: { icon: 'rate_review', tone: 'blue' },
+  INCIDENT: { icon: 'photo_camera', tone: 'red', badge: true },
+  SUGGESTION: { icon: 'tips_and_updates', tone: 'gold' },
+  THANKS: { icon: 'thumb_up', tone: 'green' },
+  OTHER: { icon: 'contact_support', tone: 'gray' },
+  ASSAULT: { icon: 'shield', tone: 'red' },
+};
+
+interface NatureCardView {
+  code: string;
+  icon: string;
+  tone: string;
+  badge: boolean;
+  translated: boolean;
+  label: string;
+  description: string;
+}
+
+interface EmergencyView {
+  code: string;
+  icon: string;
+}
+
+const EMERGENCY_CODES = new Set(['URGENCE', 'URGENCY', 'EMERGENCY', 'URGENT']);
 
 @Component({
   selector: 'app-home-page',
@@ -26,12 +46,18 @@ const NATURE_CARDS = [
 })
 export class HomePage implements OnInit, OnDestroy {
   private readonly reportService = inject(ReportService);
+  private readonly reportTypeService = inject(ReportTypeService);
   private readonly language = inject(LanguageService);
+  private readonly translate = inject(TranslateService);
   private readonly router = inject(Router);
   private langSub?: Subscription;
+  private naturesRequest = 0;
 
   readonly referenceError = signal(false);
-  readonly natureCards = NATURE_CARDS;
+  readonly natureCards = signal<NatureCardView[]>([]);
+  readonly emergency = signal<EmergencyView | null>(null);
+  readonly naturesLoading = signal(true);
+  readonly naturesError = signal(false);
 
   readonly loading = signal(true);
   readonly error = signal(false);
@@ -46,12 +72,40 @@ export class HomePage implements OnInit, OnDestroy {
   });
 
   ngOnInit(): void {
+    this.loadNatures();
     this.load(0);
-    this.langSub = this.language.langChanged$.subscribe(() => this.load(this.page()));
+    this.langSub = this.language.langChanged$.subscribe(() => {
+      this.loadNatures();
+      this.load(this.page());
+    });
   }
 
   ngOnDestroy(): void {
     this.langSub?.unsubscribe();
+  }
+
+  loadNatures(): void {
+    const request = ++this.naturesRequest;
+    this.naturesLoading.set(true);
+    this.naturesError.set(false);
+    this.reportTypeService.getActive().subscribe({
+      next: (types) => {
+        if (request !== this.naturesRequest) {
+          return;
+        }
+        this.applyNatures(types);
+        this.naturesLoading.set(false);
+      },
+      error: () => {
+        if (request !== this.naturesRequest) {
+          return;
+        }
+        this.natureCards.set([]);
+        this.emergency.set(null);
+        this.naturesError.set(true);
+        this.naturesLoading.set(false);
+      },
+    });
   }
 
   searchByReference(raw: string): void {
@@ -155,6 +209,73 @@ export class HomePage implements OnInit, OnDestroy {
       .map((part) => part[0])
       .join('')
       .toUpperCase();
+  }
+
+  private applyNatures(types: ReportType[]): void {
+    const usable = types.filter((type) => !!type.code?.trim());
+    const emergencyType = this.findEmergency(usable);
+    const cards = emergencyType
+      ? usable.filter((type) => type.code.toUpperCase() !== emergencyType.code.toUpperCase())
+      : usable;
+    this.emergency.set(emergencyType ? this.toEmergency(emergencyType) : null);
+    this.natureCards.set(this.toNatureCards(cards));
+  }
+
+  /** Le type urgence est identifié par son code, pas par sa priorité. */
+  private findEmergency(types: ReportType[]): ReportType | null {
+    return types.find((type) => this.isEmergencyType(type)) ?? null;
+  }
+
+  private isEmergencyType(type: ReportType): boolean {
+    return [type.code, type.category, type.type].some(
+      (value) => !!value && EMERGENCY_CODES.has(value.trim().toUpperCase()),
+    );
+  }
+
+  private toEmergency(type: ReportType): EmergencyView {
+    return {
+      code: type.code.toUpperCase(),
+      icon: type.icon?.trim() || 'crisis_alert',
+    };
+  }
+
+  private toNatureCards(types: ReportType[]): NatureCardView[] {
+    return this.sortByPriority(types.filter((type) => !!type.code?.trim()))
+      .map((type) => {
+        const code = type.code.toUpperCase();
+        const visual = NATURE_VISUAL[code];
+        const titleKey = `home.natures.${code}.title`;
+        const translated = this.translate.instant(titleKey) !== titleKey;
+        return {
+          code,
+          icon: this.resolveNatureIcon(code, type.icon, visual?.icon),
+          tone: visual?.tone || 'gray',
+          badge: !!visual?.badge,
+          translated,
+          label: type.label,
+          description: type.description?.trim() ?? '',
+        };
+      });
+  }
+
+  /** `emergency` ne dessine pas de glyphe ; le bouclier est déjà utilisé sur l'accueil. */
+  private resolveNatureIcon(code: string, apiIcon: string | null | undefined, fallback?: string): string {
+    const stored = apiIcon?.trim() ?? '';
+    if (code === 'ASSAULT' && (!stored || stored === 'emergency')) {
+      return fallback || 'shield';
+    }
+    return stored || fallback || 'info';
+  }
+
+  private sortByPriority(types: ReportType[]): ReportType[] {
+    return [...types].sort((a, b) => {
+      const left = a.priority ?? Number.MAX_SAFE_INTEGER;
+      const right = b.priority ?? Number.MAX_SAFE_INTEGER;
+      if (left !== right) {
+        return left - right;
+      }
+      return a.reportTypeId - b.reportTypeId;
+    });
   }
 
   private authorName(reply: PublicHomepageReply): string | null {

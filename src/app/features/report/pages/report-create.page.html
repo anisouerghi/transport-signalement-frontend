@@ -12,6 +12,18 @@
     <p class="text-secondary mb-0">{{ errorMessage() }}</p>
   </section>
 } @else {
+  @if (emergencyMode()) {
+    <section class="report-emergency" [attr.aria-label]="'home.emergencyTitle' | translate">
+      <span class="report-emergency__icon" aria-hidden="true">
+        <span class="material-symbols-outlined">{{ emergencyIcon() }}</span>
+      </span>
+      <span class="report-emergency__text">
+        <span class="report-emergency__title">{{ 'home.emergencyTitle' | translate }}</span>
+        <span class="report-emergency__hint">{{ 'home.emergencyCall' | translate }}</span>
+      </span>
+    </section>
+  }
+
   <!-- Stepper -->
   <div class="stepper-container mb-4">
     <div class="stepper">
@@ -42,49 +54,71 @@
   }
 
   <form class="panel p-3 p-md-4" [formGroup]="form" (ngSubmit)="submit()" novalidate>
-    <fieldset class="mb-3 border-0 p-0 m-0">
-      <legend class="form-label fw-semibold mb-2">{{ 'report.typeLabel' | translate }}</legend>
-      <div
-        class="nature-grid"
-        role="radiogroup"
-        [attr.aria-label]="'report.typeLabel' | translate"
-        [attr.aria-invalid]="controlInvalid('reportTypeId') ? true : null"
-      >
-        @for (type of reportTypes(); track type.reportTypeId) {
+    @if (!emergencyMode()) {
+    <fieldset
+      class="mb-3 border-0 p-0 m-0"
+      role="radiogroup"
+      [attr.aria-label]="'report.typeLabel' | translate"
+      [attr.aria-invalid]="controlInvalid('reportTypeId') ? true : null"
+    >
+      @for (type of reportTypes(); track type.reportTypeId) {
+        @if (isUrgence(type)) {
           <button
             type="button"
-            class="nature-card"
+            class="nature-card nature-card--urgence"
             role="radio"
             [attr.aria-checked]="isNatureSelected(type)"
             [class.is-selected]="isNatureSelected(type)"
             [class.is-invalid]="controlInvalid('reportTypeId')"
-            [class.nature-card--blue]="natureTone(type) === 'blue'"
-            [class.nature-card--red]="natureTone(type) === 'red'"
-            [class.nature-card--gold]="natureTone(type) === 'gold'"
-            [class.nature-card--green]="natureTone(type) === 'green'"
-            [class.nature-card--gray]="natureTone(type) === 'gray'"
             [disabled]="submitting()"
             (click)="selectNature(type)"
           >
-            @if (natureIcon(type); as icon) {
-              <span class="nature-card__icon" aria-hidden="true">
-                <span class="material-symbols-outlined">{{ icon }}</span>
-              </span>
-            }
+            <span class="nature-card__icon" aria-hidden="true">
+              <span class="material-symbols-outlined">{{ type.icon }}</span>
+            </span>
             <span class="nature-card__text">
               <span class="nature-card__name">{{ type.label }}</span>
-              @if (natureIcon(type)) {
-                <span class="nature-card__desc">{{ 'home.natures.' + natureCode(type) + '.description' | translate }}</span>
-              }
             </span>
-            <span class="nature-card__check" aria-hidden="true"><i class="bi bi-check-lg"></i></span>
+            <span class="nature-card__trail">
+              <span class="nature-card__check" aria-hidden="true"><i class="bi bi-check-lg"></i></span>
+              <span class="material-symbols-outlined nature-card__go" aria-hidden="true">arrow_forward</span>
+            </span>
           </button>
+        }
+      }
+      <p class="form-label fw-semibold mb-2">{{ 'report.typeLabel' | translate }}</p>
+      <div class="nature-grid">
+        @for (type of reportTypes(); track type.reportTypeId) {
+          @if (!isUrgence(type)) {
+            <button
+              type="button"
+              class="nature-card"
+              role="radio"
+              [attr.aria-checked]="isNatureSelected(type)"
+              [class.is-selected]="isNatureSelected(type)"
+              [class.is-invalid]="controlInvalid('reportTypeId')"
+              [class.nature-card--blue]="natureTone(type) === 'blue'"
+              [class.nature-card--red]="natureTone(type) === 'red'"
+              [class.nature-card--gold]="natureTone(type) === 'gold'"
+              [class.nature-card--green]="natureTone(type) === 'green'"
+              [class.nature-card--gray]="natureTone(type) === 'gray'"
+              [disabled]="submitting()"
+              (click)="selectNature(type)"
+            >
+              <span class="nature-card__icon" aria-hidden="true">
+                <span class="material-symbols-outlined">{{ type.icon }}</span>
+              </span>
+              <span class="nature-card__name">{{ type.label }}</span>
+              <span class="nature-card__check" aria-hidden="true"><i class="bi bi-check-lg"></i></span>
+            </button>
+          }
         }
       </div>
       @if (controlInvalid('reportTypeId')) {
         <div class="invalid-feedback d-block">{{ 'report.typeRequired' | translate }}</div>
       }
     </fieldset>
+    }
 
     <div class="mb-3">
       <label class="form-label fw-semibold" for="description">{{ 'report.descriptionLabel' | translate }}</label>

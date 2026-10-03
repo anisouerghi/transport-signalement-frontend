@@ -86,6 +86,10 @@
     "referenceRequired": "يرجى إدخال المرجع.",
     "natureTitle": "بم ترغب في إعلامنا اليوم؟",
     "natureSubtitle": "خدمة مباشرة 24/7",
+    "emergencyTitle": "حالة طارئة أو خطر مباشر؟",
+    "emergencyCall": "اتصل فوراً بـ 197 / 198 أو اضغط هنا للطوارئ",
+    "naturesError": "أنواع التبليغ غير متاحة مؤقتاً.",
+    "naturesEmpty": "لا توجد أنواع تبليغ متاحة حالياً.",
     "natures": {
       "COMPLAINT": {
         "title": "تقديم شكوى",

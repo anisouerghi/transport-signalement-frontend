@@ -86,6 +86,10 @@
     "referenceRequired": "Please enter a reference.",
     "natureTitle": "What would you like to tell us today?",
     "natureSubtitle": "Direct service 24/7",
+    "emergencyTitle": "Emergency or immediate danger?",
+    "emergencyCall": "Call 197 / 198 now, or tap here",
+    "naturesError": "Report types are temporarily unavailable.",
+    "naturesEmpty": "No report type is available right now.",
     "natures": {
       "COMPLAINT": {
         "title": "File a complaint",

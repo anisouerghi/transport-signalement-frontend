@@ -25,23 +25,14 @@ import { SupportService } from '../services/support.service';
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-/** Ordre fixe des natures voyageur (indépendant de la langue et des IDs). */
-const NATURE_ORDER = [
-  'COMPLAINT',
-  'ASSAULT',
-  'INCIDENT',
-  'SUGGESTION',
-  'THANKS',
-  'OTHER',
-] as const;
-
-/** Mêmes icônes et tons que les cartes de l'accueil. Affichage uniquement. */
-const NATURE_VISUAL: Record<string, { icon: string; tone: string }> = {
-  COMPLAINT: { icon: 'rate_review', tone: 'blue' },
-  INCIDENT: { icon: 'photo_camera', tone: 'red' },
-  SUGGESTION: { icon: 'tips_and_updates', tone: 'gold' },
-  THANKS: { icon: 'thumb_up', tone: 'green' },
-  OTHER: { icon: 'contact_support', tone: 'gray' },
+/** Couleur de pastille déjà utilisée sur l'accueil. L'icône vient du champ API `icon`. */
+const NATURE_TONE: Record<string, string> = {
+  COMPLAINT: 'blue',
+  INCIDENT: 'red',
+  SUGGESTION: 'gold',
+  THANKS: 'green',
+  OTHER: 'gray',
+  ASSAULT: 'red',
 };
 
 @Component({
@@ -128,17 +119,17 @@ const NATURE_VISUAL: Record<string, { icon: string; tone: string }> = {
     }
     .nature-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.25rem), 1fr));
       gap: 0.5rem;
     }
     .nature-card {
       display: flex;
       align-items: center;
       justify-content: flex-start;
-      gap: 0.75rem;
+      gap: 0.5rem;
       width: 100%;
-      min-height: 4.25rem;
-      padding: 0.85rem 1rem;
+      min-height: 3.25rem;
+      padding: 0.55rem 0.7rem;
       border: 1.5px solid #e5e8f0;
       border-radius: 0.75rem;
       background: #fff;
@@ -168,30 +159,95 @@ const NATURE_VISUAL: Record<string, { icon: string; tone: string }> = {
     .nature-card.is-selected .nature-card__check {
       display: inline-flex;
     }
+    .nature-card__trail {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-inline-start: auto;
+      flex-shrink: 0;
+    }
     .nature-card__check {
       display: none;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      width: 1.5rem;
-      height: 1.5rem;
+      width: 1.25rem;
+      height: 1.25rem;
       margin-inline-start: auto;
       border-radius: 999px;
       background: #003b7f;
       color: #fff;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       line-height: 1;
+    }
+    .nature-card__go {
+      font-size: 1.25rem;
+      color: #424752;
+    }
+    :host-context(html[dir='rtl']) .nature-card__go {
+      transform: rotate(180deg);
+    }
+    .nature-card--urgence {
+      min-height: 3.75rem;
+      margin-bottom: 0.85rem;
+      padding: 0.75rem 1rem;
+      gap: 0.75rem;
+      background: #fff8f7;
+      border-color: #ffdad6;
+    }
+    .nature-card--urgence .nature-card__check {
+      margin-inline-start: 0;
+    }
+    .nature-card--urgence .nature-card__icon {
+      background: #ba1a1a;
+      color: #fff;
+      border-radius: 999px;
+    }
+    .nature-card--urgence .nature-card__name {
+      color: #93000a;
+    }
+    .nature-card--urgence .nature-card__go {
+      color: #93000a;
+    }
+    .nature-card--urgence.is-selected {
+      border-color: #ba1a1a;
+      box-shadow: inset 0 0 0 1px #ba1a1a;
+    }
+    .nature-card--urgence.is-selected .nature-card__check {
+      background: #ba1a1a;
     }
     .nature-card__icon {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 3rem;
-      height: 3rem;
-      border-radius: 0.75rem;
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 0.65rem;
       flex-shrink: 0;
     }
+    .nature-card--urgence .nature-card__icon {
+      width: 2.75rem;
+      height: 2.75rem;
+    }
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      font-feature-settings: 'liga';
+      -webkit-font-feature-settings: 'liga';
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
     .nature-card__icon .material-symbols-outlined {
+      font-size: 1.25rem;
+    }
+    .nature-card--urgence .nature-card__icon .material-symbols-outlined {
       font-size: 1.5rem;
     }
     .nature-card--blue .nature-card__icon { background: rgba(11, 82, 168, 0.1); color: #0b52a8; }
@@ -207,18 +263,64 @@ const NATURE_VISUAL: Record<string, { icon: string; tone: string }> = {
     }
     .nature-card__name {
       color: #131c28;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 700;
-      line-height: 1.35;
-    }
-    .nature-card__desc {
-      color: #424752;
-      font-size: 0.75rem;
-      font-weight: 400;
-      line-height: 1.45;
+      line-height: 1.3;
+      min-width: 0;
     }
     .nature-card.is-invalid {
       border-color: #dc3545;
+    }
+    .report-emergency {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+      border-radius: 0.75rem;
+      background: #ffdad6;
+      color: #93000a;
+      box-shadow: 0 1px 2px rgba(19, 28, 40, 0.06);
+    }
+    .report-emergency__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 999px;
+      background: #ba1a1a;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .report-emergency__icon .material-symbols-outlined {
+      font-size: 1.25rem;
+      animation: report-emergency-pulse 1.5s ease-in-out infinite;
+    }
+    .report-emergency__text {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .report-emergency__title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+    .report-emergency__hint {
+      color: rgba(147, 0, 10, 0.9);
+      font-size: 0.75rem;
+      line-height: 1.5;
+    }
+    @keyframes report-emergency-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.45; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .report-emergency__icon .material-symbols-outlined {
+        animation: none;
+      }
     }
   `]
 })
@@ -252,6 +354,7 @@ export class ReportCreatePage implements OnInit, OnDestroy {
   readonly voiceFile = signal<File | null>(null);
   readonly turnstileToken = signal<string | null>(null);
   readonly turnstileError = signal<string | null>(null);
+  readonly emergencyMode = signal(false);
 
   readonly form = this.fb.nonNullable.group({
     reportTypeId: ['', Validators.required],
@@ -265,6 +368,7 @@ export class ReportCreatePage implements OnInit, OnDestroy {
     const uuid = this.route.snapshot.paramMap.get('uuid')?.trim() ?? '';
     this.supportUuid.set(uuid);
     this.fromDirect.set(this.route.snapshot.queryParamMap.get('source') === 'direct');
+    this.emergencyMode.set(this.natureQuery() === 'URGENCE');
 
     if (!uuid) {
       this.anonymousMode.set(true);
@@ -293,16 +397,17 @@ export class ReportCreatePage implements OnInit, OnDestroy {
     this.form.controls.reportTypeId.markAsTouched();
   }
 
-  natureIcon(type: ReportType): string | null {
-    return NATURE_VISUAL[type.code?.toUpperCase()]?.icon ?? null;
+  isUrgence(type: ReportType): boolean {
+    return type.code?.trim().toUpperCase() === 'URGENCE';
   }
 
-  natureTone(type: ReportType): string | null {
-    return NATURE_VISUAL[type.code?.toUpperCase()]?.tone ?? null;
+  emergencyIcon(): string {
+    const match = this.reportTypes().find((type) => this.isUrgence(type));
+    return match?.icon?.trim() || 'crisis_alert';
   }
 
-  natureCode(type: ReportType): string {
-    return type.code?.toUpperCase() ?? '';
+  natureTone(type: ReportType): string {
+    return NATURE_TONE[type.code?.trim().toUpperCase() ?? ''] ?? 'gray';
   }
 
   isNatureSelected(type: ReportType): boolean {
@@ -465,12 +570,16 @@ export class ReportCreatePage implements OnInit, OnDestroy {
     });
   }
 
+  private natureQuery(): string {
+    return this.route.snapshot.queryParamMap.get('nature')?.trim().toUpperCase() ?? '';
+  }
+
   private preselectNatureFromQuery(): void {
     if (this.form.controls.reportTypeId.value) {
       return;
     }
-    const code = this.route.snapshot.queryParamMap.get('nature')?.trim().toUpperCase();
-    if (!code || !NATURE_ORDER.includes(code as (typeof NATURE_ORDER)[number])) {
+    const code = this.natureQuery();
+    if (!code) {
       return;
     }
     const match = this.reportTypes().find((type) => type.code?.toUpperCase() === code);
@@ -489,14 +598,18 @@ export class ReportCreatePage implements OnInit, OnDestroy {
   }
 
   private orderNatures(types: ReportType[]): ReportType[] {
-    const byCode = new Map(types.map((t) => [t.code?.toUpperCase(), t]));
-    const ordered: ReportType[] = [];
-    for (const code of NATURE_ORDER) {
-      const hit = byCode.get(code);
-      if (hit) {
-        ordered.push(hit);
+    return [...types].sort((a, b) => {
+      const aUrgent = this.isUrgence(a);
+      const bUrgent = this.isUrgence(b);
+      if (aUrgent !== bUrgent) {
+        return aUrgent ? -1 : 1;
       }
-    }
-    return ordered;
+      const left = a.priority ?? Number.MAX_SAFE_INTEGER;
+      const right = b.priority ?? Number.MAX_SAFE_INTEGER;
+      if (left !== right) {
+        return left - right;
+      }
+      return a.reportTypeId - b.reportTypeId;
+    });
   }
 }

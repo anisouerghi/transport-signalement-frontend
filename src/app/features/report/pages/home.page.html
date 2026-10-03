@@ -1,4 +1,25 @@
 <section class="home-page">
+  @if (emergency(); as alert) {
+    <a
+      class="home-emergency"
+      [routerLink]="['/signalement/anonyme']"
+      [queryParams]="{ nature: alert.code }"
+    >
+      <span class="home-emergency__main">
+        <span class="home-emergency__icon" aria-hidden="true">
+            <span class="material-symbols-outlined">{{ alert.icon }}</span>
+        </span>
+        <span class="home-emergency__text">
+          <span class="home-emergency__title">{{ 'home.emergencyTitle' | translate }}</span>
+          <span class="home-emergency__hint">{{ 'home.emergencyCall' | translate }}</span>
+        </span>
+      </span>
+      <span class="home-emergency__go" aria-hidden="true">
+        <span class="material-symbols-outlined">arrow_forward_ios</span>
+      </span>
+    </a>
+  }
+
   <section class="home-voice">
     <h1 class="home-voice__title">{{ 'home.voiceTitle' | translate }}</h1>
     <p class="home-voice__text">{{ 'home.voiceText' | translate }}</p>
@@ -40,36 +61,58 @@
       <h2 class="home-natures__title">{{ 'home.natureTitle' | translate }}</h2>
       <span class="home-natures__aside">{{ 'home.natureSubtitle' | translate }}</span>
     </div>
-    <div class="home-natures__list">
-      @for (card of natureCards; track card.code) {
-        <a
-          [class]="'nature-card nature-card--' + card.tone"
-          [routerLink]="['/signalement/anonyme']"
-          [queryParams]="{ nature: card.code }"
-        >
-          <span class="nature-card__accent" aria-hidden="true"></span>
-          <span class="nature-card__main">
-            <span class="nature-card__icon" aria-hidden="true">
-              <span class="material-symbols-outlined">{{ card.icon }}</span>
-            </span>
-            <span class="nature-card__text">
-              <span class="nature-card__titles">
-                <span class="nature-card__name">{{ 'home.natures.' + card.code + '.title' | translate }}</span>
-                @if (card.badge) {
-                  <span class="nature-card__badge">{{ 'home.natures.' + card.code + '.badge' | translate }}</span>
-                } @else {
-                  <span class="nature-card__subtitle">{{ 'home.natures.' + card.code + '.subtitle' | translate }}</span>
+    @if (naturesLoading()) {
+      <div class="home-natures__list" aria-busy="true">
+        <div class="nature-card nature-card--skeleton"></div>
+        <div class="nature-card nature-card--skeleton"></div>
+        <div class="nature-card nature-card--skeleton"></div>
+      </div>
+    } @else if (naturesError()) {
+      <div class="panel p-3 text-center text-secondary">{{ 'home.naturesError' | translate }}</div>
+    } @else if (natureCards().length === 0) {
+      <div class="panel p-3 text-center text-secondary">{{ 'home.naturesEmpty' | translate }}</div>
+    } @else {
+      <div class="home-natures__list">
+        @for (card of natureCards(); track card.code) {
+          <a
+            [class]="'nature-card nature-card--' + card.tone"
+            [routerLink]="['/signalement/anonyme']"
+            [queryParams]="{ nature: card.code }"
+          >
+            <span class="nature-card__accent" aria-hidden="true"></span>
+            <span class="nature-card__main">
+              <span class="nature-card__icon" aria-hidden="true">
+                <span class="material-symbols-outlined">{{ card.icon }}</span>
+              </span>
+              <span class="nature-card__text">
+                <span class="nature-card__titles">
+                  <span class="nature-card__name">
+                    @if (card.translated) {
+                      {{ 'home.natures.' + card.code + '.title' | translate }}
+                    } @else {
+                      {{ card.label }}
+                    }
+                  </span>
+                  @if (card.badge) {
+                    <span class="nature-card__badge">{{ 'home.natures.' + card.code + '.badge' | translate }}</span>
+                  } @else if (card.translated) {
+                    <span class="nature-card__subtitle">{{ 'home.natures.' + card.code + '.subtitle' | translate }}</span>
+                  }
+                </span>
+                @if (card.translated) {
+                  <span class="nature-card__desc">{{ 'home.natures.' + card.code + '.description' | translate }}</span>
+                } @else if (card.description) {
+                  <span class="nature-card__desc">{{ card.description }}</span>
                 }
               </span>
-              <span class="nature-card__desc">{{ 'home.natures.' + card.code + '.description' | translate }}</span>
             </span>
-          </span>
-          <span class="nature-card__go" aria-hidden="true">
-            <span class="material-symbols-outlined">arrow_forward</span>
-          </span>
-        </a>
-      }
-    </div>
+            <span class="nature-card__go" aria-hidden="true">
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </span>
+          </a>
+        }
+      </div>
+    }
   </section>
 
   <section class="home-ehouwiya">

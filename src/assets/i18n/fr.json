@@ -86,6 +86,10 @@
     "referenceRequired": "Veuillez saisir une référence.",
     "natureTitle": "De quoi souhaitez-vous nous informer aujourd'hui ?",
     "natureSubtitle": "Service direct 24/7",
+    "emergencyTitle": "Urgence ou danger immédiat ?",
+    "emergencyCall": "Appelez immédiatement le 197 / 198 ou appuyez ici",
+    "naturesError": "Les natures de signalement sont temporairement indisponibles.",
+    "naturesEmpty": "Aucune nature de signalement n'est disponible pour le moment.",
     "natures": {
       "COMPLAINT": {
         "title": "Déposer une réclamation",
