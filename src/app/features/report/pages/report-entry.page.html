@@ -1,7 +1,7 @@
-@if (!redirecting()) {
-	<app-identity-choice
-		[returnUrl]="'/signalement/anonyme'"
-		(anonymousContinue)="goToAnonymousForm()"
-		(continue)="goToForm()"
-	/>
-}
+<section class="panel p-4 text-center">
+  <h1 class="h3 mb-2">{{ 'report.title' | translate }}</h1>
+  <p class="text-secondary mb-4">{{ 'report.subtitle' | translate }}</p>
+  <button type="button" class="btn btn-transtu btn-lg" (click)="goToForm()">
+    {{ 'report.title' | translate }}
+  </button>
+</section>

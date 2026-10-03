@@ -10,6 +10,7 @@ import { LanguageService } from '../../../core/services/language.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { EmailNudgeComponent } from '../components/email-nudge.component';
 import { AttachmentPickerComponent } from '../components/attachment-picker.component';
+import { IdentityChoiceComponent } from '../components/identity-choice.component';
 import { SupportSummaryComponent } from '../components/support-summary.component';
 import { TurnstileWidgetComponent } from '../components/turnstile-widget.component';
 import { VoiceRecorderComponent } from '../components/voice-recorder.component';
@@ -18,6 +19,7 @@ import {
   ReportType,
   TransportSupport,
 } from '../models/report.model';
+import { ReportDraftService } from '../services/report-draft.service';
 import { ReportService } from '../services/report.service';
 import { ReportTypeService } from '../services/report-type.service';
 import { SupportService } from '../services/support.service';
@@ -45,6 +47,7 @@ const NATURE_TONE: Record<string, string> = {
     EmailNudgeComponent,
     AttachmentPickerComponent,
     VoiceRecorderComponent,
+    IdentityChoiceComponent,
     TurnstileWidgetComponent,
     TranslatePipe,
   ],
@@ -331,6 +334,7 @@ export class ReportCreatePage implements OnInit, OnDestroy {
   private readonly supportService = inject(SupportService);
   private readonly reportTypeService = inject(ReportTypeService);
   private readonly reportService = inject(ReportService);
+  private readonly drafts = inject(ReportDraftService);
   private readonly notifications = inject(NotificationService);
   readonly auth = inject(AuthService);
   private readonly translate = inject(TranslateService);
@@ -355,6 +359,9 @@ export class ReportCreatePage implements OnInit, OnDestroy {
   readonly turnstileToken = signal<string | null>(null);
   readonly turnstileError = signal<string | null>(null);
   readonly emergencyMode = signal(false);
+  /** Parcours /signalement : récapitulatif puis choix, sans POST avant. */
+  readonly depositFlow = signal(false);
+  readonly step = signal<'form' | 'review' | 'choice'>('form');
 
   readonly form = this.fb.nonNullable.group({
     reportTypeId: ['', Validators.required],
@@ -369,6 +376,7 @@ export class ReportCreatePage implements OnInit, OnDestroy {
     this.supportUuid.set(uuid);
     this.fromDirect.set(this.route.snapshot.queryParamMap.get('source') === 'direct');
     this.emergencyMode.set(this.natureQuery() === 'URGENCE');
+    this.depositFlow.set(this.route.snapshot.queryParamMap.get('parcours') === 'depot');
 
     if (!uuid) {
       this.anonymousMode.set(true);
@@ -434,17 +442,72 @@ export class ReportCreatePage implements OnInit, OnDestroy {
     return this.config.cloudflareEnabled && !!this.config.cloudflareSiteKey && !this.turnstileToken();
   }
 
-  submit(): void {
-    this.submitted.set(true);
-    this.turnstileError.set(null);
-    if (this.form.invalid || (!this.anonymousMode() && !this.support())) {
-      this.form.markAllAsTouched();
+  onFormSubmit(): void {
+    if (this.depositFlow()) {
+      this.openReview();
       return;
     }
+    this.submit();
+  }
 
-    if (this.turnstileBlocksSubmit()) {
-      this.turnstileError.set(this.translate.instant('turnstile.required'));
-      this.notifications.error(this.translate.instant('turnstile.required'));
+  /** Passe au récapitulatif. Aucun POST. */
+  openReview(): void {
+    if (!this.readyToSend()) {
+      return;
+    }
+    this.persistDraft(false);
+    this.step.set('review');
+    window.scrollTo(0, 0);
+  }
+
+  editReport(): void {
+    this.step.set('form');
+    window.scrollTo(0, 0);
+  }
+
+  /** Passe au choix anonyme / suivi. Aucun POST. */
+  continueToChoice(): void {
+    this.persistDraft(false);
+    this.step.set('choice');
+    window.scrollTo(0, 0);
+  }
+
+  chooseFollowUp(): void {
+    if (this.auth.isAuthenticated()) {
+      this.submit();
+      return;
+    }
+    this.persistDraft(true);
+    void this.router.navigate(['/connexion'], {
+      queryParams: { returnUrl: '/signalement/anonyme?parcours=depot&etape=choix' },
+    });
+  }
+
+  selectedNatureLabel(): string {
+    const id = this.form.controls.reportTypeId.value;
+    return this.reportTypes().find((type) => String(type.reportTypeId) === id)?.label ?? '';
+  }
+
+  reviewContactLines(): string[] {
+    const raw = this.form.getRawValue();
+    return [raw.name, raw.email, raw.phoneNumber].map((value) => value.trim()).filter((value) => !!value);
+  }
+
+  reviewFileNames(): string[] {
+    const names = this.selectedFiles().map((file) => file.name);
+    const voice = this.voiceFile();
+    if (voice) {
+      names.push(voice.name);
+    }
+    return names;
+  }
+
+  submit(): void {
+    if (this.submitting()) {
+      return;
+    }
+    if (!this.readyToSend()) {
+      this.step.set('form');
       return;
     }
 
@@ -476,6 +539,7 @@ export class ReportCreatePage implements OnInit, OnDestroy {
     this.reportService.create(payload, files).subscribe({
       next: (report) => {
         this.submitting.set(false);
+        this.drafts.clear();
         this.notifications.success(this.translate.instant('report.success'));
         void this.router.navigate(['/confirmation'], {
           state: {
@@ -489,8 +553,74 @@ export class ReportCreatePage implements OnInit, OnDestroy {
         this.submitting.set(false);
         this.turnstileToken.set(null);
         this.turnstileWidget?.reset();
+        if (this.depositFlow()) {
+          this.step.set('form');
+        }
       },
     });
+  }
+
+  private readyToSend(): boolean {
+    this.submitted.set(true);
+    this.turnstileError.set(null);
+    if (this.form.invalid || (!this.anonymousMode() && !this.support())) {
+      this.form.markAllAsTouched();
+      return false;
+    }
+    if (this.turnstileBlocksSubmit()) {
+      this.turnstileError.set(this.translate.instant('turnstile.required'));
+      this.notifications.error(this.translate.instant('turnstile.required'));
+      return false;
+    }
+    return true;
+  }
+
+  private persistDraft(pendingAuth: boolean): void {
+    const raw = this.form.getRawValue();
+    this.drafts.save({
+      reportTypeId: raw.reportTypeId,
+      description: raw.description,
+      name: raw.name,
+      phoneNumber: raw.phoneNumber,
+      email: raw.email,
+      files: [...this.selectedFiles()],
+      voice: this.voiceFile(),
+      turnstileToken: this.turnstileToken(),
+      supportUuid: this.supportUuid(),
+      pendingAuth,
+    });
+  }
+
+  /** Reprend la saisie après la connexion du mode « avec suivi ». */
+  private restoreDepositDraft(): void {
+    if (!this.depositFlow()) {
+      return;
+    }
+    const draft = this.drafts.peek();
+    const waitingChoice = this.route.snapshot.queryParamMap.get('etape') === 'choix';
+    if (!draft || !waitingChoice) {
+      return;
+    }
+    this.form.patchValue({
+      reportTypeId: draft.reportTypeId,
+      description: draft.description,
+      name: draft.name,
+      phoneNumber: draft.phoneNumber,
+      email: draft.email,
+    });
+    this.selectedFiles.set(draft.files);
+    this.voiceFile.set(draft.voice);
+    this.turnstileToken.set(draft.turnstileToken);
+    if (this.auth.isAuthenticated()) {
+      this.prefillFromSession();
+    }
+    if (draft.pendingAuth && this.auth.isAuthenticated()) {
+      draft.pendingAuth = false;
+      this.submit();
+      return;
+    }
+    draft.pendingAuth = false;
+    this.step.set('choice');
   }
 
   controlInvalid(name: keyof typeof this.form.controls): boolean {
@@ -526,6 +656,7 @@ export class ReportCreatePage implements OnInit, OnDestroy {
         this.applyTypes(types);
         this.preselectNatureFromQuery();
         this.prefillFromSession();
+        this.restoreDepositDraft();
         this.loading.set(false);
       },
       error: () => {
@@ -546,6 +677,7 @@ export class ReportCreatePage implements OnInit, OnDestroy {
         this.applyTypes(types);
         this.preselectNatureFromQuery();
         this.prefillFromSession();
+        this.restoreDepositDraft();
         this.loading.set(false);
       },
       error: (err: HttpErrorResponse) => {
