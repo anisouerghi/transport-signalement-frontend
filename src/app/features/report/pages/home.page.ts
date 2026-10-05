@@ -115,7 +115,7 @@ export class HomePage implements OnInit, OnDestroy {
       return;
     }
     this.referenceError.set(false);
-    void this.router.navigate(['/mes-signalements'], { queryParams: { reference } });
+    void this.router.navigate(['/reference', reference]);
   }
 
   load(page: number): void {

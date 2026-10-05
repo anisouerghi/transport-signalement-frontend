@@ -48,6 +48,15 @@ export class ReportService {
       .pipe(map((res) => res.data));
   }
 
+  /** Recherche publique d'un signalement par sa référence. */
+  getByReference(reference: string): Observable<PublicReportTracking> {
+    return this.http
+      .get<ApiResponse<PublicReportTracking>>(
+        `${API_CONFIG.public.signalements}/reference/${encodeURIComponent(reference)}`,
+      )
+      .pipe(map((res) => res.data));
+  }
+
   /** 15 derniers signalements du voyageur authentifié (JWT). */
   listMine(reference?: string): Observable<PublicReportListItem[]> {
     const params: { [key: string]: string } = {};

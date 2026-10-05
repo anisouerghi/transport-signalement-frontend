@@ -53,7 +53,7 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
               <div class="user-menu__dropdown" role="menu">
                 @if (auth.isAuthenticated()) {
                   <a routerLink="/profil" role="menuitem" (click)="closeUserMenu()">
-                    {{ 'header.profile' | translate }}
+                    {{ 'accountSettings.title' | translate }}
                   </a>
                   <button type="button" role="menuitem" (click)="logout()">
                     {{ 'header.logout' | translate }}

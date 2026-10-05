@@ -39,6 +39,14 @@
   "footer": {
     "tagline": "Société des Transports de Tunis — Signalement voyageur"
   },
+  "accountSettings": {
+    "title": "Paramètres du compte",
+    "profile": "Profil",
+    "notifications": "Notifications",
+    "language": "Langue",
+    "notificationsEmpty": "Les paramètres de notifications seront disponibles prochainement.",
+    "languageEmpty": "Les paramètres de langue seront disponibles prochainement."
+  },
   "profile": {
     "title": "Mon profil",
     "name": "Nom",

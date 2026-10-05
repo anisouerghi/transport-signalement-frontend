@@ -39,6 +39,14 @@
   "footer": {
     "tagline": "Tunis Transport Company — Traveler reporting"
   },
+  "accountSettings": {
+    "title": "Account settings",
+    "profile": "Profile",
+    "notifications": "Notifications",
+    "language": "Language",
+    "notificationsEmpty": "Notification settings will be available soon.",
+    "languageEmpty": "Language settings will be available soon."
+  },
   "profile": {
     "title": "My profile",
     "name": "Name",

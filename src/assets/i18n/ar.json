@@ -39,6 +39,14 @@
   "footer": {
     "tagline": "شركة نقل تونس — تبليغ المسافر"
   },
+  "accountSettings": {
+    "title": "إعدادات الحساب",
+    "profile": "الملف الشخصي",
+    "notifications": "الإشعارات",
+    "language": "اللغة",
+    "notificationsEmpty": "ستتوفر إعدادات الإشعارات قريبًا.",
+    "languageEmpty": "ستتوفر إعدادات اللغة قريبًا."
+  },
   "profile": {
     "title": "ملفي الشخصي",
     "name": "الاسم",

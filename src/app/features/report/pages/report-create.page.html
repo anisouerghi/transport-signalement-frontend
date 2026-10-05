@@ -12,6 +12,47 @@
     <p class="text-secondary mb-0">{{ errorMessage() }}</p>
   </section>
 } @else {
+  <!-- Stepper (toujours visible) -->
+  <div class="stepper-container mb-4">
+    <div class="stepper">
+      @if (depositFlow()) {
+        <div class="step" [class.completed]="step() !== 'form'" [class.active]="step() === 'form'">
+          <div class="step__icon">
+            @if (step() !== 'form') { <i class="bi bi-check-lg"></i> } @else { 1 }
+          </div>
+          <div class="step__label">Formulaire</div>
+        </div>
+        <div class="step-line" [class.completed]="step() !== 'form'"></div>
+        <div class="step" [class.completed]="step() === 'choice'" [class.active]="step() === 'review'">
+          <div class="step__icon">
+            @if (step() === 'choice') { <i class="bi bi-check-lg"></i> } @else { 2 }
+          </div>
+          <div class="step__label">Récapitulatif</div>
+        </div>
+        <div class="step-line" [class.completed]="step() === 'choice'"></div>
+        <div class="step" [class.active]="step() === 'choice'">
+          <div class="step__icon">3</div>
+          <div class="step__label">{{ auth.isAuthenticated() ? 'Succès' : 'Choix : anonyme / avec suivi' }}</div>
+        </div>
+      } @else {
+        <div class="step completed">
+          <div class="step__icon"><i class="bi bi-check-lg"></i></div>
+          <div class="step__label">Type</div>
+        </div>
+        <div class="step-line completed"></div>
+        <div class="step active">
+          <div class="step__icon">2</div>
+          <div class="step__label">Détails</div>
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+          <div class="step__icon">3</div>
+          <div class="step__label">Succès</div>
+        </div>
+      }
+    </div>
+  </div>
+
   <div [hidden]="depositFlow() && step() !== 'form'">
   @if (emergencyMode()) {
     <section class="report-emergency" [attr.aria-label]="'home.emergencyTitle' | translate">
@@ -24,26 +65,6 @@
       </span>
     </section>
   }
-
-  <!-- Stepper -->
-  <div class="stepper-container mb-4">
-    <div class="stepper">
-      <div class="step completed">
-        <div class="step__icon"><i class="bi bi-check-lg"></i></div>
-        <div class="step__label">Type</div>
-      </div>
-      <div class="step-line completed"></div>
-      <div class="step active">
-        <div class="step__icon">2</div>
-        <div class="step__label">Détails</div>
-      </div>
-      <div class="step-line"></div>
-      <div class="step">
-        <div class="step__icon">3</div>
-        <div class="step__label">Succès</div>
-      </div>
-    </div>
-  </div>
 
   <section class="mb-3">
     <h1 class="h3 mb-1 mt-2">{{ 'report.title' | translate }}</h1>
