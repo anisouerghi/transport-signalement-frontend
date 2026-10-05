@@ -1,7 +1,8 @@
 {
   "common": {
     "brand": "TRANSTU",
-    "brandAria": "TRANSTU — Accueil",
+    "brandAria": "Signalement — Accueil",
+    "appLogoAlt": "Logo Signalement voyageur",
     "logoAlt": "Logo TRANSTU",
     "backHome": "Retour à l'accueil",
     "back": "Retour",
@@ -39,6 +40,14 @@
   "footer": {
     "tagline": "Société des Transports de Tunis — Signalement voyageur"
   },
+  "accountSettings": {
+    "title": "Paramètres du compte",
+    "profile": "Profil",
+    "notifications": "Notifications",
+    "language": "Langue",
+    "notificationsEmpty": "Les paramètres de notifications seront disponibles prochainement.",
+    "languageEmpty": "Les paramètres de langue seront disponibles prochainement."
+  },
   "profile": {
     "title": "Mon profil",
     "name": "Nom",
@@ -56,6 +65,12 @@
   },
   "home": {
     "title": "Signalement voyageur",
+    "ehouwiyaTitle": "Identité numérique E-Houwiya",
+    "ehouwiyaChip": "Tunisie digitale",
+    "ehouwiyaText": "Connectez-vous avec l'identité numérique du citoyen pour un suivi immédiat, retrouver toutes vos demandes et recevoir un SMS à chaque mise à jour.",
+    "ehouwiyaLogin": "Connexion avec E-Houwiya",
+    "voiceTitle": "Faites entendre votre voix à la TRANSTU",
+    "voiceText": "Votre plateforme participative pour les réclamations, les signalements de terrain, les suggestions et les remerciements, afin d'améliorer la flotte de bus, le métro léger et la ligne TGM.",
     "intro": "Scannez le QR Code présent sur votre support de transport pour déposer un signalement rapidement et en toute sécurité.",
     "followHint": "Le suivi des réponses s'effectue via le lien sécurisé envoyé par e-mail lorsque notre équipe vous répond.",
     "step1": "Scanner un QR Code",
@@ -73,14 +88,45 @@
     "repliesPagination": "Pagination des réponses publiques",
     "seeMore": "Voir plus",
     "seeLess": "Réduire",
-    "trackingLabel": "Suivez votre demande avec le code de suivi (Code de suivi)",
-    "trackingPlaceholder": "Ex. : 123e4567-e89b-12d3-a456-426614174000",
-    "trackingSearch": "Rechercher",
-    "trackingAria": "Suivi de réclamation par code de suivi",
-    "typesTitle": "Que souhaitez-vous nous signaler ?",
-    "typesHint": "24/7 — service direct",
-    "typesError": "Impossible de charger les types de signalements.",
-    "typesEmpty": "Aucun type de signalement disponible."
+    "referenceTitle": "Rechercher par référence",
+    "referenceHint": "Entrez la référence de votre demande pour consulter son suivi.",
+    "referencePlaceholder": "Exemple : SIG-20261002-100001",
+    "referenceSearch": "Rechercher",
+    "referenceRequired": "Veuillez saisir une référence.",
+    "natureTitle": "De quoi souhaitez-vous nous informer aujourd'hui ?",
+    "natureSubtitle": "Service direct 24/7",
+    "emergencyTitle": "Urgence ou danger immédiat ?",
+    "emergencyCall": "Appelez immédiatement le 197 / 198 ou appuyez ici",
+    "naturesError": "Les natures de signalement sont temporairement indisponibles.",
+    "naturesEmpty": "Aucune nature de signalement n'est disponible pour le moment.",
+    "natures": {
+      "COMPLAINT": {
+        "title": "Déposer une réclamation",
+        "subtitle": "Réclamation",
+        "description": "Retard, comportement inapproprié, panne ou question liée aux titres."
+      },
+      "INCIDENT": {
+        "title": "Signalement immédiat",
+        "subtitle": "Incident",
+        "badge": "Direct",
+        "description": "Dégâts aux stations, bris de vitre, propreté ou sécurité."
+      },
+      "SUGGESTION": {
+        "title": "Suggestion d'amélioration",
+        "subtitle": "Suggestion",
+        "description": "Horaires, nouveaux itinéraires ou expérience des stations."
+      },
+      "THANKS": {
+        "title": "Message de remerciement",
+        "subtitle": "Remerciement",
+        "description": "Encourager un conducteur, un contrôleur ou une équipe."
+      },
+      "OTHER": {
+        "title": "Autre demande",
+        "subtitle": "Autre demande",
+        "description": "Abonnements, objets perdus et services administratifs."
+      }
+    }
   },
   "welcome": {
     "title": "Votre avis nous intéresse",
@@ -179,9 +225,9 @@
   "report": {
     "title": "Déposer un signalement",
     "subtitle": "Décrivez la situation rencontrée. Notre équipe traitera votre demande dans les meilleurs délais.",
-    "typeLabel": "Type de signalement *",
-    "typePlaceholder": "Sélectionnez un type",
-    "typeRequired": "Veuillez choisir un type de signalement.",
+    "typeLabel": "Nature du signalement *",
+    "typePlaceholder": "Sélectionnez une nature",
+    "typeRequired": "Veuillez sélectionner une nature de signalement.",
     "descriptionLabel": "Description *",
     "descriptionPlaceholder": "Décrivez précisément le problème rencontré…",
     "descriptionRequired": "La description doit contenir au moins 10 caractères.",
@@ -189,16 +235,10 @@
     "emailInvalid": "Adresse e-mail invalide.",
     "phoneInvalid": "Numéro de téléphone invalide.",
     "submit": "Soumettre",
-    "stepDetails": "Détails",
-    "stepSummary": "Récapitulatif",
-    "stepSuccess": "Succès",
-    "stepChoice": "Suivi",
-    "choiceTitle": "Comment souhaitez-vous enregistrer votre réclamation ?",
-    "choiceSubtitle": "Choisissez le mode d'enregistrement de votre réclamation.",
-    "choiceAnonymous": "Sans suivi (anonyme)",
-    "choiceAnonymousHint": "Enregistrer sans créer de compte ; seuls la référence et le code sont conservés.",
-    "choiceTracking": "Avec suivi",
-    "choiceTrackingHint": "Connexion requise pour suivre votre réclamation et recevoir les réponses.",
+    "reviewTitle": "Récapitulatif de votre signalement",
+    "reviewEdit": "Modifier",
+    "reviewContinue": "Continuer",
+    "reviewEmpty": "—",
     "submitting": "Envoi en cours…",
     "success": "Réclamation envoyée avec succés.",
     "invalidQr": "QR Code non reconnu",

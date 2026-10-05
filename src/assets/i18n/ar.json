@@ -1,7 +1,8 @@
 ﻿{
   "common": {
     "brand": "TRANSTU",
-    "brandAria": "TRANSTU — الصفحة الرئيسية",
+    "brandAria": "التبليغ — الصفحة الرئيسية",
+    "appLogoAlt": "شعار تبليغ المسافر",
     "logoAlt": "شعار TRANSTU",
     "backHome": "العودة إلى الصفحة الرئيسية",
     "back": "رجوع",
@@ -39,6 +40,14 @@
   "footer": {
     "tagline": "شركة نقل تونس — تبليغ المسافر"
   },
+  "accountSettings": {
+    "title": "إعدادات الحساب",
+    "profile": "الملف الشخصي",
+    "notifications": "الإشعارات",
+    "language": "اللغة",
+    "notificationsEmpty": "ستتوفر إعدادات الإشعارات قريبًا.",
+    "languageEmpty": "ستتوفر إعدادات اللغة قريبًا."
+  },
   "profile": {
     "title": "ملفي الشخصي",
     "name": "الاسم",
@@ -56,6 +65,12 @@
   },
   "home": {
     "title": "تبليغ المسافر",
+    "ehouwiyaTitle": "الهوية الرقمية ء-هوية",
+    "ehouwiyaChip": "تونس الرقمية",
+    "ehouwiyaText": "سجّل دخولك بواسطة الهوية الرقمية للمواطن للحصول على تتبع فوري، استرجاع كامل لجميع طلباتك السابقة، واستلام تنبيهات الرسائل النصية عند كل تحديث لمعاملتك.",
+    "ehouwiyaLogin": "الدخول بالهوية الرقمية ء-هوية",
+    "voiceTitle": "وصّل صوتك لشركة نقل تونس",
+    "voiceText": "منصتكم التشاركية لتقديم الشكاوى، البلاغات الميدانية، المقترحات ورسائل الشكر لتطوير أسطول الحافلات، شبكة المترو الخفيف وخط ت.ج.م.",
     "intro": "امسح رمز الاستجابة السريعة الموجود على وسيلة النقل لإيداع تبليغ بسرعة وبأمان.",
     "followHint": "يتم متابعة الردود عبر الرابط الآمن المرسل بالبريد الإلكتروني عندما يرد فريقنا.",
     "step1": "مسح رمز QR",
@@ -73,14 +88,45 @@
     "repliesPagination": "ترقيم صفحات الردود العامة",
     "seeMore": "عرض المزيد",
     "seeLess": "عرض أقل",
-    "trackingLabel": "تتبّع مطلبك برمز المتابعة (Code de suivi)",
-    "trackingPlaceholder": "مثال: 123e4567-e89b-12d3-a456-426614174000",
-    "trackingSearch": "بحث",
-    "trackingAria": "تتبّع الشكوى بواسطة رمز المتابعة",
-    "typesTitle": "بم ترغب في إعلامنا اليوم؟",
-    "typesHint": "24/7 خدمة مباشرة",
-    "typesError": "تعذّر تحميل أنواع التبليغ.",
-    "typesEmpty": "لا توجد أنواع تبليغ متاحة."
+    "referenceTitle": "البحث بالمرجع",
+    "referenceHint": "أدخل مرجع طلبك للاطلاع على متابعته.",
+    "referencePlaceholder": "مثال: SIG-20261002-100001",
+    "referenceSearch": "بحث",
+    "referenceRequired": "يرجى إدخال المرجع.",
+    "natureTitle": "بم ترغب في إعلامنا اليوم؟",
+    "natureSubtitle": "خدمة مباشرة 24/7",
+    "emergencyTitle": "حالة طارئة أو خطر مباشر؟",
+    "emergencyCall": "اتصل فوراً بـ 197 / 198 أو اضغط هنا للطوارئ",
+    "naturesError": "أنواع التبليغ غير متاحة مؤقتاً.",
+    "naturesEmpty": "لا توجد أنواع تبليغ متاحة حالياً.",
+    "natures": {
+      "COMPLAINT": {
+        "title": "تقديم شكوى",
+        "subtitle": "Réclamation",
+        "description": "تأخير، سلوك غير لائق، عطب، أو مسألة متعلقة بالتذاكر"
+      },
+      "INCIDENT": {
+        "title": "إشعار / تبليغ فوري",
+        "subtitle": "Incident",
+        "badge": "مباشر",
+        "description": "أضرار بالمحطات، كسر بالزجاج، مشاكل نظافة أو سلامة"
+      },
+      "SUGGESTION": {
+        "title": "اقتراح تحسين",
+        "subtitle": "Suggestion",
+        "description": "تحسين المواعيد، مسارات جديدة، أو تجربة المحطات"
+      },
+      "THANKS": {
+        "title": "رسالة شكر وتشجيع",
+        "subtitle": "Remerciement",
+        "description": "تشجيع سائق، عون مراقبة، أو فريق عمل مميز"
+      },
+      "OTHER": {
+        "title": "طلب أو استفسار آخر",
+        "subtitle": "Autre demande",
+        "description": "استفسارات الاشتراكات، الضائعات، والخدمات الإدارية"
+      }
+    }
   },
   "welcome": {
     "title": "رأيكم يهمنا",
@@ -100,7 +146,7 @@
     "benefit5": "تلقي الإشعارات المتاحة",
     "signIn": "تسجيل الدخول",
     "createAccount": "إنشاء حساب",
-    "continueAnonymous": "شكوى مجهولة المصدر",
+    "continueAnonymous": "شكوى بدون متابعة",
     "anonymousHint": "يمكنك إيداع تبليغ دون حساب. التسجيل ليس إلزامياً أبداً.",
     "withoutAccount": "بدون حساب يمكنك أيضاً:",
     "anon1": "إنشاء تبليغ والبقاء مجهولاً",
@@ -110,7 +156,7 @@
   },
   "identity": {
     "title": "ترغب في إيداع تبليغ",
-    "anonymous": "شكوى مجهولة المصدر",
+    "anonymous": "شكوى بدون متابعة",
     "anonymousHint": "بدون إنشاء حساب. التسجيل ليس إلزامياً أبداً.",
     "auth": "شكوى مع متابعة",
     "authHint": "اعثر على تبليغاتك وردود الفريق.",
@@ -168,9 +214,9 @@
   "report": {
     "title": "إيداع تبليغ",
     "subtitle": "صف الوضع الذي واجهته. سيعالج فريقنا طلبك في أقرب الآجال.",
-    "typeLabel": "نوع التبليغ *",
-    "typePlaceholder": "اختر نوعاً",
-    "typeRequired": "يرجى اختيار نوع التبليغ.",
+    "typeLabel": "طبيعة التبليغ *",
+    "typePlaceholder": "اختر طبيعة التبليغ",
+    "typeRequired": "يرجى اختيار نوع البلاغ.",
     "descriptionLabel": "الوصف *",
     "descriptionPlaceholder": "صف المشكلة بدقة…",
     "descriptionRequired": "يجب أن يحتوي الوصف على 10 أحرف على الأقل.",
@@ -178,16 +224,10 @@
     "emailInvalid": "عنوان بريد إلكتروني غير صالح.",
     "phoneInvalid": "رقم هاتف غير صالح.",
     "submit": "إرسال تبليغي",
-    "stepDetails": "التفاصيل",
-    "stepSummary": "ملخص",
-    "stepSuccess": "نجاح",
-    "stepChoice": "المتابعة",
-    "choiceTitle": "كيف تريد تسجيل شكواك؟",
-    "choiceSubtitle": "اختر طريقة تسجيل شكواك.",
-    "choiceAnonymous": "بدون متابعة (مجهولة)",
-    "choiceAnonymousHint": "تسجيل بدون حساب؛ يتم الاحتفاظ فقط بالمرجع والرمز.",
-    "choiceTracking": "مع متابعة",
-    "choiceTrackingHint": "تسجيل الدخول مطلوب لمتابعة شكواك وتلقي الردود.",
+    "reviewTitle": "ملخص تبليغك",
+    "reviewEdit": "تعديل",
+    "reviewContinue": "متابعة",
+    "reviewEmpty": "—",
     "submitting": "جاري الإرسال…",
     "success": "تم تسجيل تبليغك بنجاح.",
     "invalidQr": "رمز QR غير معروف",

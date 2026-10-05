@@ -1,26 +1,20 @@
 import { Injectable } from '@angular/core';
 
+/** Saisie conservée en mémoire le temps du parcours, sans appel API. */
 export interface ReportDraft {
-  formValue: {
-    reportTypeId: string;
-    description: string;
-    name: string;
-    phoneNumber: string;
-    email: string;
-  };
-  supportUuid: string;
-  anonymousMode: boolean;
+  reportTypeId: string;
+  description: string;
+  name: string;
+  phoneNumber: string;
+  email: string;
   files: File[];
-  voiceFile: File | null;
-  turnstileToken?: string | null;
-  /** true → après connexion, enregistrer avec suivi automatiquement. */
-  withTracking: boolean;
+  voice: File | null;
+  turnstileToken: string | null;
+  supportUuid: string;
+  /** Vrai seulement après le choix « avec suivi » en attente de connexion. */
+  pendingAuth: boolean;
 }
 
-/**
- * Conserve temporairement le brouillon de signalement
- * pendant une redirection vers la connexion (suivi).
- */
 @Injectable({ providedIn: 'root' })
 export class ReportDraftService {
   private draft: ReportDraft | null = null;
@@ -29,10 +23,8 @@ export class ReportDraftService {
     this.draft = draft;
   }
 
-  take(): ReportDraft | null {
-    const d = this.draft;
-    this.draft = null;
-    return d;
+  peek(): ReportDraft | null {
+    return this.draft;
   }
 
   clear(): void {

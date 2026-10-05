@@ -27,7 +27,7 @@ export const routes: Routes = [
     path: 'profil',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./features/report/pages/profile.page').then((m) => m.ProfilePage),
+      import('./features/report/pages/account-settings.page').then((m) => m.AccountSettingsPage),
   },
   {
     path: 'scan',
@@ -71,6 +71,11 @@ export const routes: Routes = [
     path: 'report-followup/:uuid',
     loadComponent: () =>
       import('./features/report/pages/report-tracking.page').then((m) => m.ReportTrackingPage),
+  },
+  {
+    path: 'reference/:reference',
+    loadComponent: () =>
+      import('./features/report/pages/report-reference.page').then((m) => m.ReportReferencePage),
   },
   /** Compatibilité anciens liens e-mail /suivi/{uuid} */
   {

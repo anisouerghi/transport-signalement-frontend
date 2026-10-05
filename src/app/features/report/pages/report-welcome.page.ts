@@ -1,8 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
+import { LanguageService } from '../../../core/services/language.service';
 import { IdentityChoiceComponent } from '../components/identity-choice.component';
 import { SupportSummaryComponent } from '../components/support-summary.component';
 import { TransportSupport } from '../models/report.model';
@@ -21,12 +23,14 @@ const UUID_RE =
   templateUrl: './report-welcome.page.html',
   styleUrl: './report-welcome.page.scss',
 })
-export class ReportWelcomePage implements OnInit {
+export class ReportWelcomePage implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly supportService = inject(SupportService);
   private readonly translate = inject(TranslateService);
+  private readonly language = inject(LanguageService);
   readonly auth = inject(AuthService);
+  private langSub?: Subscription;
 
   readonly loading = signal(true);
   readonly invalidQr = signal(false);
@@ -45,10 +49,22 @@ export class ReportWelcomePage implements OnInit {
       return;
     }
 
+    this.loadSupport(uuid);
+    this.langSub = this.language.langChanged$.subscribe(() => this.loadSupport(uuid));
+  }
+
+  ngOnDestroy(): void {
+    this.langSub?.unsubscribe();
+  }
+
+  private loadSupport(uuid: string): void {
+    this.loading.set(true);
     this.supportService.getByUuid(uuid).subscribe({
       next: (support) => {
         this.support.set(support);
         this.loading.set(false);
+        this.invalidQr.set(false);
+        this.errorMessage.set(null);
       },
       error: (err: HttpErrorResponse) => {
         this.loading.set(false);

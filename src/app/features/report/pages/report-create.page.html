@@ -12,29 +12,59 @@
     <p class="text-secondary mb-0">{{ errorMessage() }}</p>
   </section>
 } @else {
-  <!-- Stepper -->
+  <!-- Stepper (toujours visible) -->
   <div class="stepper-container mb-4">
     <div class="stepper">
-      <div class="step" [class.completed]="step() !== 'form'" [class.active]="step() === 'form'">
-        <div class="step__icon">
-          @if (step() !== 'form') { <i class="bi bi-check-lg"></i> } @else { 1 }
+      @if (depositFlow()) {
+        <div class="step" [class.completed]="step() !== 'form'" [class.active]="step() === 'form'">
+          <div class="step__icon">
+            @if (step() !== 'form') { <i class="bi bi-check-lg"></i> } @else { 1 }
+          </div>
+          <div class="step__label">Formulaire</div>
         </div>
-        <div class="step__label">{{ 'report.stepDetails' | translate }}</div>
-      </div>
-      <div class="step-line" [class.completed]="step() !== 'form'"></div>
-      <div class="step" [class.completed]="step() === 'choice'" [class.active]="step() === 'summary'">
-        <div class="step__icon">
-          @if (step() === 'choice') { <i class="bi bi-check-lg"></i> } @else { 2 }
+        <div class="step-line" [class.completed]="step() !== 'form'"></div>
+        <div class="step" [class.completed]="step() === 'choice'" [class.active]="step() === 'review'">
+          <div class="step__icon">
+            @if (step() === 'choice') { <i class="bi bi-check-lg"></i> } @else { 2 }
+          </div>
+          <div class="step__label">Récapitulatif</div>
         </div>
-        <div class="step__label">{{ 'report.stepSummary' | translate }}</div>
-      </div>
-      <div class="step-line" [class.completed]="step() === 'choice'"></div>
-      <div class="step" [class.active]="step() === 'choice'">
-        <div class="step__icon">3</div>
-        <div class="step__label">{{ 'report.stepChoice' | translate }}</div>
-      </div>
+        <div class="step-line" [class.completed]="step() === 'choice'"></div>
+        <div class="step" [class.active]="step() === 'choice'">
+          <div class="step__icon">3</div>
+          <div class="step__label">{{ auth.isAuthenticated() ? 'Succès' : 'Choix : anonyme / avec suivi' }}</div>
+        </div>
+      } @else {
+        <div class="step completed">
+          <div class="step__icon"><i class="bi bi-check-lg"></i></div>
+          <div class="step__label">Type</div>
+        </div>
+        <div class="step-line completed"></div>
+        <div class="step active">
+          <div class="step__icon">2</div>
+          <div class="step__label">Détails</div>
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+          <div class="step__icon">3</div>
+          <div class="step__label">Succès</div>
+        </div>
+      }
     </div>
   </div>
+
+  <div [hidden]="depositFlow() && step() !== 'form'">
+  @if (emergencyMode()) {
+    <section class="report-emergency" [attr.aria-label]="'home.emergencyTitle' | translate">
+      <span class="report-emergency__icon" aria-hidden="true">
+        <span class="material-symbols-outlined">{{ emergencyIcon() }}</span>
+      </span>
+      <span class="report-emergency__text">
+        <span class="report-emergency__title">{{ 'home.emergencyTitle' | translate }}</span>
+        <span class="report-emergency__hint">{{ 'home.emergencyCall' | translate }}</span>
+      </span>
+    </section>
+  }
 
   <section class="mb-3">
     <h1 class="h3 mb-1 mt-2">{{ 'report.title' | translate }}</h1>
@@ -45,71 +75,73 @@
     <app-support-summary [support]="currentSupport" />
   }
 
-  @if (step() === 'choice') {
-    <section class="panel p-3 p-md-4" aria-labelledby="choice-title">
-      <h2 id="choice-title" class="h5 mb-1">{{ 'report.choiceTitle' | translate }}</h2>
-      <p class="text-secondary small mb-4">{{ 'report.choiceSubtitle' | translate }}</p>
-
-      <div class="choice-grid">
-        <button type="button" class="choice-card" [disabled]="submitting()" (click)="submitAnonymous()">
-          <span class="choice-card__icon choice-card__icon--anon" aria-hidden="true"><i class="bi bi-incognito"></i></span>
-          <span class="choice-card__body">
-            <strong>{{ 'report.choiceAnonymous' | translate }}</strong>
-            <span class="text-secondary small">{{ 'report.choiceAnonymousHint' | translate }}</span>
-          </span>
-        </button>
-
-        <button type="button" class="choice-card" [disabled]="submitting()" (click)="submitTracking()">
-          <span class="choice-card__icon choice-card__icon--track" aria-hidden="true"><i class="bi bi-person-check"></i></span>
-          <span class="choice-card__body">
-            <strong>{{ 'report.choiceTracking' | translate }}</strong>
-            <span class="text-secondary small">{{ 'report.choiceTrackingHint' | translate }}</span>
-          </span>
-        </button>
-      </div>
-
-      @if (submitting()) {
-        <p class="text-secondary small mt-3 mb-0">
-          <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-          {{ 'report.submitting' | translate }}
-        </p>
-      }
-
-      <div class="report-actions mt-4">
-        <button type="button" class="btn btn-transtu-outline report-back" (click)="backToSummary()">
-          <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>
-          {{ 'common.back' | translate }}
-        </button>
-      </div>
-    </section>
-  } @else if (step() === 'summary') {
-    <app-report-summary
-      [type]="selectedReportType()"
-      [typeLabel]="selectedReportType()?.label ?? ''"
-      [support]="support()"
-      [description]="form.controls.description.value"
-      [name]="form.controls.name.value"
-      [phone]="form.controls.phoneNumber.value"
-      [email]="form.controls.email.value"
-      [attachmentsCount]="selectedFiles().length + (voiceFile() ? 1 : 0)"
-    />
-
-    <div class="report-actions mt-3">
-      <button type="button" class="btn btn-transtu-outline report-back" (click)="backToForm()">
-        <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>
-        {{ 'summary.edit' | translate }}
-      </button>
-      <button type="button" class="btn btn-transtu" [disabled]="submitting()" (click)="goToChoice()">
-        @if (submitting()) {
-          <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-          {{ 'report.submitting' | translate }}
-        } @else {
-          {{ 'summary.confirm' | translate }}
+  <form class="panel p-3 p-md-4" [formGroup]="form" (ngSubmit)="onFormSubmit()" novalidate>
+    @if (!emergencyMode()) {
+    <fieldset
+      class="mb-3 border-0 p-0 m-0"
+      role="radiogroup"
+      [attr.aria-label]="'report.typeLabel' | translate"
+      [attr.aria-invalid]="controlInvalid('reportTypeId') ? true : null"
+    >
+      @for (type of reportTypes(); track type.reportTypeId) {
+        @if (isUrgence(type)) {
+          <button
+            type="button"
+            class="nature-card nature-card--urgence"
+            role="radio"
+            [attr.aria-checked]="isNatureSelected(type)"
+            [class.is-selected]="isNatureSelected(type)"
+            [class.is-invalid]="controlInvalid('reportTypeId')"
+            [disabled]="submitting()"
+            (click)="selectNature(type)"
+          >
+            <span class="nature-card__icon" aria-hidden="true">
+              <span class="material-symbols-outlined">{{ type.icon }}</span>
+            </span>
+            <span class="nature-card__text">
+              <span class="nature-card__name">{{ type.label }}</span>
+            </span>
+            <span class="nature-card__trail">
+              <span class="nature-card__check" aria-hidden="true"><i class="bi bi-check-lg"></i></span>
+              <span class="material-symbols-outlined nature-card__go" aria-hidden="true">arrow_forward</span>
+            </span>
+          </button>
         }
-      </button>
-    </div>
-  } @else {
-  <form class="panel p-3 p-md-4" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      }
+      <p class="form-label fw-semibold mb-2">{{ 'report.typeLabel' | translate }}</p>
+      <div class="nature-grid">
+        @for (type of reportTypes(); track type.reportTypeId) {
+          @if (!isUrgence(type)) {
+            <button
+              type="button"
+              class="nature-card"
+              role="radio"
+              [attr.aria-checked]="isNatureSelected(type)"
+              [class.is-selected]="isNatureSelected(type)"
+              [class.is-invalid]="controlInvalid('reportTypeId')"
+              [class.nature-card--blue]="natureTone(type) === 'blue'"
+              [class.nature-card--red]="natureTone(type) === 'red'"
+              [class.nature-card--gold]="natureTone(type) === 'gold'"
+              [class.nature-card--green]="natureTone(type) === 'green'"
+              [class.nature-card--gray]="natureTone(type) === 'gray'"
+              [disabled]="submitting()"
+              (click)="selectNature(type)"
+            >
+              <span class="nature-card__icon" aria-hidden="true">
+                <span class="material-symbols-outlined">{{ type.icon }}</span>
+              </span>
+              <span class="nature-card__name">{{ type.label }}</span>
+              <span class="nature-card__check" aria-hidden="true"><i class="bi bi-check-lg"></i></span>
+            </button>
+          }
+        }
+      </div>
+      @if (controlInvalid('reportTypeId')) {
+        <div class="invalid-feedback d-block">{{ 'report.typeRequired' | translate }}</div>
+      }
+    </fieldset>
+    }
+
     <div class="mb-3">
       <label class="form-label fw-semibold" for="description">{{ 'report.descriptionLabel' | translate }}</label>
       <textarea
@@ -168,12 +200,69 @@
         @if (submitting()) {
           <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
           {{ 'report.submitting' | translate }}
+        } @else if (depositFlow()) {
+          {{ 'report.reviewContinue' | translate }}
         } @else {
           {{ 'summary.next' | translate }}
         }
       </button>
     </div>
   </form>
+  </div>
+
+  @if (depositFlow() && step() === 'review') {
+    <section class="panel p-3 p-md-4">
+      <h1 class="h4 mb-3">{{ 'report.reviewTitle' | translate }}</h1>
+      <dl class="review-list mb-4">
+        <dt>{{ 'report.typeLabel' | translate }}</dt>
+        <dd>{{ selectedNatureLabel() }}</dd>
+        <dt>{{ 'report.descriptionLabel' | translate }}</dt>
+        <dd class="review-text">{{ form.controls.description.value }}</dd>
+        @if (support(); as currentSupport) {
+          <dt>{{ 'support.title' | translate }}</dt>
+          <dd>{{ currentSupport.supportTypeLabel || currentSupport.label }}</dd>
+        }
+        <dt>{{ 'report.contactSection' | translate }}</dt>
+        <dd>
+          @if (reviewContactLines().length === 0) {
+            {{ 'report.reviewEmpty' | translate }}
+          } @else {
+            @for (line of reviewContactLines(); track line) {
+              <span class="d-block">{{ line }}</span>
+            }
+          }
+        </dd>
+        <dt>{{ 'attachments.title' | translate }}</dt>
+        <dd>
+          @if (reviewFileNames().length === 0) {
+            {{ 'report.reviewEmpty' | translate }}
+          } @else {
+            @for (name of reviewFileNames(); track name) {
+              <span class="d-block">{{ name }}</span>
+            }
+          }
+        </dd>
+      </dl>
+      <div class="report-actions">
+        <button type="button" class="btn btn-transtu-outline report-back" (click)="editReport()">
+          {{ 'report.reviewEdit' | translate }}
+        </button>
+        <button type="button" class="btn btn-transtu" (click)="continueToChoice()">
+          {{ 'report.reviewContinue' | translate }}
+        </button>
+      </div>
+    </section>
+  }
+
+  @if (depositFlow() && step() === 'choice') {
+    <app-identity-choice
+      [returnUrl]="depositReturnUrl()"
+      [alwaysShowChoices]="true"
+      [deferAuth]="true"
+      (anonymousContinue)="submit()"
+      (continue)="submit()"
+      (authRequest)="chooseFollowUp()"
+    />
   }
 }
 
@@ -250,5 +339,21 @@
     .report-actions .btn {
       min-height: 2.85rem;
     }
+  }
+
+  .review-list dt {
+    color: #424752;
+    font-size: 0.8rem;
+    margin-top: 0.85rem;
+  }
+
+  .review-list dd {
+    margin: 0.15rem 0 0;
+    font-weight: 600;
+  }
+
+  .review-text {
+    white-space: pre-wrap;
+    font-weight: 500;
   }
 </style>

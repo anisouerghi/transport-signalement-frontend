@@ -1,16 +1,15 @@
 import { Component, Input } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
 import { TransportSupport } from '../models/report.model';
 
 @Component({
   selector: 'app-support-summary',
   standalone: true,
-  imports: [TranslatePipe],
+  imports: [],
   template: `
     @if (support) {
       <span class="support-chip">
         <i class="support-chip__icon bi" [class]="getSupportIcon()" aria-hidden="true"></i>
-        <span class="support-chip__type">{{ getSupportTypeLabel() }}</span>
+        <span class="support-chip__type">{{ support.supportTypeLabel || support.supportTypeCode || '' }}</span>
         <span class="support-chip__label">{{ support.label }}</span>
       </span>
     }
@@ -57,44 +56,19 @@ export class SupportSummaryComponent {
   @Input({ required: true }) support!: TransportSupport;
 
   getSupportIcon(): string {
-    const text = this.getSupportTypeText();
-
-    if (text.includes('bus')) {
+    const code = (this.support?.supportTypeCode || '').toLowerCase();
+    if (code.includes('bus')) {
       return 'bi-bus-front';
     }
-    if (text.includes('metro') || text.includes('métro')) {
+    if (code.includes('metro')) {
       return 'bi-train-lightrail-front';
     }
-    if (text.includes('station') || text.includes('arrêt') || text.includes('arret')) {
+    if (code.includes('station')) {
       return 'bi-geo-alt';
     }
-    if (text.includes('tgm') || text.includes('train')) {
+    if (code.includes('train') || code.includes('tgm')) {
       return 'bi-train-front';
     }
     return 'bi-app-indicator';
-  }
-
-  getSupportTypeLabel(): string {
-    const text = this.getSupportTypeText();
-
-    if (text.includes('bus')) {
-      return 'Bus';
-    }
-    if (text.includes('metro') || text.includes('métro')) {
-      return 'Métro';
-    }
-    if (text.includes('station') || text.includes('arrêt') || text.includes('arret')) {
-      return 'Station';
-    }
-    if (text.includes('tgm') || text.includes('train')) {
-      return 'TGM';
-    }
-    return 'Autres';
-  }
-
-  private getSupportTypeText(): string {
-    const code = (this.support?.supportTypeCode || '').toLowerCase();
-    const label = (this.support?.supportTypeLabel || '').toLowerCase();
-    return `${code} ${label}`;
   }
 }

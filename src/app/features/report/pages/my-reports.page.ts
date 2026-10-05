@@ -1,9 +1,11 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
+import { LanguageService } from '../../../core/services/language.service';
 import { PublicReportListItem } from '../models/report.model';
 import { ReportService } from '../services/report.service';
 
@@ -15,10 +17,13 @@ const PAGE_SIZE = 5;
   imports: [ReactiveFormsModule, RouterLink, DatePipe, TranslatePipe],
   templateUrl: './my-reports.page.html',
 })
-export class MyReportsPage implements OnInit {
+export class MyReportsPage implements OnInit, OnDestroy {
   readonly auth = inject(AuthService);
   private readonly reportService = inject(ReportService);
+  private readonly language = inject(LanguageService);
   private readonly fb = inject(FormBuilder);
+  private readonly route = inject(ActivatedRoute);
+  private langSub?: Subscription;
 
   readonly loading = signal(false);
   readonly error = signal(false);
@@ -43,10 +48,27 @@ export class MyReportsPage implements OnInit {
   readonly pages = computed(() => Array.from({ length: this.totalPages() }, (_, i) => i));
 
   ngOnInit(): void {
+    const reference = (this.route.snapshot.queryParamMap.get('reference') ?? '').trim();
+    if (reference) {
+      this.filterForm.controls.reference.setValue(reference);
+      this.appliedReference.set(reference);
+    }
     if (!this.auth.isAuthenticated()) {
       return;
     }
     this.load();
+    this.langSub = this.language.langChanged$.subscribe(() => this.load());
+  }
+
+  authReturnUrl(): string {
+    const reference = this.appliedReference();
+    return reference
+      ? `/mes-signalements?reference=${encodeURIComponent(reference)}`
+      : '/mes-signalements';
+  }
+
+  ngOnDestroy(): void {
+    this.langSub?.unsubscribe();
   }
 
   load(): void {

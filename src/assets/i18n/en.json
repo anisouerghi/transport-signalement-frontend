@@ -1,7 +1,8 @@
 {
   "common": {
     "brand": "TRANSTU",
-    "brandAria": "TRANSTU — Home",
+    "brandAria": "Reporting — Home",
+    "appLogoAlt": "Traveler reporting logo",
     "logoAlt": "TRANSTU logo",
     "backHome": "Back to home",
     "back": "Back",
@@ -39,6 +40,14 @@
   "footer": {
     "tagline": "Tunis Transport Company — Traveler reporting"
   },
+  "accountSettings": {
+    "title": "Account settings",
+    "profile": "Profile",
+    "notifications": "Notifications",
+    "language": "Language",
+    "notificationsEmpty": "Notification settings will be available soon.",
+    "languageEmpty": "Language settings will be available soon."
+  },
   "profile": {
     "title": "My profile",
     "name": "Name",
@@ -56,6 +65,12 @@
   },
   "home": {
     "title": "Traveler reporting",
+    "ehouwiyaTitle": "E-Houwiya digital identity",
+    "ehouwiyaChip": "Digital Tunisia",
+    "ehouwiyaText": "Sign in with the citizen digital identity for instant tracking, full access to your previous requests, and an SMS each time a request is updated.",
+    "ehouwiyaLogin": "Sign in with E-Houwiya",
+    "voiceTitle": "Make your voice heard at TRANSTU",
+    "voiceText": "Your participatory platform for complaints, field reports, suggestions and thanks, to improve the bus fleet, the light metro and the TGM line.",
     "intro": "Scan the QR code on your transport support to submit a report quickly and securely.",
     "followHint": "You can track replies via the secure link emailed when our team responds.",
     "step1": "Scan a QR code",
@@ -73,14 +88,45 @@
     "repliesPagination": "Public replies pagination",
     "seeMore": "See more",
     "seeLess": "Show less",
-    "trackingLabel": "Track your request with the tracking code (Code de suivi)",
-    "trackingPlaceholder": "E.g.: 123e4567-e89b-12d3-a456-426614174000",
-    "trackingSearch": "Search",
-    "trackingAria": "Track a claim by tracking code",
-    "typesTitle": "What would you like to tell us today?",
-    "typesHint": "24/7 direct service",
-    "typesError": "Unable to load report types.",
-    "typesEmpty": "No report type available."
+    "referenceTitle": "Search by reference",
+    "referenceHint": "Enter your request reference to open its follow-up.",
+    "referencePlaceholder": "Example: SIG-20261002-100001",
+    "referenceSearch": "Search",
+    "referenceRequired": "Please enter a reference.",
+    "natureTitle": "What would you like to tell us today?",
+    "natureSubtitle": "Direct service 24/7",
+    "emergencyTitle": "Emergency or immediate danger?",
+    "emergencyCall": "Call 197 / 198 now, or tap here",
+    "naturesError": "Report types are temporarily unavailable.",
+    "naturesEmpty": "No report type is available right now.",
+    "natures": {
+      "COMPLAINT": {
+        "title": "File a complaint",
+        "subtitle": "Complaint",
+        "description": "Delay, inappropriate behavior, breakdown or a ticket issue."
+      },
+      "INCIDENT": {
+        "title": "Immediate report",
+        "subtitle": "Incident",
+        "badge": "Live",
+        "description": "Station damage, broken glass, cleanliness or safety."
+      },
+      "SUGGESTION": {
+        "title": "Improvement idea",
+        "subtitle": "Suggestion",
+        "description": "Schedules, new routes or the station experience."
+      },
+      "THANKS": {
+        "title": "Thank-you message",
+        "subtitle": "Thanks",
+        "description": "Encourage a driver, an inspector or a team."
+      },
+      "OTHER": {
+        "title": "Other request",
+        "subtitle": "Other",
+        "description": "Subscriptions, lost property and administrative services."
+      }
+    }
   },
   "welcome": {
     "title": "Your feedback matters",
@@ -179,9 +225,9 @@
   "report": {
     "title": "Submit a report",
     "subtitle": "Describe the situation. Our team will handle your request as soon as possible.",
-    "typeLabel": "Report type *",
-    "typePlaceholder": "Select a type",
-    "typeRequired": "Please choose a report type.",
+    "typeLabel": "Report nature *",
+    "typePlaceholder": "Select a nature",
+    "typeRequired": "Please select a report nature.",
     "descriptionLabel": "Description *",
     "descriptionPlaceholder": "Describe the problem precisely…",
     "descriptionRequired": "The description must contain at least 10 characters.",
@@ -189,16 +235,10 @@
     "emailInvalid": "Invalid email address.",
     "phoneInvalid": "Invalid phone number.",
     "submit": "Send my report",
-    "stepDetails": "Details",
-    "stepSummary": "Summary",
-    "stepSuccess": "Success",
-    "stepChoice": "Tracking",
-    "choiceTitle": "How would you like to file your claim?",
-    "choiceSubtitle": "Choose how to register your claim.",
-    "choiceAnonymous": "Without tracking (anonymous)",
-    "choiceAnonymousHint": "Register without an account; only the reference and code are kept.",
-    "choiceTracking": "With tracking",
-    "choiceTrackingHint": "Sign in required to track your claim and receive replies.",
+    "reviewTitle": "Summary of your report",
+    "reviewEdit": "Edit",
+    "reviewContinue": "Continue",
+    "reviewEmpty": "—",
     "submitting": "Sending…",
     "success": "Your report has been recorded.",
     "invalidQr": "Unrecognized QR code",

@@ -1,13 +1,41 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 import { LanguageService } from '../../../core/services/language.service';
 import { PublicHomepageReply, ReportType } from '../models/report.model';
 import { ReportService } from '../services/report.service';
 import { ReportTypeService } from '../services/report-type.service';
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 4;
 const EXCERPT_LENGTH = 110;
+
+/** Icônes et couleurs déjà utilisées sur l'accueil. Affichage uniquement. */
+const NATURE_VISUAL: Record<string, { icon: string; tone: string; badge?: boolean }> = {
+  COMPLAINT: { icon: 'rate_review', tone: 'blue' },
+  INCIDENT: { icon: 'photo_camera', tone: 'red', badge: true },
+  SUGGESTION: { icon: 'tips_and_updates', tone: 'gold' },
+  THANKS: { icon: 'thumb_up', tone: 'green' },
+  OTHER: { icon: 'contact_support', tone: 'gray' },
+  ASSAULT: { icon: 'shield', tone: 'red' },
+};
+
+interface NatureCardView {
+  code: string;
+  icon: string;
+  tone: string;
+  badge: boolean;
+  translated: boolean;
+  label: string;
+  description: string;
+}
+
+interface EmergencyView {
+  code: string;
+  icon: string;
+}
+
+const EMERGENCY_CODES = new Set(['URGENCE', 'URGENCY', 'EMERGENCY', 'URGENT']);
 
 @Component({
   selector: 'app-home-page',
@@ -16,11 +44,20 @@ const EXCERPT_LENGTH = 110;
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, OnDestroy {
   private readonly reportService = inject(ReportService);
   private readonly reportTypeService = inject(ReportTypeService);
   private readonly language = inject(LanguageService);
+  private readonly translate = inject(TranslateService);
   private readonly router = inject(Router);
+  private langSub?: Subscription;
+  private naturesRequest = 0;
+
+  readonly referenceError = signal(false);
+  readonly natureCards = signal<NatureCardView[]>([]);
+  readonly emergency = signal<EmergencyView | null>(null);
+  readonly naturesLoading = signal(true);
+  readonly naturesError = signal(false);
 
   readonly loading = signal(true);
   readonly error = signal(false);
@@ -39,105 +76,50 @@ export class HomePage implements OnInit {
   });
 
   ngOnInit(): void {
+    this.loadNatures();
     this.load(0);
-    this.loadReportTypes();
+    this.langSub = this.language.langChanged$.subscribe(() => {
+      this.loadNatures();
+      this.load(this.page());
+    });
   }
 
-  loadReportTypes(): void {
-    this.typesLoading.set(true);
-    this.typesError.set(false);
+  ngOnDestroy(): void {
+    this.langSub?.unsubscribe();
+  }
+
+  loadNatures(): void {
+    const request = ++this.naturesRequest;
+    this.naturesLoading.set(true);
+    this.naturesError.set(false);
     this.reportTypeService.getActive().subscribe({
       next: (types) => {
-        this.reportTypes.set(types);
-        this.typesLoading.set(false);
+        if (request !== this.naturesRequest) {
+          return;
+        }
+        this.applyNatures(types);
+        this.naturesLoading.set(false);
       },
       error: () => {
-        this.typesError.set(true);
-        this.reportTypes.set([]);
-        this.typesLoading.set(false);
+        if (request !== this.naturesRequest) {
+          return;
+        }
+        this.natureCards.set([]);
+        this.emergency.set(null);
+        this.naturesError.set(true);
+        this.naturesLoading.set(false);
       },
     });
   }
 
-  typeLabel(type: ReportType): string {
-    const lang = this.language.currentLang();
-    if (lang === 'ar' && type.labelAr) {
-      return type.labelAr;
+  searchByReference(raw: string): void {
+    const reference = raw.trim();
+    if (!reference) {
+      this.referenceError.set(true);
+      return;
     }
-    if (lang === 'en' && type.labelEn) {
-      return type.labelEn;
-    }
-    return type.labelFr || type.label;
-  }
-
-  typeSecondaryLabel(type: ReportType): string {
-    return this.language.currentLang() === 'ar'
-      ? type.labelFr || type.label
-      : type.label;
-  }
-
-  typeIcon(code: string): string {
-    switch ((code ?? '').toUpperCase()) {
-      case 'INCIDENT':
-        return 'bi bi-exclamation-triangle';
-      case 'COMPLAINT':
-      case 'RECLAMATION':
-        return 'bi bi-chat-left-text';
-      case 'SUGGESTION':
-        return 'bi bi-lightbulb';
-      case 'MERCI':
-      case 'REMERCIEMENT':
-      case 'THANKS':
-        return 'bi bi-hand-thumbs-up';
-      default:
-        return 'bi bi-question-circle';
-    }
-  }
-
-  typeAccent(code: string): string {
-    switch ((code ?? '').toUpperCase()) {
-      case 'INCIDENT':
-        return '#c62828';
-      case 'COMPLAINT':
-      case 'RECLAMATION':
-        return '#003b7f';
-      case 'SUGGESTION':
-        return '#f0a500';
-      case 'MERCI':
-      case 'REMERCIEMENT':
-      case 'THANKS':
-        return '#2e7d32';
-      default:
-        return '#6c757d';
-    }
-  }
-
-  typeIconBg(code: string): string {
-    switch ((code ?? '').toUpperCase()) {
-      case 'INCIDENT':
-        return '#fdecea';
-      case 'COMPLAINT':
-      case 'RECLAMATION':
-        return '#e7eefb';
-      case 'SUGGESTION':
-        return '#fdf3d7';
-      case 'MERCI':
-      case 'REMERCIEMENT':
-      case 'THANKS':
-        return '#e6f4ea';
-      default:
-        return '#eef1f5';
-    }
-  }
-
-  goToType(type: ReportType): void {
-    void this.router.navigate(['/signalement/anonyme'], {
-      queryParams: { type: type.code },
-    });
-  }
-
-  trackType(index: number, type: ReportType): number {
-    return type.reportTypeId;
+    this.referenceError.set(false);
+    void this.router.navigate(['/reference', reference]);
   }
 
   load(page: number): void {
@@ -147,7 +129,12 @@ export class HomePage implements OnInit {
     this.reportService.listHomepageReplies(page, PAGE_SIZE).subscribe({
       next: (res) => {
         const content = Array.isArray(res?.content) ? res.content : [];
-        this.replies.set(content);
+        const sorted = [...content].sort((a, b) => {
+          const da = a.replyDate ? Date.parse(a.replyDate) : 0;
+          const db = b.replyDate ? Date.parse(b.replyDate) : 0;
+          return db - da;
+        });
+        this.replies.set(sorted);
         this.totalPages.set(res?.totalPages ?? 0);
         this.page.set(res?.page ?? page);
         this.loading.set(false);
@@ -243,6 +230,73 @@ export class HomePage implements OnInit {
       .map((part) => part[0])
       .join('')
       .toUpperCase();
+  }
+
+  private applyNatures(types: ReportType[]): void {
+    const usable = types.filter((type) => !!type.code?.trim());
+    const emergencyType = this.findEmergency(usable);
+    const cards = emergencyType
+      ? usable.filter((type) => type.code.toUpperCase() !== emergencyType.code.toUpperCase())
+      : usable;
+    this.emergency.set(emergencyType ? this.toEmergency(emergencyType) : null);
+    this.natureCards.set(this.toNatureCards(cards));
+  }
+
+  /** Le type urgence est identifié par son code, pas par sa priorité. */
+  private findEmergency(types: ReportType[]): ReportType | null {
+    return types.find((type) => this.isEmergencyType(type)) ?? null;
+  }
+
+  private isEmergencyType(type: ReportType): boolean {
+    return [type.code, type.category, type.type].some(
+      (value) => !!value && EMERGENCY_CODES.has(value.trim().toUpperCase()),
+    );
+  }
+
+  private toEmergency(type: ReportType): EmergencyView {
+    return {
+      code: type.code.toUpperCase(),
+      icon: type.icon?.trim() || 'crisis_alert',
+    };
+  }
+
+  private toNatureCards(types: ReportType[]): NatureCardView[] {
+    return this.sortByPriority(types.filter((type) => !!type.code?.trim()))
+      .map((type) => {
+        const code = type.code.toUpperCase();
+        const visual = NATURE_VISUAL[code];
+        const titleKey = `home.natures.${code}.title`;
+        const translated = this.translate.instant(titleKey) !== titleKey;
+        return {
+          code,
+          icon: this.resolveNatureIcon(code, type.icon, visual?.icon),
+          tone: visual?.tone || 'gray',
+          badge: !!visual?.badge,
+          translated,
+          label: type.label,
+          description: type.description?.trim() ?? '',
+        };
+      });
+  }
+
+  /** `emergency` ne dessine pas de glyphe ; le bouclier est déjà utilisé sur l'accueil. */
+  private resolveNatureIcon(code: string, apiIcon: string | null | undefined, fallback?: string): string {
+    const stored = apiIcon?.trim() ?? '';
+    if (code === 'ASSAULT' && (!stored || stored === 'emergency')) {
+      return fallback || 'shield';
+    }
+    return stored || fallback || 'info';
+  }
+
+  private sortByPriority(types: ReportType[]): ReportType[] {
+    return [...types].sort((a, b) => {
+      const left = a.priority ?? Number.MAX_SAFE_INTEGER;
+      const right = b.priority ?? Number.MAX_SAFE_INTEGER;
+      if (left !== right) {
+        return left - right;
+      }
+      return a.reportTypeId - b.reportTypeId;
+    });
   }
 
   private authorName(reply: PublicHomepageReply): string | null {

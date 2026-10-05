@@ -7,6 +7,7 @@ import { firstValueFrom } from 'rxjs';
 import { routes } from './app.routes';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { acceptLanguageInterceptor } from './core/interceptors/accept-language.interceptor';
 import { AuthService } from './core/services/auth.service';
 import { LanguageService } from './core/services/language.service';
 import { ConfigService, initAppConfig } from './core/config/config.service';
@@ -31,7 +32,7 @@ export const appConfig: ApplicationConfig = {
       routes,
       withInMemoryScrolling({ scrollPositionRestoration: 'top' }),
     ),
-    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
+    provideHttpClient(withInterceptors([acceptLanguageInterceptor, authInterceptor, errorInterceptor])),
     provideTranslateService({
       loader: provideTranslateHttpLoader({
         prefix: resolveI18nPrefix(),

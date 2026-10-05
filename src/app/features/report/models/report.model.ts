@@ -19,6 +19,13 @@ export interface ReportType {
   labelAr?: string;
   labelEn?: string;
   description?: string;
+  /** Ordre d'affichage : 1 = premier. */
+  priority?: number;
+  /** Nom Material Symbols renvoyé par l'API (ex. crisis_alert). */
+  icon?: string;
+  category?: string;
+  type?: string;
+  phone?: string;
   active?: boolean;
 }
 

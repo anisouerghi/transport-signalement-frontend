@@ -1,36 +1,38 @@
-/* -------------------------------------------------------------------------- */
-/* TRANSTU public theme — Material Design 3 (référence code.html)             */
-/* -------------------------------------------------------------------------- */
+/* Identité visuelle de référence : surface claire, bleu / vert / jaune */
+$transtu-green: #006e2f;
+$transtu-green-dark: #005321;
+$transtu-green-soft: #8cfa9f;
+$transtu-blue: #0b52a8;
+$transtu-blue-deep: #003b7f;
+$transtu-gold: #f5bf00;
+$transtu-gold-soft: #ffdf95;
+$transtu-ink: #131c28;
+$transtu-muted: #424752;
+$transtu-surface: #f8f9ff;
+$transtu-border: #c2c6d4;
 
-/* Bootstrap SCSS overrides (avant l'import) */
-$primary: #003b7f;
-$secondary: #424752;
-$success: #006e2f;
-$danger: #ba1a1a;
-$warning: #b26a00;
-$info: #0b52a8;
-$light: #eff4ff;
-$dark: #28313d;
-
-$font-family-base: 'Inter', 'IBM Plex Sans Arabic', system-ui, sans-serif;
-$headings-font-family: 'Inter', 'IBM Plex Sans Arabic', system-ui, sans-serif;
-
-$border-radius: 0.5rem;
-$border-radius-sm: 0.375rem;
-$border-radius-lg: 0.75rem;
-$border-radius-xl: 1rem;
-
-$btn-border-radius: 0.5rem;
-$btn-border-radius-lg: 0.5rem;
-$btn-border-radius-sm: 0.375rem;
-$btn-font-weight: 600;
-
-$input-border-radius: 0.5rem;
-$input-border-radius-lg: 0.5rem;
-$input-focus-border-color: rgba(0, 59, 127, 0.55);
-$input-focus-box-shadow: 0 0 0 0.22rem rgba(0, 59, 127, 0.16);
-
-$card-border-radius: 0.75rem;
+:root {
+  --transtu-green: #{$transtu-green};
+  --transtu-green-dark: #{$transtu-green-dark};
+  --transtu-green-soft: #{$transtu-green-soft};
+  --transtu-blue: #{$transtu-blue};
+  --transtu-blue-deep: #{$transtu-blue-deep};
+  --transtu-gold: #{$transtu-gold};
+  --transtu-gold-soft: #{$transtu-gold-soft};
+  --transtu-ink: #{$transtu-ink};
+  --transtu-muted: #{$transtu-muted};
+  --transtu-surface: #{$transtu-surface};
+  --transtu-border: #{$transtu-border};
+  --bs-primary: #{$transtu-blue};
+  --bs-primary-rgb: 11, 82, 168;
+  --bs-link-color: #{$transtu-blue-deep};
+  --bs-body-font-family: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
+  --bs-heading-font-family: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
+  --bs-body-color: #{$transtu-ink};
+  --bs-body-bg: transparent;
+  --bs-border-radius: 0.5rem;
+  --bs-border-radius-lg: 0.75rem;
+}
 
 @import 'bootstrap/scss/bootstrap';
 @import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -115,14 +117,15 @@ $card-border-radius: 0.75rem;
 html,
 body {
   min-height: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
   margin: 0;
   color: var(--on-surface);
   font-family: var(--bs-body-font-family);
-  background: var(--surface);
-  background-attachment: fixed;
+  background: var(--transtu-surface);
 }
 
 h1,
@@ -135,43 +138,17 @@ h5,
 .h3,
 .h4,
 .h5 {
-  font-family: var(--bs-heading-font-family);
-  font-weight: 600;
+  font-family: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
   letter-spacing: -0.01em;
-  color: var(--on-surface);
-}
-
-.material-symbols-outlined {
-  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-  line-height: 1;
-}
-
-/* Ruban tricolore TRANSTU (vert / or / bleu) */
-.brand-ribbon {
-  display: flex;
-  height: 4px;
-  width: 100%;
-
-  > span {
-    flex: 1;
-    height: 100%;
-  }
-
-  .brand-ribbon__green {
-    background: var(--secondary);
-  }
-  .brand-ribbon__gold {
-    background: var(--tertiary-fixed-dim);
-  }
-  .brand-ribbon__blue {
-    background: var(--primary-container);
-  }
+  color: var(--transtu-blue-deep);
 }
 
 .app-shell {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 .app-main {
@@ -202,21 +179,20 @@ h5,
 }
 
 .btn-transtu {
-  --bs-btn-bg: var(--primary);
-  --bs-btn-border-color: var(--primary);
-  --bs-btn-hover-bg: var(--primary-container);
-  --bs-btn-hover-border-color: var(--primary-container);
-  --bs-btn-active-bg: var(--primary-container);
-  --bs-btn-active-border-color: var(--primary-container);
-  --bs-btn-color: var(--on-primary);
-  --bs-btn-hover-color: var(--on-primary);
-  --bs-btn-active-color: var(--on-primary);
-  --bs-btn-disabled-bg: var(--primary);
-  --bs-btn-disabled-border-color: var(--primary);
-  font-weight: 700;
+  --bs-btn-bg: var(--transtu-blue);
+  --bs-btn-border-color: var(--transtu-blue);
+  --bs-btn-hover-bg: var(--transtu-blue-deep);
+  --bs-btn-hover-border-color: var(--transtu-blue-deep);
+  --bs-btn-active-bg: var(--transtu-blue-deep);
+  --bs-btn-active-border-color: var(--transtu-blue-deep);
+  --bs-btn-color: #fff;
+  --bs-btn-hover-color: #fff;
+  font-weight: 600;
   letter-spacing: 0.01em;
-  padding: 0.75rem 1.25rem;
-  box-shadow: 0 1px 3px rgba(19, 28, 40, 0.12);
+  min-height: 3rem;
+  border-radius: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  box-shadow: 0 1px 2px rgba(19, 28, 40, 0.06);
 }
 
 .btn-transtu-outline {
@@ -233,11 +209,11 @@ h5,
   padding: 0.75rem 1.25rem;
 }
 
-.btn-link {
-  --bs-link-color: var(--primary);
-  --bs-btn-color: var(--primary);
-  --bs-btn-hover-color: var(--primary-container);
-  font-weight: 600;
+.panel {
+  background: #ffffff;
+  border: 0;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px rgba(19, 28, 40, 0.06);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -274,23 +250,28 @@ h5,
   }
 }
 
+.form-label {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  color: var(--transtu-blue-deep);
+  margin-bottom: 0.35rem;
+}
+
+.form-control,
+.form-select {
+  min-height: 3rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(19, 28, 40, 0.06);
+}
+
 .form-control:focus,
 .form-select:focus {
-  border-color: rgba(0, 59, 127, 0.55);
-  box-shadow: 0 0 0 0.22rem rgba(0, 59, 127, 0.16);
-}
-
-.form-label {
-  font-weight: 600;
-  font-size: 0.875rem;
-  letter-spacing: 0.01em;
-  color: var(--on-surface);
-}
-
-.input-group-text {
-  background: var(--surface-container);
-  border-color: var(--outline-variant);
-  color: var(--on-surface-variant);
+  border-color: transparent;
+  box-shadow: 0 0 0 2px rgba(0, 59, 127, 0.35);
 }
 
 .invalid-feedback,
@@ -618,9 +599,9 @@ html[dir='rtl'] .home-steps__arrow {
 
 .page-btn--active,
 .page-btn:not(:disabled):hover {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: var(--on-primary);
+  background: var(--transtu-blue);
+  border-color: var(--transtu-blue);
+  color: #fff;
 }
 
 .form-select-lg,
