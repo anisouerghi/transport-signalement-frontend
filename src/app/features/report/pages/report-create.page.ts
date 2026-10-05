@@ -376,7 +376,9 @@ export class ReportCreatePage implements OnInit, OnDestroy {
     this.supportUuid.set(uuid);
     this.fromDirect.set(this.route.snapshot.queryParamMap.get('source') === 'direct');
     this.emergencyMode.set(this.natureQuery() === 'URGENCE');
-    this.depositFlow.set(this.route.snapshot.queryParamMap.get('parcours') === 'depot');
+    // /signalement/anonyme (avec ou sans nature) : saisie → récap → choix, jamais de POST avant.
+    // Le segment « anonyme » n'est pas un mode définitif. Le QR (/report/:uuid) conserve son flux.
+    this.depositFlow.set(!uuid || this.route.snapshot.queryParamMap.get('parcours') === 'depot');
 
     if (!uuid) {
       this.anonymousMode.set(true);
@@ -465,9 +467,17 @@ export class ReportCreatePage implements OnInit, OnDestroy {
     window.scrollTo(0, 0);
   }
 
-  /** Passe au choix anonyme / suivi. Aucun POST. */
+  /**
+   * Après le récapitulatif.
+   * Connecté : enregistrement direct avec le compte (aucun choix de mode).
+   * Non connecté : choix anonyme / suivi, sans POST.
+   */
   continueToChoice(): void {
     this.persistDraft(false);
+    if (this.auth.isAuthenticated()) {
+      this.submit();
+      return;
+    }
     this.step.set('choice');
     window.scrollTo(0, 0);
   }
@@ -479,8 +489,18 @@ export class ReportCreatePage implements OnInit, OnDestroy {
     }
     this.persistDraft(true);
     void this.router.navigate(['/connexion'], {
-      queryParams: { returnUrl: '/signalement/anonyme?parcours=depot&etape=choix' },
+      queryParams: { returnUrl: this.depositReturnUrl() },
     });
+  }
+
+  /** Retour après connexion : même formulaire, nature conservée, étape choix. */
+  depositReturnUrl(): string {
+    const params = new URLSearchParams({ parcours: 'depot', etape: 'choix' });
+    const nature = this.natureQuery();
+    if (nature) {
+      params.set('nature', nature);
+    }
+    return `/signalement/anonyme?${params.toString()}`;
   }
 
   selectedNatureLabel(): string {

@@ -235,7 +235,7 @@
 
   @if (depositFlow() && step() === 'choice') {
     <app-identity-choice
-      returnUrl="/signalement/anonyme?parcours=depot&etape=choix"
+      [returnUrl]="depositReturnUrl()"
       [alwaysShowChoices]="true"
       [deferAuth]="true"
       (anonymousContinue)="submit()"
