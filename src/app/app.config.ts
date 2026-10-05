@@ -7,8 +7,15 @@ import { firstValueFrom } from 'rxjs';
 import { routes } from './app.routes';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { acceptLanguageInterceptor } from './core/interceptors/accept-language.interceptor';
 import { AuthService } from './core/services/auth.service';
 import { LanguageService } from './core/services/language.service';
+import { ConfigService, initAppConfig } from './core/config/config.service';
+
+/** Préfixe i18n relatif au base href (ex. /sig/assets/i18n/). */
+function resolveI18nPrefix(): string {
+  return new URL('assets/i18n/', document.baseURI).href;
+}
 
 function restorePassengerSession(auth: AuthService) {
   return () => firstValueFrom(auth.restoreSession()).catch(() => null);
@@ -21,19 +28,26 @@ function initLanguage(language: LanguageService) {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes, withInMemoryScrolling({ scrollPositionRestoration: 'top' })),
-    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
-    // loader via chemin absolu /assets/... (évite 404 selon la route courante)
-    // useHttpBackend: bypass interceptors pendant le chargement des JSON i18n
+    provideRouter(
+      routes,
+      withInMemoryScrolling({ scrollPositionRestoration: 'top' }),
+    ),
+    provideHttpClient(withInterceptors([acceptLanguageInterceptor, authInterceptor, errorInterceptor])),
     provideTranslateService({
       loader: provideTranslateHttpLoader({
-        prefix: '/assets/i18n/',
+        prefix: resolveI18nPrefix(),
         suffix: '.json',
         useHttpBackend: true,
       }),
       fallbackLang: 'fr',
       lang: 'fr',
     }),
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initAppConfig,
+      deps: [ConfigService],
+      multi: true,
+    },
     {
       provide: APP_INITIALIZER,
       useFactory: initLanguage,

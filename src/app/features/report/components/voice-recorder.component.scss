@@ -1,0 +1,46 @@
+.voice-recorder {
+  border: 1px solid var(--transtu-border, #dde3ec);
+  border-radius: 0.85rem;
+  padding: 1rem;
+  background: #fff;
+}
+
+.voice-panel {
+  border-radius: 0.75rem;
+  padding: 0.85rem;
+  background: rgba(232, 246, 238, 0.45);
+}
+
+.voice-panel--recording {
+  background: rgba(220, 53, 69, 0.08);
+}
+
+.voice-timer {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+.voice-audio {
+  max-height: 2.75rem;
+}
+
+.voice-pulse {
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+  background: #dc3545;
+  flex-shrink: 0;
+  animation: voice-pulse 1s ease-in-out infinite;
+}
+
+@keyframes voice-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.85);
+  }
+}

@@ -12,7 +12,7 @@ import { AuthService } from '../../../core/services/auth.service';
   standalone: true,
   imports: [TranslatePipe],
   template: `
-    @if (auth.isAuthenticated()) {
+    @if (auth.isAuthenticated() && !alwaysShowChoices) {
       <div class="identity-choice panel p-4">
         <p class="mb-1">{{ 'identity.greeting' | translate }} <strong>{{ displayName() }}</strong></p>
         <p class="text-secondary small mb-3">{{ 'identity.connectedHint' | translate }}</p>
@@ -24,7 +24,7 @@ import { AuthService } from '../../../core/services/auth.service';
       <section class="identity-choice panel p-4">
         <h2 class="h5 mb-3">{{ 'identity.title' | translate }}</h2>
         <div class="d-grid gap-2">
-          <button type="button" class="choice-card" (click)="continue.emit()">
+          <button type="button" class="choice-card" (click)="anonymousContinue.emit()">
             <span class="choice-card__icon" aria-hidden="true"><i class="bi bi-incognito"></i></span>
             <span>
               <strong class="d-block">{{ 'identity.anonymous' | translate }}</strong>
@@ -80,9 +80,23 @@ export class IdentityChoiceComponent {
 
   /** URL de retour après connexion / inscription. */
   @Input({ required: true }) returnUrl = '/accueil';
+  /** Affiche les deux cartes même si un compte est déjà connecté. */
+  @Input() alwaysShowChoices = false;
+  /** Le parent enregistre le brouillon puis lance lui-même la connexion. */
+  @Input() deferAuth = false;
   @Output() continue = new EventEmitter<void>();
+  @Output() anonymousContinue = new EventEmitter<void>();
+  @Output() authRequest = new EventEmitter<void>();
 
   goAuth(): void {
+    if (this.alwaysShowChoices && this.auth.isAuthenticated()) {
+      this.continue.emit();
+      return;
+    }
+    if (this.deferAuth) {
+      this.authRequest.emit();
+      return;
+    }
     void this.router.navigate(['/connexion'], { queryParams: { returnUrl: this.returnUrl } });
   }
 

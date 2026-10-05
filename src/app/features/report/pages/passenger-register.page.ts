@@ -1,32 +1,61 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { ConfigService } from '../../../core/config/config.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
+import { PassengerOtpPendingResponse } from '../../../core/models/auth.model';
+import { OtpInputComponent } from '../components/otp-input.component';
+import { TurnstileWidgetComponent } from '../components/turnstile-widget.component';
+import { tryGetOptionalGps } from '../../../core/utils/optional-gps';
+import { from, switchMap } from 'rxjs';
+
+type RegisterStep = 'credentials' | 'otp';
 
 @Component({
   selector: 'app-passenger-register-page',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, TranslatePipe],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    RouterLinkActive,
+    TranslatePipe,
+    OtpInputComponent,
+    TurnstileWidgetComponent,
+  ],
   templateUrl: './passenger-register.page.html',
 })
-export class PassengerRegisterPage implements OnInit {
+export class PassengerRegisterPage implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly notifications = inject(NotificationService);
   private readonly translate = inject(TranslateService);
+  private readonly config = inject(ConfigService);
+
+  @ViewChild(TurnstileWidgetComponent) private turnstileWidget?: TurnstileWidgetComponent;
 
   readonly submitting = signal(false);
+  readonly resending = signal(false);
   readonly returnUrl = signal('/accueil');
+  readonly step = signal<RegisterStep>('credentials');
+  readonly otpPending = signal<PassengerOtpPendingResponse | null>(null);
+  readonly resendCountdown = signal(0);
+  readonly turnstileToken = signal<string | null>(null);
+
+  private resendTimer: ReturnType<typeof setInterval> | null = null;
 
   readonly form = this.fb.nonNullable.group({
     name: ['', Validators.maxLength(150)],
     email: ['', [Validators.required, Validators.email]],
     phoneNumber: ['', [Validators.maxLength(30), Validators.pattern(/^[+0-9\s().-]{0,30}$/)]],
     password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(100)]],
+  });
+
+  readonly otpForm = this.fb.nonNullable.group({
+    otp: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
   });
 
   ngOnInit(): void {
@@ -36,27 +65,139 @@ export class PassengerRegisterPage implements OnInit {
     }
   }
 
+  ngOnDestroy(): void {
+    this.clearResendTimer();
+  }
+
+  onTurnstileToken(token: string | null): void {
+    this.turnstileToken.set(token);
+  }
+
+  turnstileBlocksSubmit(): boolean {
+    return this.config.cloudflareEnabled && !!this.config.cloudflareSiteKey && !this.turnstileToken();
+  }
+
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
+    if (this.turnstileBlocksSubmit()) {
+      this.notifications.error(this.translate.instant('turnstile.required'));
+      return;
+    }
+
     this.submitting.set(true);
     const raw = this.form.getRawValue();
-    this.auth
-      .register({
-        name: raw.name.trim() || undefined,
-        email: raw.email.trim(),
-        phoneNumber: raw.phoneNumber.trim() || undefined,
-        password: raw.password,
-      })
+    const token = this.turnstileToken();
+    from(tryGetOptionalGps())
+      .pipe(
+        switchMap((gps) =>
+          this.auth.register({
+            name: raw.name.trim() || undefined,
+            email: raw.email.trim(),
+            phoneNumber: raw.phoneNumber.trim() || undefined,
+            password: raw.password,
+            ...(token ? { turnstileToken: token } : {}),
+            ...gps,
+          }),
+        ),
+      )
       .subscribe({
-        next: () => {
+        next: (pending) => {
           this.submitting.set(false);
-          this.notifications.success(this.translate.instant('auth.registerSuccess'));
-          void this.router.navigateByUrl(this.returnUrl());
+          this.otpPending.set(pending);
+          this.step.set('otp');
+          this.startResendCountdown(pending.resendDelaySeconds);
+          if (pending.emailSent === false) {
+            this.notifications.error(this.translate.instant('auth.otpEmailFailed'));
+          } else {
+            this.notifications.info(
+              this.translate.instant('auth.otpSent', {
+                email: pending.maskedEmail ?? raw.email.trim(),
+              }),
+            );
+          }
         },
-        error: () => this.submitting.set(false),
+        error: () => {
+          this.submitting.set(false);
+          this.turnstileToken.set(null);
+          this.turnstileWidget?.reset();
+        },
       });
+  }
+
+  verifyOtp(): void {
+    if (this.otpForm.invalid) {
+      this.otpForm.markAllAsTouched();
+      return;
+    }
+
+    const pending = this.otpPending();
+    if (!pending) {
+      return;
+    }
+
+    this.submitting.set(true);
+    const { otp } = this.otpForm.getRawValue();
+    this.auth.verifyOtp(pending.otpTransactionId, otp).subscribe({
+      next: () => {
+        this.submitting.set(false);
+        this.notifications.success(this.translate.instant('auth.registerSuccess'));
+        void this.router.navigateByUrl(this.returnUrl());
+      },
+      error: () => this.submitting.set(false),
+    });
+  }
+
+  resendOtp(): void {
+    if (this.resendCountdown() > 0 || this.resending()) {
+      return;
+    }
+
+    const pending = this.otpPending();
+    if (!pending) {
+      return;
+    }
+
+    this.resending.set(true);
+    this.auth.resendOtp(pending.otpTransactionId).subscribe({
+      next: (updated) => {
+        this.resending.set(false);
+        this.otpPending.set(updated);
+        this.startResendCountdown(updated.resendDelaySeconds);
+        this.notifications.success(this.translate.instant('auth.otpResent'));
+      },
+      error: () => this.resending.set(false),
+    });
+  }
+
+  backToRegister(): void {
+    this.clearResendTimer();
+    this.step.set('credentials');
+    this.otpPending.set(null);
+    this.otpForm.reset();
+    this.turnstileToken.set(null);
+  }
+
+  private startResendCountdown(seconds: number): void {
+    this.clearResendTimer();
+    this.resendCountdown.set(seconds);
+    this.resendTimer = setInterval(() => {
+      const next = this.resendCountdown() - 1;
+      if (next <= 0) {
+        this.resendCountdown.set(0);
+        this.clearResendTimer();
+        return;
+      }
+      this.resendCountdown.set(next);
+    }, 1000);
+  }
+
+  private clearResendTimer(): void {
+    if (this.resendTimer) {
+      clearInterval(this.resendTimer);
+      this.resendTimer = null;
+    }
   }
 }

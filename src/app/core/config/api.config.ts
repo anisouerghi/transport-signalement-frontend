@@ -1,18 +1,43 @@
-import { environment } from '../../../environments/environment';
+let apiBaseUrl = '';
 
-/** Endpoints API publics (voyageur). */
-export const API_CONFIG = {
-  baseUrl: environment.apiBaseUrl,
+function api(path: string): string {
+  return `${apiBaseUrl}${path}`;
+}
+
+export type PublicApiConfig = {
+  baseUrl: string;
   public: {
-    supports: `${environment.apiBaseUrl}/api/public/supports`,
-    reportTypes: `${environment.apiBaseUrl}/api/public/report-types`,
-    signalements: `${environment.apiBaseUrl}/api/public/signalements`,
-    /** Suivi sécurisé par UUID (lien e-mail). */
-    followUp: `${environment.apiBaseUrl}/api/public/signalements`,
-    /** @deprecated alias — préférer followUp */
-    suivi: `${environment.apiBaseUrl}/api/public/suivi`,
-    /** Réponses visibles à l'accueil (publish). */
-    reponses: `${environment.apiBaseUrl}/api/public/reponses`,
-    auth: `${environment.apiBaseUrl}/api/public/auth`,
-  },
-} as const;
+    supports: string;
+    reportTypes: string;
+    signalements: string;
+    followUp: string;
+    suivi: string;
+    reponses: string;
+    auth: string;
+  };
+};
+
+function buildApiConfig(): PublicApiConfig {
+  return {
+    baseUrl: apiBaseUrl,
+    public: {
+      supports: api('/api/public/supports'),
+      reportTypes: api('/api/public/report-types'),
+      signalements: api('/api/public/signalements'),
+      followUp: api('/api/public/signalements'),
+      suivi: api('/api/public/suivi'),
+      reponses: api('/api/public/reponses'),
+      auth: api('/api/public/auth'),
+    },
+  };
+}
+
+/** Endpoints API publics (voyageur) — apiBaseUrl charge depuis config.json. */
+export const API_CONFIG: PublicApiConfig = buildApiConfig();
+
+export function initializeApiConfig(baseUrl: string): void {
+  apiBaseUrl = baseUrl;
+  const built = buildApiConfig();
+  API_CONFIG.baseUrl = built.baseUrl;
+  Object.assign(API_CONFIG.public, built.public);
+}

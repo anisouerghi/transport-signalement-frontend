@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from '../../core/services/auth.service';
 import { AppLanguage, LanguageService } from '../../core/services/language.service';
@@ -13,11 +13,11 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
       <div class="public-header__inner">
         <a routerLink="/accueil" class="brand" [attr.aria-label]="'common.brandAria' | translate">
           <img
-            src="assets/images/transtu_logo.png"
-            [attr.alt]="'common.logoAlt' | translate"
+            src="assets/images/signalement_logo.jpg"
+            [attr.alt]="'common.appLogoAlt' | translate"
             class="brand__logo"
-            width="160"
-            height="48"
+            width="168"
+            height="68"
           />
         </a>
         <div class="public-header__tools">
@@ -34,19 +34,43 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
               </button>
             }
           </div>
-          @if (auth.isAuthenticated()) {
-            <span class="nav-user d-none d-md-inline-flex" [attr.title]="auth.currentUser()?.email">
-              <i class="bi bi-person-check-fill" aria-hidden="true"></i>
-              {{ displayName() }}
-            </span>
-            <button type="button" class="nav-btn" (click)="logout()">
-              {{ 'header.logout' | translate }}
+          <div class="user-menu">
+            <button
+              type="button"
+              class="user-menu__trigger"
+              [attr.aria-expanded]="userMenuOpen()"
+              aria-haspopup="menu"
+              [attr.aria-label]="auth.isAuthenticated() ? displayName() : ('header.account' | translate)"
+              (click)="toggleUserMenu()"
+            >
+              @if (auth.isAuthenticated()) {
+                {{ userInitials() }}
+              } @else {
+                <i class="bi bi-person-circle" aria-hidden="true"></i>
+              }
             </button>
-          } @else {
-            <a routerLink="/connexion" [queryParams]="{ returnUrl: '/mes-signalements' }" class="nav-link-muted">
-              {{ 'header.login' | translate }}
-            </a>
-          }
+            @if (userMenuOpen()) {
+              <div class="user-menu__dropdown" role="menu">
+                @if (auth.isAuthenticated()) {
+                  <a routerLink="/profil" role="menuitem" (click)="closeUserMenu()">
+                    {{ 'header.profile' | translate }}
+                  </a>
+                  <button type="button" role="menuitem" (click)="logout()">
+                    {{ 'header.logout' | translate }}
+                  </button>
+                } @else {
+                  <a
+                    routerLink="/connexion"
+                    [queryParams]="{ returnUrl: '/mes-signalements' }"
+                    role="menuitem"
+                    (click)="closeUserMenu()"
+                  >
+                    {{ 'header.login' | translate }}
+                  </a>
+                }
+              </div>
+            }
+          </div>
         </div>
       </div>
       <nav class="public-header__links d-none d-md-flex" [attr.aria-label]="'common.navMain' | translate">
@@ -68,13 +92,22 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
   styles: [
     `
       .public-header {
-        background: linear-gradient(180deg, #0f2758 0%, #1a3a7a 100%);
-        color: #fff;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: rgba(248, 249, 255, 0.92);
+        backdrop-filter: blur(18px);
+        color: #131c28;
+        max-width: 100%;
+        overflow-x: clip;
+        box-shadow: 0 2px 8px rgba(27, 36, 48, 0.06);
       }
       .public-header__inner {
+        box-sizing: border-box;
         width: min(720px, 100%);
+        max-width: 100vw;
         margin: 0 auto;
-        padding: 0.7rem 1rem 0.45rem;
+        padding: 0.45rem 1rem 0.3rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -83,19 +116,30 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
       .brand {
         display: inline-flex;
         align-items: center;
+        justify-content: flex-start;
+        box-sizing: border-box;
+        width: 168px;
+        height: 68px;
+        margin: 0;
+        padding: 0;
         text-decoration: none;
+        flex: 0 0 auto;
+        min-width: 0;
+        overflow: hidden;
+        background: transparent;
       }
       .brand__logo {
-        height: 40px;
-        width: auto;
-        object-fit: contain;
-        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
+        display: block;
+        height: 68px;
+        width: 168px;
+        max-width: none;
+        object-fit: fill;
       }
       .public-header__tools {
         display: flex;
         align-items: center;
         gap: 0.65rem;
-        flex-wrap: wrap;
+        flex: 0 0 auto;
         justify-content: flex-end;
       }
       .public-header__links {
@@ -106,30 +150,31 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
         justify-content: flex-start;
       }
       .public-header__links a {
-        color: rgba(255, 255, 255, 0.82);
+        color: #424752;
         text-decoration: none;
-        font-size: 0.92rem;
+        font-size: 0.875rem;
         font-weight: 600;
         padding-bottom: 0.15rem;
         border-bottom: 2px solid transparent;
       }
-      .public-header__links a.is-active,
-      .public-header__links a:hover {
-        color: #fff;
-        border-bottom-color: #e8a317;
+      .public-header__links a:hover,
+      .public-header__links a.is-active {
+        color: #003b7f;
+        border-bottom-color: #003b7f;
       }
       .lang-switch {
         display: inline-flex;
         align-items: center;
         gap: 0.15rem;
-        padding: 0.15rem;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.1);
+        min-height: 2.75rem;
+        padding: 0.2rem;
+        border-radius: 0.5rem;
+        background: #eff4ff;
       }
       .lang-btn {
         background: transparent;
         border: none;
-        color: rgba(255, 255, 255, 0.85);
+        color: rgba(10, 10, 10, 0.85);
         font-size: 0.72rem;
         font-weight: 700;
         letter-spacing: 0.02em;
@@ -139,18 +184,72 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
         line-height: 1.2;
       }
       .lang-btn:hover {
-        color: #fff;
-        background: rgba(255, 255, 255, 0.12);
+        color: #0f2758;
+      }
+      @media (max-width: 420px) {
+        .brand,
+        .brand__logo {
+          width: 132px;
+          height: 52px;
+        }
       }
       .lang-btn--active {
         background: #fff;
-        color: #0f2758;
+        color: #003b7f;
       }
       .nav-link-muted {
         color: rgba(255, 255, 255, 0.9);
         text-decoration: none;
         font-weight: 600;
         font-size: 0.85rem;
+      }
+      .user-menu {
+        position: relative;
+      }
+      .user-menu__trigger {
+        width: 2.5rem;
+        height: 2.5rem;
+        border: 0;
+        border-radius: 50%;
+        background: #0b52a8;
+        color: #fff;
+        font-size: 0.78rem;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 0 0 2px rgba(0, 59, 127, 0.18);
+      }
+      .user-menu__trigger i {
+        font-size: 1.35rem;
+      }
+      .user-menu__dropdown {
+        position: absolute;
+        top: calc(100% + 0.5rem);
+        inset-inline-end: 0;
+        z-index: 40;
+        min-width: 9rem;
+        padding: 0.35rem;
+        background: #fff;
+        border: 1px solid rgba(15, 39, 88, 0.14);
+        border-radius: 0.5rem;
+        box-shadow: 0 0.5rem 1.25rem rgba(15, 39, 88, 0.18);
+      }
+      .user-menu__dropdown a,
+      .user-menu__dropdown button {
+        display: block;
+        width: 100%;
+        padding: 0.5rem 0.65rem;
+        border: 0;
+        border-radius: 0.3rem;
+        background: transparent;
+        color: #0f2758;
+        text-align: start;
+        text-decoration: none;
+        font: inherit;
+        cursor: pointer;
+      }
+      .user-menu__dropdown a:hover,
+      .user-menu__dropdown button:hover {
+        background: #f1f4f8;
       }
       .nav-user {
         font-size: 0.85rem;
@@ -175,38 +274,42 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
         cursor: pointer;
       }
       .gold-bar {
-        height: 3px;
-        background: linear-gradient(90deg, #e8a317, #0b8a3e 55%, #1a3a7a);
+        height: 4px;
+        background: linear-gradient(90deg, #006e2f 0 33.33%, #f5bf00 33.33% 66.66%, #0b52a8 66.66% 100%);
       }
       .public-bottom-nav {
         position: fixed;
         left: 0;
         right: 0;
         bottom: 0;
-        z-index: 30;
+        z-index: 50;
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        background: #0f2758;
-        border-top: 3px solid #e8a317;
-        padding: 0.35rem 0.2rem calc(0.4rem + env(safe-area-inset-bottom));
+        background: rgba(248, 249, 255, 0.92);
+        backdrop-filter: blur(18px);
+        padding: 0.25rem 0.35rem calc(0.25rem + env(safe-area-inset-bottom));
+        border-radius: 0;
+        box-shadow: 0 -4px 16px rgba(27, 36, 48, 0.06);
       }
       .public-bottom-nav a {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 0.15rem;
-        color: rgba(255, 255, 255, 0.7);
+        gap: 0.1rem;
+        color: #424752;
         text-decoration: none;
-        font-size: 0.68rem;
-        font-weight: 600;
-        min-height: 2.85rem;
+        font-size: 0.625rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        min-height: 3rem;
         justify-content: center;
       }
       .public-bottom-nav a i {
-        font-size: 1.15rem;
+        font-size: 1.35rem;
       }
-      .public-bottom-nav a.is-active {
-        color: #fff;
+      .public-bottom-nav a.is-active,
+      .public-bottom-nav a:hover {
+        color: #003b7f;
       }
     `,
   ],
@@ -214,12 +317,14 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
 export class PublicHeaderComponent {
   readonly auth = inject(AuthService);
   readonly language = inject(LanguageService);
+  readonly router = inject(Router);
+  readonly userMenuOpen = signal(false);
 
   readonly navItems = [
     { path: '/accueil', key: 'nav.home', icon: 'bi-house' },
     { path: '/signalement', key: 'nav.report', icon: 'bi-exclamation-circle' },
     { path: '/mes-signalements', key: 'nav.myReports', icon: 'bi-clipboard-check' },
-    { path: '/a-propos', key: 'nav.about', icon: 'bi-info-circle' },
+    { path: '/scan', key: 'nav.scan', icon: 'bi-qr-code-scan' },
   ];
 
   displayName(): string {
@@ -230,8 +335,28 @@ export class PublicHeaderComponent {
     return user.name.split(' ')[0];
   }
 
+  userInitials(): string {
+    const user = this.auth.currentUser();
+    const value = user?.name?.trim() || user?.email?.split('@')[0] || '';
+    const parts = value.split(/\s+/).filter(Boolean);
+    if (parts.length > 1) {
+      return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+    }
+    return value.slice(0, 2).toUpperCase();
+  }
+
+  toggleUserMenu(): void {
+    this.userMenuOpen.update((open) => !open);
+  }
+
+  closeUserMenu(): void {
+    this.userMenuOpen.set(false);
+  }
+
   logout(): void {
+    this.closeUserMenu();
     this.auth.logout();
+    void this.router.navigate(['/accueil']);
   }
 
   onLang(code: AppLanguage): void {

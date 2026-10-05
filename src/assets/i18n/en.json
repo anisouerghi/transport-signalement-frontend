@@ -1,12 +1,14 @@
 {
   "common": {
     "brand": "TRANSTU",
-    "brandAria": "TRANSTU — Home",
+    "brandAria": "Reporting — Home",
+    "appLogoAlt": "Traveler reporting logo",
     "logoAlt": "TRANSTU logo",
     "backHome": "Back to home",
     "back": "Back",
     "or": "or",
     "close": "Close",
+    "cancel": "Cancel",
     "loading": "Loading…",
     "reference": "Reference",
     "label": "Label",
@@ -25,25 +27,49 @@
     "home": "Home",
     "report": "Report",
     "myReports": "My reports",
-    "about": "About"
+    "scan": "Scan"
   },
   "header": {
     "login": "Sign in",
+    "account": "User account",
     "logout": "Sign out",
+    "profile": "Profile",
     "language": "Language"
   },
   "footer": {
     "tagline": "Tunis Transport Company — Traveler reporting"
   },
+  "profile": {
+    "title": "My profile",
+    "name": "Name",
+    "edit": "Edit profile",
+    "nameRequired": "Name is required.",
+    "emailInvalid": "Invalid email address.",
+    "changePassword": "Change password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "passwordRequired": "Current password is required.",
+    "passwordMin": "The new password must contain at least 8 characters.",
+    "save": "Save",
+    "submitting": "Saving…",
+    "updated": "Profile updated successfully."
+  },
   "home": {
     "title": "Traveler reporting",
+    "ehouwiyaTitle": "E-Houwiya digital identity",
+    "ehouwiyaChip": "Digital Tunisia",
+    "ehouwiyaText": "Sign in with the citizen digital identity for instant tracking, full access to your previous requests, and an SMS each time a request is updated.",
+    "ehouwiyaLogin": "Sign in with E-Houwiya",
+    "voiceTitle": "Make your voice heard at TRANSTU",
+    "voiceText": "Your participatory platform for complaints, field reports, suggestions and thanks, to improve the bus fleet, the light metro and the TGM line.",
     "intro": "Scan the QR code on your transport support to submit a report quickly and securely.",
     "followHint": "You can track replies via the secure link emailed when our team responds.",
     "step1": "Scan a QR code",
     "step2": "Submit a report",
     "step3": "Receive a reply",
     "cta": "Submit a report",
-    "repliesTitle": "Replies to reports",
+    "repliesTitle": "Your complaints, our actions",
+    "anonymous": "Anonymous",
     "repliesLead": "Short previews of the latest published team replies.",
     "repliesTeam": "Team reply",
     "repliesEmpty": "No public replies at the moment.",
@@ -52,7 +78,46 @@
     "repliesNext": "Next",
     "repliesPagination": "Public replies pagination",
     "seeMore": "See more",
-    "seeLess": "Show less"
+    "seeLess": "Show less",
+    "referenceTitle": "Search by reference",
+    "referenceHint": "Enter your request reference to open its follow-up.",
+    "referencePlaceholder": "Example: SIG-20261002-100001",
+    "referenceSearch": "Search",
+    "referenceRequired": "Please enter a reference.",
+    "natureTitle": "What would you like to tell us today?",
+    "natureSubtitle": "Direct service 24/7",
+    "emergencyTitle": "Emergency or immediate danger?",
+    "emergencyCall": "Call 197 / 198 now, or tap here",
+    "naturesError": "Report types are temporarily unavailable.",
+    "naturesEmpty": "No report type is available right now.",
+    "natures": {
+      "COMPLAINT": {
+        "title": "File a complaint",
+        "subtitle": "Complaint",
+        "description": "Delay, inappropriate behavior, breakdown or a ticket issue."
+      },
+      "INCIDENT": {
+        "title": "Immediate report",
+        "subtitle": "Incident",
+        "badge": "Live",
+        "description": "Station damage, broken glass, cleanliness or safety."
+      },
+      "SUGGESTION": {
+        "title": "Improvement idea",
+        "subtitle": "Suggestion",
+        "description": "Schedules, new routes or the station experience."
+      },
+      "THANKS": {
+        "title": "Thank-you message",
+        "subtitle": "Thanks",
+        "description": "Encourage a driver, an inspector or a team."
+      },
+      "OTHER": {
+        "title": "Other request",
+        "subtitle": "Other",
+        "description": "Subscriptions, lost property and administrative services."
+      }
+    }
   },
   "welcome": {
     "title": "Your feedback matters",
@@ -115,6 +180,17 @@
     "step3": "Our team handles your request",
     "step4": "Read the reply"
   },
+  "scan": {
+    "title": "Scan a QR code",
+    "intro": "Allow camera access to identify your transport support.",
+    "camera": "Camera",
+    "starting": "Starting camera…",
+    "permission": "Allow camera access to scan a QR code.",
+    "unsupported": "The camera is not available on this device or browser.",
+    "invalid": "This QR code does not belong to a TRANSTU support.",
+    "retry": "Try again",
+    "back": "Back"
+  },
   "myReports": {
     "title": "My reports",
     "subtitle": "Your 15 most recent reports.",
@@ -140,9 +216,9 @@
   "report": {
     "title": "Submit a report",
     "subtitle": "Describe the situation. Our team will handle your request as soon as possible.",
-    "typeLabel": "Report type *",
-    "typePlaceholder": "Select a type",
-    "typeRequired": "Please choose a report type.",
+    "typeLabel": "Report nature *",
+    "typePlaceholder": "Select a nature",
+    "typeRequired": "Please select a report nature.",
     "descriptionLabel": "Description *",
     "descriptionPlaceholder": "Describe the problem precisely…",
     "descriptionRequired": "The description must contain at least 10 characters.",
@@ -150,6 +226,10 @@
     "emailInvalid": "Invalid email address.",
     "phoneInvalid": "Invalid phone number.",
     "submit": "Send my report",
+    "reviewTitle": "Summary of your report",
+    "reviewEdit": "Edit",
+    "reviewContinue": "Continue",
+    "reviewEmpty": "—",
     "submitting": "Sending…",
     "success": "Your report has been recorded.",
     "invalidQr": "Unrecognized QR code",
@@ -159,6 +239,31 @@
     "contactDisabledHint": "Information from your account (read-only).",
     "sessionContact": "This report will be linked to your account ({{email}})."
   },
+  "voice": {
+    "title": "Voice message",
+    "optional": "optional",
+    "hint": "Record a short message (30 s max). Microphone permission is requested only when you start recording.",
+    "record": "Record a voice message",
+    "recording": "Recording…",
+    "stop": "Stop",
+    "ready": "Message ready to send",
+    "delete": "Delete",
+    "rerecord": "Record again",
+    "permissionDenied": "Microphone access was denied. You can still submit the report without a voice message.",
+    "unsupported": "Audio recording is not available on this device or browser.",
+    "empty": "No sound was captured. You can try again or continue without a voice message.",
+    "tooLarge": "The voice message exceeds 10 MB. Shorten it or continue without audio."
+  },
+  "turnstile": {
+    "label": "Security check",
+    "hint": "Security verification (Cloudflare)",
+    "required": "Please complete the security check before submitting your report.",
+    "error": "Security verification failed. Please try again.",
+    "expired": "The verification expired. Please complete it again.",
+    "timeout": "Security check timed out. Please try again.",
+    "loadFailed": "Could not load the security check. Check your connection and reload the page.",
+    "missingKey": "Security configuration incomplete. Please contact the administrator."
+  },
   "emailNudge": {
     "title": "Why provide your email?",
     "body": "You can submit your report anonymously. However, if you provide your email address, you will be automatically informed of progress and receive our team's reply by email."
@@ -167,6 +272,12 @@
     "title": "Attachments (optional)",
     "limits": "Maximum {{maxFiles}} files · {{maxFileMb}} MB / file · {{maxTotalMb}} MB total · JPG, JPEG, PNG, WEBP, PDF",
     "dropHint": "Drag and drop your files here or",
+    "takePhoto": "Open camera",
+    "capture": "Capture",
+    "cancelCamera": "Cancel",
+    "cameraUnavailable": "The camera is not available on this device or browser.",
+    "cameraPermissionDenied": "Camera access was denied. Allow camera access and try again.",
+    "captureFailed": "The photo could not be captured.",
     "browse": "Browse",
     "removeAria": "Remove {{name}}",
     "maxFiles": "Maximum {{count}} attachments allowed.",
@@ -198,7 +309,23 @@
     "signInLink": "Sign in",
     "registerSuccess": "Account created. You are signed in.",
     "emailInvalid": "Invalid email address.",
-    "phoneInvalid": "Invalid phone number."
+    "phoneInvalid": "Invalid phone number.",
+    "googleContinue": "Continue with Google",
+    "orDivider": "or",
+    "otpTitle": "Email verification",
+    "otpSubtitle": "Enter the 6-digit code sent to {{email}}.",
+    "otpLabel": "Verification code",
+    "otpInvalid": "A 6-digit code is required.",
+    "otpVerify": "Verify",
+    "otpVerifying": "Verifying…",
+    "otpResend": "Resend code",
+    "otpResending": "Sending…",
+    "otpResendWait": "Resend in {{seconds}} s",
+    "otpResent": "A new code has been sent.",
+    "otpSent": "A code was sent to {{email}}.",
+    "otpEmailFailed": "The email could not be sent. Click \"Resend code\" or check your spam folder.",
+    "otpBackToLogin": "Back to sign in",
+    "otpBackToRegister": "Back to registration"
   },
   "confirmation": {
     "emptyTitle": "No confirmation available",
@@ -223,6 +350,7 @@
     "notFoundTitle": "No report found",
     "notFoundBody": "This tracking link is invalid or the report no longer exists.",
     "createdAt": "Created on",
+    "description": "Report description",
     "repliesTitle": "TRANSTU replies",
     "replyFrom": "Reply from TRANSTU",
     "noReplies": "No visible reply yet."

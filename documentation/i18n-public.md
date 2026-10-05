@@ -12,7 +12,7 @@
 
 - `@ngx-translate/core` + `@ngx-translate/http-loader`
 - Fichiers JSON : `src/assets/i18n/{fr,ar,en}.json`
-- Chargement : préfixe **absolu** `/assets/i18n/` + `useHttpBackend: true` (évite les 404 selon la route et le passage par les interceptors)
+- Chargement : préfixe résolu via `document.baseURI` + `assets/i18n/` (compatible sous-répertoire `/sig/`) + `useHttpBackend: true` (évite les interceptors)
 - Service : `src/app/core/services/language.service.ts`
 - Sélecteur : en-tête `PublicHeaderComponent` (`FR | العربية | EN`)
 

@@ -1,15 +1,15 @@
-/* TRANSTU public theme — inspired by official logo (green / blue / gold) */
-$transtu-green: #0b8a3e;
-$transtu-green-dark: #066b2f;
-$transtu-green-soft: #e8f6ee;
-$transtu-blue: #1a3a7a;
-$transtu-blue-deep: #0f2758;
-$transtu-gold: #e8a317;
-$transtu-gold-soft: #fff6e0;
-$transtu-ink: #142033;
-$transtu-muted: #5a6b7d;
-$transtu-surface: #f4f7f5;
-$transtu-border: #d5e0d9;
+/* Identité visuelle de référence : surface claire, bleu / vert / jaune */
+$transtu-green: #006e2f;
+$transtu-green-dark: #005321;
+$transtu-green-soft: #8cfa9f;
+$transtu-blue: #0b52a8;
+$transtu-blue-deep: #003b7f;
+$transtu-gold: #f5bf00;
+$transtu-gold-soft: #ffdf95;
+$transtu-ink: #131c28;
+$transtu-muted: #424752;
+$transtu-surface: #f8f9ff;
+$transtu-border: #c2c6d4;
 
 :root {
   --transtu-green: #{$transtu-green};
@@ -23,15 +23,15 @@ $transtu-border: #d5e0d9;
   --transtu-muted: #{$transtu-muted};
   --transtu-surface: #{$transtu-surface};
   --transtu-border: #{$transtu-border};
-  --bs-primary: #{$transtu-green};
-  --bs-primary-rgb: 11, 138, 62;
-  --bs-link-color: #{$transtu-green-dark};
-  --bs-body-font-family: 'Source Sans 3', system-ui, sans-serif;
-  --bs-heading-font-family: 'Manrope', system-ui, sans-serif;
+  --bs-primary: #{$transtu-blue};
+  --bs-primary-rgb: 11, 82, 168;
+  --bs-link-color: #{$transtu-blue-deep};
+  --bs-body-font-family: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
+  --bs-heading-font-family: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
   --bs-body-color: #{$transtu-ink};
   --bs-body-bg: transparent;
-  --bs-border-radius: 0.85rem;
-  --bs-border-radius-lg: 1.15rem;
+  --bs-border-radius: 0.5rem;
+  --bs-border-radius-lg: 0.75rem;
 }
 
 @import 'bootstrap/scss/bootstrap';
@@ -46,17 +46,15 @@ $transtu-border: #d5e0d9;
 html,
 body {
   min-height: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
   margin: 0;
   color: var(--transtu-ink);
   font-family: var(--bs-body-font-family);
-  background:
-    radial-gradient(ellipse 80% 50% at 10% -10%, rgba(11, 138, 62, 0.14), transparent 55%),
-    radial-gradient(ellipse 70% 45% at 100% 0%, rgba(26, 58, 122, 0.12), transparent 50%),
-    linear-gradient(180deg, #eef5f1 0%, var(--transtu-surface) 42%, #e8eef6 100%);
-  background-attachment: fixed;
+  background: var(--transtu-surface);
 }
 
 h1,
@@ -69,14 +67,17 @@ h5,
 .h3,
 .h4,
 .h5 {
-  font-family: 'Manrope', system-ui, sans-serif;
-  letter-spacing: -0.02em;
+  font-family: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
+  letter-spacing: -0.01em;
+  color: var(--transtu-blue-deep);
 }
 
 .app-shell {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 .app-main {
@@ -93,17 +94,20 @@ h5,
 }
 
 .btn-transtu {
-  --bs-btn-bg: var(--transtu-green);
-  --bs-btn-border-color: var(--transtu-green);
-  --bs-btn-hover-bg: var(--transtu-green-dark);
-  --bs-btn-hover-border-color: var(--transtu-green-dark);
-  --bs-btn-active-bg: var(--transtu-green-dark);
-  --bs-btn-active-border-color: var(--transtu-green-dark);
+  --bs-btn-bg: var(--transtu-blue);
+  --bs-btn-border-color: var(--transtu-blue);
+  --bs-btn-hover-bg: var(--transtu-blue-deep);
+  --bs-btn-hover-border-color: var(--transtu-blue-deep);
+  --bs-btn-active-bg: var(--transtu-blue-deep);
+  --bs-btn-active-border-color: var(--transtu-blue-deep);
   --bs-btn-color: #fff;
   --bs-btn-hover-color: #fff;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.01em;
-  padding: 0.75rem 1.25rem;
+  min-height: 3rem;
+  border-radius: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  box-shadow: 0 1px 2px rgba(19, 28, 40, 0.06);
 }
 
 .btn-transtu-outline {
@@ -112,28 +116,42 @@ h5,
   --bs-btn-hover-bg: var(--transtu-blue);
   --bs-btn-hover-border-color: var(--transtu-blue);
   --bs-btn-hover-color: #fff;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  padding: 0.75rem 1.25rem;
 }
 
 .panel {
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(213, 224, 217, 0.9);
-  border-radius: var(--bs-border-radius-lg);
-  box-shadow: 0 18px 40px rgba(15, 39, 88, 0.06);
-  backdrop-filter: blur(8px);
+  background: #ffffff;
+  border: 0;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px rgba(19, 28, 40, 0.06);
 }
 
-.gold-rule {
-  height: 3px;
-  width: 4.5rem;
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--transtu-gold), #f3c35a);
+
+
+.form-label {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  color: var(--transtu-blue-deep);
+  margin-bottom: 0.35rem;
+}
+
+.form-control,
+.form-select {
+  min-height: 3rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(19, 28, 40, 0.06);
 }
 
 .form-control:focus,
 .form-select:focus {
-  border-color: rgba(11, 138, 62, 0.55);
-  box-shadow: 0 0 0 0.22rem rgba(11, 138, 62, 0.18);
+  border-color: transparent;
+  box-shadow: 0 0 0 2px rgba(0, 59, 127, 0.35);
 }
 
 .invalid-feedback,
@@ -359,7 +377,7 @@ h5,
 
   .home-reply-card {
     flex: 1 1 calc(33.333% - 0.75rem);
-    max-width: calc(33.333% - 0.5rem);
+    // max-width: calc(33.333% - 0.5rem);
     min-width: 12.5rem;
   }
 }
@@ -414,8 +432,8 @@ html[dir='rtl'] .home-steps__arrow {
 
 .page-btn--active,
 .page-btn:not(:disabled):hover {
-  background: var(--transtu-green);
-  border-color: var(--transtu-green);
+  background: var(--transtu-blue);
+  border-color: var(--transtu-blue);
   color: #fff;
 }
 
@@ -428,7 +446,7 @@ html[dir='rtl'] .home-steps__arrow {
 /* RTL (arabe) — bascule via html[dir=rtl] définie par LanguageService        */
 /* -------------------------------------------------------------------------- */
 html[dir='rtl'] body {
-  font-family: 'Noto Sans Arabic', 'Source Sans 3', system-ui, sans-serif;
+  font-family: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
 }
 
 html[dir='rtl'] h1,
@@ -441,7 +459,7 @@ html[dir='rtl'] .h2,
 html[dir='rtl'] .h3,
 html[dir='rtl'] .h4,
 html[dir='rtl'] .h5 {
-  font-family: 'Noto Sans Arabic', 'Manrope', system-ui, sans-serif;
+  font-family: 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
   letter-spacing: 0;
 }
 

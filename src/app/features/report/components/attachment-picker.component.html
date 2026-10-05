@@ -22,17 +22,44 @@
   >
     <i class="bi bi-cloud-arrow-up fs-3 d-block mb-2" aria-hidden="true"></i>
     <p class="mb-2">{{ 'attachments.dropHint' | translate }}</p>
-    <label class="btn btn-sm btn-outline-success mb-0">
-      {{ 'attachments.browse' | translate }}
-      <input
-        type="file"
-        class="d-none"
-        multiple
-        accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf"
-        [disabled]="disabled"
-        (change)="onFileInput($event)"
-      />
-    </label>
+    <div class="d-flex justify-content-center flex-wrap gap-2">
+      <button
+        type="button"
+        class="btn btn-sm btn-success"
+        [disabled]="disabled || cameraOpen"
+        (click)="openCamera()"
+      >
+        <i class="bi bi-camera me-1" aria-hidden="true"></i>
+        {{ 'attachments.takePhoto' | translate }}
+      </button>
+      <label class="btn btn-sm btn-outline-success mb-0">
+        <i class="bi bi-folder2-open me-1" aria-hidden="true"></i>
+        {{ 'attachments.browse' | translate }}
+        <input
+          type="file"
+          class="d-none"
+          multiple
+          accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf"
+          [disabled]="disabled"
+          (change)="onFileInput($event)"
+        />
+      </label>
+    </div>
+
+    @if (cameraOpen) {
+      <div class="camera-panel mt-3" role="dialog" aria-modal="true">
+        <video #cameraPreview class="camera-preview" autoplay playsinline muted></video>
+        <div class="d-flex justify-content-center gap-2 mt-2">
+          <button type="button" class="btn btn-sm btn-success" (click)="capturePhoto()">
+            <i class="bi bi-camera-fill me-1" aria-hidden="true"></i>
+            {{ 'attachments.capture' | translate }}
+          </button>
+          <button type="button" class="btn btn-sm btn-outline-secondary" (click)="closeCamera()">
+            {{ 'attachments.cancelCamera' | translate }}
+          </button>
+        </div>
+      </div>
+    }
   </div>
 
   @if (error) {

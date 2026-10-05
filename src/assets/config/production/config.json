@@ -1,0 +1,8 @@
+{
+  
+  //"apiBaseUrl": "http://213.150.169.116",
+  "apiBaseUrl": "http://10.0.80.1",
+  "googleClientId": "805628985152-kkg4l131p8jmpi7bek764icsp5ikmso7.apps.googleusercontent.com",
+  "cloudflareEnabled": true,
+  "cloudflareSiteKey": ""
+}

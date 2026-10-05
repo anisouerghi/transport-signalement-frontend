@@ -8,7 +8,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   template: `
     <section class="panel p-4">
       <h1 class="h3 mb-2">{{ 'about.title' | translate }}</h1>
-      <div class="gold-rule mb-3"></div>
+
       <p class="text-secondary mb-4">{{ 'about.intro' | translate }}</p>
       <p class="text-secondary mb-4">{{ 'about.follow' | translate }}</p>
 

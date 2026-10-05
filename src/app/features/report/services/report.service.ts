@@ -62,8 +62,8 @@ export class ReportService {
       .pipe(map((res) => res.data ?? []));
   }
 
-  /** Réponses publiées sur l'accueil (pagination serveur). */
-  listHomepageReplies(page: number, size = 5): Observable<PageResult<PublicHomepageReply>> {
+  /** Réponses publiées sur l'accueil (pagination serveur, max 4 / page). */
+  listHomepageReplies(page: number, size = 4): Observable<PageResult<PublicHomepageReply>> {
     return this.http
       .get<ApiResponse<PageResult<PublicHomepageReply>>>(API_CONFIG.public.reponses, {
         params: { page: String(page), size: String(size) },

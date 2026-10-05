@@ -17,6 +17,20 @@
   pointer-events: none;
 }
 
+.camera-panel {
+  max-width: 28rem;
+  margin-inline: auto;
+}
+
+.camera-preview {
+  display: block;
+  width: 100%;
+  max-height: 20rem;
+  object-fit: cover;
+  border-radius: 0.65rem;
+  background: #101820;
+}
+
 .file-row {
   display: flex;
   align-items: center;
