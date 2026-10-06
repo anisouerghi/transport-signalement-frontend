@@ -1,7 +1,7 @@
-<form class="tracking-search" dir="rtl" (submit)="onTrackSubmit($event)">
+<form class="tracking-search" (submit)="onTrackSubmit($event)">
   <label class="tracking-search__label" for="followup-tracking-input">
     <i class="bi bi-qr-code-scan" aria-hidden="true"></i>
-    تتبّع مطلبك برمز المتابعة (Code de suivi)
+    {{ 'followUp.trackByCode' | translate }}
   </label>
   <div class="tracking-search__row">
     <div class="tracking-search__field">
@@ -11,14 +11,14 @@
         type="text"
         dir="ltr"
         autocomplete="off"
-        placeholder="مثال: TR-2024-8841"
+        [placeholder]="'followUp.trackPlaceholder' | translate"
         [value]="trackingCode()"
         (input)="onTrackingInput($event)"
       />
     </div>
     <button type="submit" class="tracking-search__btn" [disabled]="!trackingCode().trim()">
       <i class="bi bi-search" aria-hidden="true"></i>
-      بحث
+      {{ 'followUp.trackSearch' | translate }}
     </button>
   </div>
 </form>

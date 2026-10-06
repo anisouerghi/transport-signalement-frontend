@@ -365,6 +365,9 @@
   "followUp": {
     "title": "تبليغك",
     "subtitle": "اطلع على حالة طلبك وردود TRANSTU.",
+    "trackByCode": "تتبّع مطلبك برمز المتابعة",
+    "trackPlaceholder": "مثال: TR-2024-8841",
+    "trackSearch": "بحث",
     "invalidLinkTitle": "رابط متابعة غير صالح",
     "invalidLinkBody": "استخدم الرابط الآمن المستلم بالبريد للاطلاع على تبليغك.",
     "loading": "جاري تحميل المتابعة…",

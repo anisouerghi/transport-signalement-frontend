@@ -376,6 +376,9 @@
   "followUp": {
     "title": "Your report",
     "subtitle": "Check the status of your request and TRANSTU replies.",
+    "trackByCode": "Track your request with the tracking code",
+    "trackPlaceholder": "Example: TR-2024-8841",
+    "trackSearch": "Search",
     "invalidLinkTitle": "Invalid tracking link",
     "invalidLinkBody": "Use the secure link received by email to view your report.",
     "loading": "Loading follow-up…",
