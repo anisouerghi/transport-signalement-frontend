@@ -7,6 +7,7 @@ import { Observable, map, tap, catchError, of } from 'rxjs';
 import { API_CONFIG } from '../config/api.config';
 
 import { ApiResponse } from '../../shared/models/api-response.model';
+import { LanguageService } from './language.service';
 
 import {
 
@@ -46,6 +47,7 @@ const GOOGLE_RETURN_URL_KEY = 'transtu_google_return_url';
 export class AuthService {
 
   private readonly http = inject(HttpClient);
+  private readonly language = inject(LanguageService);
 
   /** Lu à chaque appel : config.json peut arriver après la construction du service. */
   private get baseUrl(): string {
@@ -199,9 +201,13 @@ export class AuthService {
             name: updated.name ?? request.name ?? current.name,
             email: updated.email ?? request.email,
             phoneNumber: updated.phoneNumber ?? request.phoneNumber ?? current.phoneNumber,
+            language: updated.language ?? request.language ?? current.language,
           };
           localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
           this.sessionSignal.set(session);
+          if (request.language) {
+            void this.language.setLanguage(request.language as 'fr' | 'ar' | 'en');
+          }
           return session;
         }),
       );
@@ -327,9 +333,17 @@ export class AuthService {
       phoneNumber: auth.phoneNumber,
       profilePictureUrl: auth.profilePictureUrl,
       authProvider: auth.authProvider,
+      language: auth.language,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
     this.sessionSignal.set(session);
+    // La langue enregistrée sur le compte devient la langue par défaut.
+    const storedLang = (session.language ?? '').trim().toLowerCase();
+    if (storedLang === 'fr' || storedLang === 'ar' || storedLang === 'en') {
+      session.language = storedLang;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+      void this.language.setLanguage(storedLang);
+    }
     return session;
   }
 

@@ -10,6 +10,8 @@ export interface PassengerSession {
   phoneNumber?: string;
   profilePictureUrl?: string;
   authProvider?: string;
+  /** Langue préférée stockée sur le compte voyageur. */
+  language?: string;
 }
 
 export interface PassengerLoginRequest {
@@ -40,6 +42,7 @@ export interface PassengerProfileUpdateRequest {
   phoneNumber?: string;
   currentPassword?: string;
   password?: string;
+  language?: string;
 }
 
 export interface PassengerAuthResponse {
@@ -52,6 +55,7 @@ export interface PassengerAuthResponse {
   phoneNumber?: string;
   profilePictureUrl?: string;
   authProvider?: string;
+  language?: string;
 }
 
 export interface PassengerOtpPendingResponse {

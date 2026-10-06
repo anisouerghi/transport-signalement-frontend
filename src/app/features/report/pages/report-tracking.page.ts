@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -80,6 +80,7 @@ import { ReportService } from '../services/report.service';
 })
 export class ReportTrackingPage implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly reportService = inject(ReportService);
   private readonly language = inject(LanguageService);
   private langSub?: Subscription;
@@ -114,17 +115,7 @@ export class ReportTrackingPage implements OnInit, OnDestroy {
     if (!code) {
       return;
     }
-    if (!UUID_RE.test(uuid)) {
-      this.invalidLink.set(true);
-      return;
-    }
-    this.currentUuid = uuid;
-    this.load(uuid);
-    this.langSub = this.language.langChanged$.subscribe(() => {
-      if (this.currentUuid) {
-        this.load(this.currentUuid);
-      }
-    });
+    void this.router.navigate(['/report-followup', code]);
   }
 
   ngOnDestroy(): void {

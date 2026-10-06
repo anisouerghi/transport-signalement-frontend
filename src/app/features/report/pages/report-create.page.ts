@@ -23,7 +23,6 @@ import {
 import { ReportDraftService } from '../services/report-draft.service';
 import { ReportService } from '../services/report.service';
 import { ReportTypeService } from '../services/report-type.service';
-import { ReportDraftService } from '../services/report-draft.service';
 import { SupportService } from '../services/support.service';
 
 const UUID_RE =
@@ -339,7 +338,6 @@ export class ReportCreatePage implements OnInit, OnDestroy {
   private readonly reportService = inject(ReportService);
   private readonly drafts = inject(ReportDraftService);
   private readonly notifications = inject(NotificationService);
-  private readonly draftService = inject(ReportDraftService);
   readonly auth = inject(AuthService);
   private readonly translate = inject(TranslateService);
   private readonly language = inject(LanguageService);
@@ -353,7 +351,6 @@ export class ReportCreatePage implements OnInit, OnDestroy {
   readonly submitted = signal(false);
   readonly invalidQr = signal(false);
   readonly errorMessage = signal<string | null>(null);
-  readonly step = signal<'form' | 'summary' | 'choice'>('form');
   readonly support = signal<TransportSupport | null>(null);
   readonly reportTypes = signal<ReportType[]>([]);
   readonly supportUuid = signal('');
@@ -569,10 +566,8 @@ export class ReportCreatePage implements OnInit, OnDestroy {
         void this.router.navigate(['/confirmation'], {
           state: {
             reference: report.reference,
-            uuid: withTracking ? report.uuid : undefined,
             email: payload.passenger.email,
             supportUuid: this.supportUuid() || undefined,
-            withTracking,
           },
         });
       },

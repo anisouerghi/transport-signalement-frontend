@@ -40,7 +40,7 @@ const EMERGENCY_CODES = new Set(['URGENCE', 'URGENCY', 'EMERGENCY', 'URGENT']);
 @Component({
   selector: 'app-home-page',
   standalone: true,
-  imports: [TranslatePipe],
+  imports: [TranslatePipe, RouterLink],
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
