@@ -1,18 +1,17 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
-import { DatePipe } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { LanguageService } from '../../../core/services/language.service';
+import { ReportConversationComponent } from '../components/report-conversation.component';
 import { PublicReportTracking } from '../models/report.model';
 import { ReportService } from '../services/report.service';
 
 @Component({
   selector: 'app-report-tracking-page',
   standalone: true,
-  imports: [RouterLink, DatePipe, TranslatePipe],
+  imports: [RouterLink, TranslatePipe, ReportConversationComponent],
   templateUrl: './report-tracking.page.html',
   styles: [`
     .tracking-search {
@@ -107,6 +106,10 @@ export class ReportTrackingPage implements OnInit, OnDestroy {
 
   onTrackingInput(event: Event): void {
     this.trackingCode.set((event.target as HTMLInputElement).value);
+  }
+
+  onReport(next: PublicReportTracking): void {
+    this.report.set(next);
   }
 
   onTrackSubmit(event: Event): void {

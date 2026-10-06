@@ -6,6 +6,7 @@ import { ApiResponse, PageResult } from '../../../shared/models/api-response.mod
 import {
   PublicHomepageReply,
   PublicReportListItem,
+  PublicReplyView,
   PublicReportTracking,
   ReportRequest,
   ReportResponse,
@@ -44,6 +45,19 @@ export class ReportService {
     return this.http
       .get<ApiResponse<PublicReportTracking>>(
         `${API_CONFIG.public.followUp}/${encodeURIComponent(uuid)}/follow-up`,
+      )
+      .pipe(map((res) => res.data));
+  }
+
+  /**
+   * Réponse du voyageur authentifié à une demande de complément.
+   * L'identité vient du jeton, pas du corps de la requête.
+   */
+  replyToComplement(uuid: string, message: string): Observable<PublicReplyView> {
+    return this.http
+      .post<ApiResponse<PublicReplyView>>(
+        `${API_CONFIG.public.followUp}/${encodeURIComponent(uuid)}/reponses`,
+        { message },
       )
       .pipe(map((res) => res.data));
   }
