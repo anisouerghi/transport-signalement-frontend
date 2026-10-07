@@ -54,18 +54,6 @@
   </div>
 
   <div [hidden]="depositFlow() && step() !== 'form'">
-  @if (emergencyMode()) {
-    <section class="report-emergency" [attr.aria-label]="'home.emergencyTitle' | translate">
-      <span class="report-emergency__icon" aria-hidden="true">
-        <span class="material-symbols-outlined">{{ emergencyIcon() }}</span>
-      </span>
-      <span class="report-emergency__text">
-        <span class="report-emergency__title">{{ 'home.emergencyTitle' | translate }}</span>
-        <span class="report-emergency__hint">{{ 'home.emergencyCall' | translate }}</span>
-      </span>
-    </section>
-  }
-
   <section class="mb-3">
     <h1 class="h3 mb-1 mt-2">{{ 'report.title' | translate }}</h1>
     <p class="text-secondary mb-0">{{ 'report.subtitle' | translate }}</p>
@@ -76,7 +64,6 @@
   }
 
   <form class="panel p-3 p-md-4" [formGroup]="form" (ngSubmit)="onFormSubmit()" novalidate>
-    @if (!emergencyMode()) {
     <fieldset
       class="mb-3 border-0 p-0 m-0"
       role="radiogroup"
@@ -139,8 +126,7 @@
       @if (controlInvalid('reportTypeId')) {
         <div class="invalid-feedback d-block">{{ 'report.typeRequired' | translate }}</div>
       }
-    </fieldset>
-    }
+      </fieldset>
 
     <div class="mb-3">
       <label class="form-label fw-semibold" for="description">{{ 'report.descriptionLabel' | translate }}</label>

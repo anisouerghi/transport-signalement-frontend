@@ -64,6 +64,16 @@ interface TimelineGroup {
               {{ 'followUp.lastUpdate' | translate }} · {{ lastUpdate() }}
             </p>
           }
+          @if (report.creationDate) {
+            <p class="dossier__updated">
+              {{ 'followUp.reportedOn' | translate }} · {{ stamp(report.creationDate) }}
+            </p>
+          }
+          @if (report.closureDate) {
+            <p class="dossier__updated">
+              {{ 'followUp.closedOn' | translate }} · {{ stamp(report.closureDate) }}
+            </p>
+          }
         </div>
         @if (report.statusLabel) {
           <span class="dossier__status" [class.dossier__status--closed]="closed()" [class.dossier__status--wait]="waiting()">
@@ -72,6 +82,11 @@ interface TimelineGroup {
           </span>
         }
       </header>
+
+      <p class="dossier__duration">
+        <span class="material-symbols-outlined" aria-hidden="true">schedule</span>
+        {{ durationText() }}
+      </p>
 
       @if (waiting()) {
         <div class="dossier__action" role="status">
@@ -232,6 +247,34 @@ interface TimelineGroup {
       margin: 0.2rem 0 0;
       color: var(--transtu-muted, #5c6570);
       font-size: 0.82rem;
+    }
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      direction: ltr;
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .dossier__duration {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin: 0 0 1rem;
+      padding: 0.55rem 0.8rem;
+      border-radius: 0.75rem;
+      background: #f5bf00;
+      color: #3d2e00;
+      font-size: 0.95rem;
+      font-weight: 800;
+    }
+    .dossier__duration .material-symbols-outlined {
+      font-size: 1.25rem;
+      font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
     }
     .dossier__status {
       display: inline-flex;
@@ -532,6 +575,46 @@ export class ReportConversationComponent {
       return 'pending';
     }
     return 'schedule';
+  }
+
+  stamp(value?: string): string {
+    const date = this.parse(value);
+    return date ? this.formatStamp(date) : '';
+  }
+
+  /** Durée réelle dépôt → clôture. L'heure actuelle n'est jamais utilisée. */
+  durationText(): string {
+    this.language.currentLang();
+    const seconds = this.report?.processingDurationSeconds;
+    if (seconds != null && seconds >= 0) {
+      return `${this.translate.instant('followUp.processingLabel')} : ${this.formatDuration(seconds)}`;
+    }
+    if (this.report?.closureDate || isClosedStatus(this.report?.statusCode)) {
+      return this.translate.instant('followUp.processingUnavailable');
+    }
+    return this.translate.instant('followUp.processingOngoing');
+  }
+
+  private formatDuration(totalSeconds: number): string {
+    if (totalSeconds < 60) {
+      return this.translate.instant('followUp.durationLessThanMinute');
+    }
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const parts: string[] = [];
+    if (days === 1) {
+      parts.push(this.translate.instant('followUp.durationDay', { count: days }));
+    } else if (days > 1) {
+      parts.push(this.translate.instant('followUp.durationDays', { count: days }));
+    }
+    if (hours > 0) {
+      parts.push(this.translate.instant('followUp.durationHour', { count: hours }));
+    }
+    if (minutes > 0) {
+      parts.push(this.translate.instant('followUp.durationMinute', { count: minutes }));
+    }
+    return parts.join(' ');
   }
 
   lastUpdate(): string {

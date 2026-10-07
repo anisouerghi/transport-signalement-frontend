@@ -100,6 +100,10 @@ export interface PublicReportTracking {
   uuid: string;
   reference: string;
   creationDate?: string;
+  /** Heure serveur de clôture. Absente tant que le dossier n'est pas clôturé. */
+  closureDate?: string;
+  /** Secondes entre dépôt et clôture. Absentes si le calcul n'est pas possible. */
+  processingDurationSeconds?: number | null;
   description?: string;
   reportTypeLabel?: string;
   supportLabel?: string;
