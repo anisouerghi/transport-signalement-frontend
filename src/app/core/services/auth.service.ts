@@ -202,6 +202,7 @@ export class AuthService {
             email: updated.email ?? request.email,
             phoneNumber: updated.phoneNumber ?? request.phoneNumber ?? current.phoneNumber,
             language: updated.language ?? request.language ?? current.language,
+            notifications: updated.notifications ?? request.notifications ?? current.notifications,
           };
           localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
           this.sessionSignal.set(session);
@@ -334,6 +335,7 @@ export class AuthService {
       profilePictureUrl: auth.profilePictureUrl,
       authProvider: auth.authProvider,
       language: auth.language,
+      notifications: auth.notifications,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
     this.sessionSignal.set(session);

@@ -48,6 +48,9 @@ export interface StatusInfo {
   statusId: number;
   code: string;
   label: string;
+  labelFr?: string;
+  labelAr?: string;
+  labelEn?: string;
   displayOrder?: number;
 }
 

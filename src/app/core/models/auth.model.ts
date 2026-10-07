@@ -12,6 +12,8 @@ export interface PassengerSession {
   authProvider?: string;
   /** Langue préférée stockée sur le compte voyageur. */
   language?: string;
+  /** Canaux de notification choisis par l'utilisateur. */
+  notifications?: number[];
 }
 
 export interface PassengerLoginRequest {
@@ -43,6 +45,7 @@ export interface PassengerProfileUpdateRequest {
   currentPassword?: string;
   password?: string;
   language?: string;
+  notifications?: number[];
 }
 
 export interface PassengerAuthResponse {
@@ -56,6 +59,7 @@ export interface PassengerAuthResponse {
   profilePictureUrl?: string;
   authProvider?: string;
   language?: string;
+  notifications?: number[];
 }
 
 export interface PassengerOtpPendingResponse {

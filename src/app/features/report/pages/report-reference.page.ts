@@ -130,7 +130,7 @@ import { ReportService } from '../services/report.service';
     .ref-search__input {
       width: 100%;
       height: 3rem;
-      border: 1px solid transparent;
+      border: 1px solid var(--transtu-border, #c2c6d4);
       border-radius: 0.5rem;
       background: #fff;
       padding-inline: 0.9rem 2.2rem;

@@ -58,11 +58,17 @@ export class ReportService {
   }
 
   /** 15 derniers signalements du voyageur authentifié (JWT). */
-  listMine(reference?: string): Observable<PublicReportListItem[]> {
+  listMine(reference?: string, statusCode?: string, creationDate?: string): Observable<PublicReportListItem[]> {
     const params: { [key: string]: string } = {};
     const q = reference?.trim();
     if (q) {
       params['reference'] = q;
+    }
+    if (statusCode) {
+      params['statusCode'] = statusCode;
+    }
+    if (creationDate) {
+      params['creationDate'] = creationDate;
     }
     return this.http
       .get<ApiResponse<PublicReportListItem[]>>(`${API_CONFIG.public.signalements}/mine`, {

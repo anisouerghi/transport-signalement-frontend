@@ -14,6 +14,7 @@ export type PublicApiConfig = {
     suivi: string;
     reponses: string;
     auth: string;
+    status: string;
   };
 };
 
@@ -28,6 +29,7 @@ function buildApiConfig(): PublicApiConfig {
       suivi: api('/api/public/suivi'),
       reponses: api('/api/public/reponses'),
       auth: api('/api/public/auth'),
+      status: api('/api/public/status'),
     },
   };
 }
