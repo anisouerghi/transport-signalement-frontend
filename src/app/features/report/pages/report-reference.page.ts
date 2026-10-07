@@ -1,15 +1,15 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ReportConversationComponent } from '../components/report-conversation.component';
 import { PublicReportTracking } from '../models/report.model';
 import { ReportService } from '../services/report.service';
 
 @Component({
   selector: 'app-report-reference-page',
   standalone: true,
-  imports: [RouterLink, DatePipe, TranslatePipe],
+  imports: [RouterLink, TranslatePipe, ReportConversationComponent],
   template: `
     <section class="ref-search mb-3">
       <label class="ref-search__label" for="reference-search-input">
@@ -54,49 +54,7 @@ import { ReportService } from '../services/report.service';
         <p class="text-secondary mb-0">{{ 'followUp.notFoundBody' | translate }}</p>
       </section>
     } @else if (report(); as r) {
-      <section class="panel p-3 p-md-4 mb-3">
-        <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
-          <div>
-            <p class="small text-secondary mb-1">{{ 'common.reference' | translate }}</p>
-            <div class="fw-bold fs-5" style="color: var(--transtu-blue-deep)">{{ r.reference }}</div>
-          </div>
-          @if (r.statusLabel) {
-            <span class="support-chip">{{ r.statusLabel }}</span>
-          }
-        </div>
-
-        <dl class="row gy-2 mb-0">
-          <dt class="col-5 text-secondary">{{ 'common.status' | translate }}</dt>
-          <dd class="col-7 mb-0">{{ r.statusLabel || ('common.dash' | translate) }}</dd>
-          <dt class="col-5 text-secondary">{{ 'common.type' | translate }}</dt>
-          <dd class="col-7 mb-0">{{ r.reportTypeLabel || ('common.dash' | translate) }}</dd>
-          <dt class="col-5 text-secondary">{{ 'followUp.createdAt' | translate }}</dt>
-          <dd class="col-7 mb-0">{{ r.creationDate | date: 'dd/MM/yyyy HH:mm' }}</dd>
-          <dt class="col-5 text-secondary">{{ 'common.support' | translate }}</dt>
-          <dd class="col-7 mb-0">{{ r.supportLabel || ('common.dash' | translate) }}</dd>
-          <dt class="col-5 text-secondary">{{ 'followUp.description' | translate }}</dt>
-          <dd class="col-7 mb-0" style="white-space: pre-wrap; word-break: break-word">{{
-            r.description || ('common.dash' | translate)
-          }}</dd>
-        </dl>
-      </section>
-
-      <section class="panel p-3 p-md-4">
-        <h2 class="h5 mb-3">{{ 'followUp.repliesTitle' | translate }}</h2>
-        @if (r.replies?.length) {
-          @for (reply of r.replies; track reply.replyDate + reply.message) {
-            <article class="mb-3 p-3 border rounded-2">
-              <div class="small text-secondary mb-1 fw-semibold">{{ 'followUp.replyFrom' | translate }}</div>
-              <div class="small text-secondary mb-2">
-                {{ reply.replyDate | date: 'dd/MM/yyyy – HH:mm' }}
-              </div>
-              <p class="mb-0" style="white-space: pre-wrap">{{ reply.message }}</p>
-            </article>
-          }
-        } @else {
-          <p class="text-secondary mb-0">{{ 'followUp.noReplies' | translate }}</p>
-        }
-      </section>
+      <app-report-conversation [report]="r" (reportChange)="onReport($event)" />
     }
 
     <p class="text-center mt-3 mb-0">
@@ -193,6 +151,10 @@ export class ReportReferencePage implements OnInit {
   onInput(event: Event): void {
     this.reference.set((event.target as HTMLInputElement).value);
     this.referenceError.set(false);
+  }
+
+  onReport(next: PublicReportTracking): void {
+    this.report.set(next);
   }
 
   onSearch(): void {

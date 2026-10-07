@@ -105,12 +105,16 @@ export interface PublicReportTracking {
   supportLabel?: string;
   statusCode?: string;
   statusLabel?: string;
+  /** Calculé par le serveur : une demande de complément est ouverte. */
+  canPassengerReply?: boolean;
   replies?: PublicReplyView[];
 }
 
 export interface PublicReplyView {
   message: string;
   replyDate: string;
+  replyType?: string;
+  authorType?: string;
 }
 
 export interface PublicReportListItem {
