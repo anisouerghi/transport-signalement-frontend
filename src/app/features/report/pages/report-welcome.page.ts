@@ -65,6 +65,8 @@ export class ReportWelcomePage implements OnInit, OnDestroy {
         this.loading.set(false);
         this.invalidQr.set(false);
         this.errorMessage.set(null);
+        // Après un scan QR, aller directement à l'étape 1 (formulaire).
+        void this.router.navigate(['/report', this.supportUuid(), 'signaler']);
       },
       error: (err: HttpErrorResponse) => {
         this.loading.set(false);

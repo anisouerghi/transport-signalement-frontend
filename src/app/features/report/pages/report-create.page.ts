@@ -378,9 +378,8 @@ export class ReportCreatePage implements OnInit, OnDestroy {
     this.supportUuid.set(uuid);
     this.fromDirect.set(this.route.snapshot.queryParamMap.get('source') === 'direct');
     this.emergencyMode.set(this.natureQuery() === 'URGENCE');
-    // /signalement/anonyme (avec ou sans nature) : saisie → récap → choix, jamais de POST avant.
-    // Le segment « anonyme » n'est pas un mode définitif. Le QR (/report/:uuid) conserve son flux.
-    this.depositFlow.set(!uuid || this.route.snapshot.queryParamMap.get('parcours') === 'depot');
+    // Parcours unifié : saisie → récap → choix (anonyme / avec suivi), jamais de POST avant.
+    this.depositFlow.set(true);
 
     if (!uuid) {
       this.anonymousMode.set(true);
