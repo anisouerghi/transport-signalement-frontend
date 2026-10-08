@@ -140,10 +140,15 @@
     </span>
   </section>
 
-  <section class="home-replies" aria-labelledby="home-replies-title">
-    <h2 id="home-replies-title" class="h5 mb-1">
-      {{ 'home.repliesTitle' | translate }}
-    </h2>
+  <section class="home-replies accordion" id="homeRepliesAccordion" aria-labelledby="home-replies-title">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="home-replies-title">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#homeRepliesBody" aria-expanded="false" aria-controls="homeRepliesBody">
+          {{ 'home.repliesTitle' | translate }}
+        </button>
+      </h2>
+      <div id="homeRepliesBody" class="accordion-collapse collapse" aria-labelledby="home-replies-title" data-bs-parent="#homeRepliesAccordion">
+        <div class="accordion-body">
     <!-- <p class="text-center text-secondary small mb-3">{{ 'home.repliesLead' | translate }}</p> -->
 
     @if (loading()) {
@@ -213,5 +218,8 @@
         </nav>
       }
     }
+        </div>
+      </div>
+    </div>
   </section>
 </section>

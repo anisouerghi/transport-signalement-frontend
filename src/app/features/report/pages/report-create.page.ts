@@ -158,8 +158,9 @@ const NATURE_TONE: Record<string, string> = {
       opacity: 0.7;
     }
     .nature-card.is-selected {
-      border-color: #003b7f;
-      box-shadow: inset 0 0 0 1px #003b7f;
+      border: 2.5px solid #003b7f;
+      box-shadow: 0 0 0 4px rgba(0, 59, 127, 0.18), 0 6px 16px rgba(19, 28, 40, 0.14);
+      background: #f4f8ff;
     }
     .nature-card.is-selected .nature-card__check {
       display: inline-flex;
@@ -215,8 +216,9 @@ const NATURE_TONE: Record<string, string> = {
       color: #93000a;
     }
     .nature-card--urgence.is-selected {
-      border-color: #ba1a1a;
-      box-shadow: inset 0 0 0 1px #ba1a1a;
+      border: 2.5px solid #ba1a1a;
+      box-shadow: 0 0 0 4px rgba(186, 26, 26, 0.16), 0 6px 16px rgba(19, 28, 40, 0.14);
+      background: #fff5f4;
     }
     .nature-card--urgence.is-selected .nature-card__check {
       background: #ba1a1a;
