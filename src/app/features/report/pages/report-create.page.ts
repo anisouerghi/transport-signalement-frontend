@@ -276,57 +276,6 @@ const NATURE_TONE: Record<string, string> = {
     .nature-card.is-invalid {
       border-color: #dc3545;
     }
-    .report-emergency {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      width: 100%;
-      margin-bottom: 1rem;
-      padding: 0.5rem;
-      border-radius: 0.75rem;
-      background: #ffdad6;
-      color: #93000a;
-      box-shadow: 0 1px 2px rgba(19, 28, 40, 0.06);
-    }
-    .report-emergency__icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 2.5rem;
-      height: 2.5rem;
-      border-radius: 999px;
-      background: #ba1a1a;
-      color: #fff;
-      flex-shrink: 0;
-    }
-    .report-emergency__icon .material-symbols-outlined {
-      font-size: 1.25rem;
-      animation: report-emergency-pulse 1.5s ease-in-out infinite;
-    }
-    .report-emergency__text {
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
-    .report-emergency__title {
-      font-size: 1.125rem;
-      font-weight: 700;
-      line-height: 1.35;
-    }
-    .report-emergency__hint {
-      color: rgba(147, 0, 10, 0.9);
-      font-size: 0.75rem;
-      line-height: 1.5;
-    }
-    @keyframes report-emergency-pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.45; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .report-emergency__icon .material-symbols-outlined {
-        animation: none;
-      }
-    }
   `]
 })
 export class ReportCreatePage implements OnInit, OnDestroy {
@@ -360,7 +309,6 @@ export class ReportCreatePage implements OnInit, OnDestroy {
   readonly voiceFile = signal<File | null>(null);
   readonly turnstileToken = signal<string | null>(null);
   readonly turnstileError = signal<string | null>(null);
-  readonly emergencyMode = signal(false);
   /** Parcours /signalement : récapitulatif puis choix, sans POST avant. */
   readonly depositFlow = signal(false);
   readonly step = signal<'form' | 'review' | 'choice'>('form');
@@ -377,9 +325,9 @@ export class ReportCreatePage implements OnInit, OnDestroy {
     const uuid = this.route.snapshot.paramMap.get('uuid')?.trim() ?? '';
     this.supportUuid.set(uuid);
     this.fromDirect.set(this.route.snapshot.queryParamMap.get('source') === 'direct');
-    this.emergencyMode.set(this.natureQuery() === 'URGENCE');
-    // Parcours unifié : saisie → récap → choix (anonyme / avec suivi), jamais de POST avant.
-    this.depositFlow.set(true);
+    // /signalement/anonyme (avec ou sans nature) : saisie → récap → choix, jamais de POST avant.
+    // Le segment « anonyme » n'est pas un mode définitif. Le QR (/report/:uuid) conserve son flux.
+    this.depositFlow.set(!uuid || this.route.snapshot.queryParamMap.get('parcours') === 'depot');
 
     if (!uuid) {
       this.anonymousMode.set(true);
@@ -410,11 +358,6 @@ export class ReportCreatePage implements OnInit, OnDestroy {
 
   isUrgence(type: ReportType): boolean {
     return type.code?.trim().toUpperCase() === 'URGENCE';
-  }
-
-  emergencyIcon(): string {
-    const match = this.reportTypes().find((type) => this.isUrgence(type));
-    return match?.icon?.trim() || 'crisis_alert';
   }
 
   natureTone(type: ReportType): string {
