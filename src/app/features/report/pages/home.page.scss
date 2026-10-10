@@ -131,6 +131,30 @@
   transform: scale(0.99);
 }
 
+@media (max-width: 520px) {
+  .home-reference__form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .home-reference__submit {
+    width: 100%;
+  }
+
+  .home-natures__head {
+    flex-wrap: wrap;
+  }
+
+  .home-natures__aside {
+    white-space: normal;
+  }
+
+  .home-emergency__title,
+  .home-emergency__hint {
+    overflow-wrap: anywhere;
+  }
+}
+
 .home-reference__search-icon {
   font-size: 1.125rem;
 }

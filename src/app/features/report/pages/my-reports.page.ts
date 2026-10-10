@@ -17,6 +17,27 @@ const PAGE_SIZE = 5;
   standalone: true,
   imports: [ReactiveFormsModule, RouterLink, DatePipe, TranslatePipe],
   templateUrl: './my-reports.page.html',
+  styles: [
+    `
+      .mine-filters__actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+      .mine-filters__actions .btn {
+        min-height: 2.75rem;
+        min-width: 2.75rem;
+      }
+      @media (max-width: 991.98px) {
+        .mine-filters__field,
+        .mine-filters__actions {
+          width: 100%;
+        }
+        .mine-filters__actions .btn {
+          flex: 1;
+        }
+      }
+    `,
+  ],
 })
 export class MyReportsPage implements OnInit, OnDestroy {
   readonly auth = inject(AuthService);
@@ -92,12 +113,19 @@ export class MyReportsPage implements OnInit, OnDestroy {
     if (!this.auth.isAuthenticated()) {
       return;
     }
+    this.refreshStatuses();
+    this.load();
+    this.langSub = this.language.langChanged$.subscribe(() => {
+      this.refreshStatuses();
+      this.load();
+    });
+  }
+
+  private refreshStatuses(): void {
     this.statusService.getAll().subscribe({
       next: (statuses) => this.statuses.set(statuses),
       error: () => this.statuses.set([]),
     });
-    this.load();
-    this.langSub = this.language.langChanged$.subscribe(() => this.load());
   }
 
   authReturnUrl(): string {

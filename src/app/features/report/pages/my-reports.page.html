@@ -18,8 +18,8 @@
   </section>
 } @else {
   <form class="panel p-3 p-md-4 mb-3" [formGroup]="filterForm" (ngSubmit)="search()">
-    <div class="d-flex flex-column flex-lg-row gap-2 align-items-lg-end">
-      <div class="flex-grow-1">
+    <div class="mine-filters d-flex flex-column flex-lg-row gap-2 align-items-lg-end">
+      <div class="mine-filters__field flex-grow-1">
         <label class="form-label fw-semibold" for="mine-reference">{{ 'myReports.searchLabel' | translate }}</label>
         <div class="input-group">
           <span class="input-group-text" aria-hidden="true"><i class="bi bi-search"></i></span>
@@ -33,7 +33,7 @@
           />
         </div>
       </div>
-      <div>
+      <div class="mine-filters__field">
         <label class="form-label fw-semibold" for="mine-status">{{ 'myReports.statusFilter' | translate }}</label>
         <select id="mine-status" class="form-select" formControlName="statusCode">
           <option value="">{{ 'myReports.allStatuses' | translate }}</option>
@@ -42,11 +42,11 @@
           }
         </select>
       </div>
-      <div>
+      <div class="mine-filters__field">
         <label class="form-label fw-semibold" for="mine-date">{{ 'myReports.dateFilter' | translate }}</label>
         <input id="mine-date" type="date" class="form-control" formControlName="creationDate" />
       </div>
-      <div class="d-flex gap-2">
+      <div class="mine-filters__actions">
         <button
           type="submit"
           class="btn btn-transtu"
@@ -105,7 +105,7 @@
             <p class="mb-1">{{ supportLine(item) }}</p>
           }
           <p class="small text-secondary mb-2">
-            {{ item.creationDate | date: "dd/MM/yyyy 'à' HH:mm" }}
+            {{ item.creationDate | date: 'dd/MM/yyyy HH:mm' }}
           </p>
           <p class="mb-3">
             {{ 'common.status' | translate }} :

@@ -32,7 +32,7 @@
         <div class="step-line" [class.completed]="step() === 'choice'"></div>
         <div class="step" [class.active]="step() === 'choice'">
           <div class="step__icon">3</div>
-          <div class="step__label">{{ auth.isAuthenticated() ? 'Succès' : 'Choix : anonyme / avec suivi' }}</div>
+          <div class="step__label">{{ auth.isAuthenticated() ? 'Succès' : 'anonyme/avec suivi' }}</div>
         </div>
       } @else {
         <div class="step completed">

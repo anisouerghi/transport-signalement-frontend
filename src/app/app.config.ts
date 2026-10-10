@@ -36,7 +36,7 @@ export const appConfig: ApplicationConfig = {
     provideTranslateService({
       loader: provideTranslateHttpLoader({
         prefix: resolveI18nPrefix(),
-        suffix: '.json',
+        suffix: '.json?v=20261009',
         useHttpBackend: true,
       }),
       fallbackLang: 'fr',
