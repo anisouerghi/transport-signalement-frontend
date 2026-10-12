@@ -47,6 +47,7 @@
   </section>
 } @else if (report(); as r) {
   <app-report-conversation [report]="r" (reportChange)="onReport($event)" />
+  <app-report-satisfaction [report]="r" [returnUrl]="returnUrl()" (reportChange)="onReport($event)" />
 }
 
 <p class="text-center mt-3 mb-0">

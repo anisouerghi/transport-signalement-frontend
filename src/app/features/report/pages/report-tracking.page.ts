@@ -5,13 +5,14 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { LanguageService } from '../../../core/services/language.service';
 import { ReportConversationComponent } from '../components/report-conversation.component';
+import { ReportSatisfactionComponent } from '../components/report-satisfaction.component';
 import { PublicReportTracking } from '../models/report.model';
 import { ReportService } from '../services/report.service';
 
 @Component({
   selector: 'app-report-tracking-page',
   standalone: true,
-  imports: [RouterLink, TranslatePipe, ReportConversationComponent],
+  imports: [RouterLink, TranslatePipe, ReportConversationComponent, ReportSatisfactionComponent],
   templateUrl: './report-tracking.page.html',
   styles: [`
     .tracking-search {
@@ -110,6 +111,11 @@ export class ReportTrackingPage implements OnInit, OnDestroy {
 
   onReport(next: PublicReportTracking): void {
     this.report.set(next);
+  }
+
+  returnUrl(): string {
+    const uuid = this.report()?.uuid;
+    return uuid ? `/report-followup/${uuid}` : '/accueil';
   }
 
   onTrackSubmit(event: Event): void {

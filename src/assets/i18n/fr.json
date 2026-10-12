@@ -452,4 +452,21 @@
     "denied": "Autorisation de localisation refusée.",
     "failed": "Impossible d'obtenir la position GPS."
   }
+,
+  "satisfaction": {
+    "title": "Votre avis nous intéresse",
+    "intro": "Votre signalement a été traité par la TRANSTU. Nous vous invitons à évaluer la réponse apportée afin de nous aider à améliorer la qualité de nos services.",
+    "satisfied": "Satisfait",
+    "partial": "Moyennement satisfait",
+    "dissatisfied": "Non satisfait",
+    "commentLabel": "Souhaitez-vous nous donner plus de détails sur votre expérience ?",
+    "commentPlaceholder": "Expliquez brièvement pourquoi vous êtes satisfait ou insatisfait de la réponse apportée…",
+    "submit": "Envoyer mon avis",
+    "cancel": "Annuler",
+    "thanks": "Merci pour votre retour. Votre avis contribue à l'amélioration des services de la TRANSTU.",
+    "login": "Connectez-vous pour donner votre avis",
+    "already": "Un avis a déjà été enregistré pour ce signalement.",
+    "error": "Votre avis n'a pas pu être enregistré. Réessayez.",
+    "groupLabel": "Niveau de satisfaction"
+  }
 }

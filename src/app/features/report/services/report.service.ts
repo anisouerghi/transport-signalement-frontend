@@ -8,6 +8,7 @@ import {
   PublicReportListItem,
   PublicReplyView,
   PublicReportTracking,
+  PublicSatisfaction,
   ReportRequest,
   ReportResponse,
   SupportTypeCount,
@@ -59,6 +60,25 @@ export class ReportService {
       .post<ApiResponse<PublicReplyView>>(
         `${API_CONFIG.public.followUp}/${encodeURIComponent(uuid)}/reponses`,
         { message },
+      )
+      .pipe(map((res) => res.data));
+  }
+
+  /** Avis unique sur un signalement clôturé, via le lien de suivi. */
+  submitSatisfaction(
+    uuid: string,
+    level: string,
+    comment: string,
+  ): Observable<PublicSatisfaction> {
+    const body: { level: string; comment?: string } = { level };
+    const text = comment.trim();
+    if (text) {
+      body.comment = text;
+    }
+    return this.http
+      .post<ApiResponse<PublicSatisfaction>>(
+        `${API_CONFIG.public.followUp}/${encodeURIComponent(uuid)}/satisfaction`,
+        body,
       )
       .pipe(map((res) => res.data));
   }

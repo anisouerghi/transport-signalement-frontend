@@ -449,4 +449,21 @@
     "denied": "Location permission denied.",
     "failed": "Unable to get GPS position."
   }
+,
+  "satisfaction": {
+    "title": "Your feedback matters",
+    "intro": "Your report has been handled by TRANSTU. Please rate the response so we can improve our services.",
+    "satisfied": "Satisfied",
+    "partial": "Partly satisfied",
+    "dissatisfied": "Not satisfied",
+    "commentLabel": "Would you like to tell us more about your experience?",
+    "commentPlaceholder": "Briefly explain why you are satisfied or not with the response…",
+    "submit": "Send my feedback",
+    "cancel": "Cancel",
+    "thanks": "Thank you. Your feedback helps TRANSTU improve its services.",
+    "login": "Sign in to leave your feedback",
+    "already": "Feedback has already been recorded for this report.",
+    "error": "Your feedback could not be saved. Please try again.",
+    "groupLabel": "Satisfaction level"
+  }
 }
