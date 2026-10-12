@@ -111,7 +111,19 @@ export interface PublicReportTracking {
   statusLabel?: string;
   /** Calculé par le serveur : une demande de complément est ouverte. */
   canPassengerReply?: boolean;
+  /** Avis déjà enregistré. Absent lorsque le suivi vient de la référence. */
+  satisfaction?: PublicSatisfaction | null;
+  /** Lien de suivi UUID : le voyageur peut encore envoyer un avis. */
+  canSubmitSatisfaction?: boolean;
+  /** Compte avec suivi : connexion du propriétaire requise. */
+  satisfactionLoginRequired?: boolean;
   replies?: PublicReplyView[];
+}
+
+export interface PublicSatisfaction {
+  level: 'SATISFAIT' | 'MOYENNEMENT_SATISFAIT' | 'NON_SATISFAIT' | string;
+  comment?: string | null;
+  createdAt?: string;
 }
 
 export interface PublicReplyView {
