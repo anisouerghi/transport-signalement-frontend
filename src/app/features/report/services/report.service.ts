@@ -10,6 +10,7 @@ import {
   PublicReportTracking,
   ReportRequest,
   ReportResponse,
+  SupportTypeCount,
 } from '../models/report.model';
 
 /**
@@ -114,6 +115,15 @@ export class ReportService {
       page: payload?.page ?? page,
       size: payload?.size ?? size,
     };
+  }
+
+  /** Nombre de supports par type de support (statistiques publiques). */
+  getSupportsByType(): Observable<SupportTypeCount[]> {
+    return this.http
+      .get<ApiResponse<SupportTypeCount[]>>(
+        `${API_CONFIG.public.statistics}/supports-by-type`,
+      )
+      .pipe(map((res) => res.data ?? []));
   }
 
   /** @deprecated Préférer {@link getFollowUp} */

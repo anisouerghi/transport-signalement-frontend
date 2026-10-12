@@ -140,6 +140,36 @@
     </span>
   </section>
 
+  <section class="home-support" [attr.aria-label]="'home.supportStatsTitle' | translate">
+    <div class="home-support__head">
+      <h2 class="home-support__title">{{ 'home.supportStatsTitle' | translate }}</h2>
+      <span class="home-support__aside">{{ 'home.supportStatsSubtitle' | translate }}</span>
+    </div>
+    @if (supportStatsLoading()) {
+      <div class="home-support__grid" aria-busy="true">
+        <div class="support-stat support-stat--skeleton"></div>
+        <div class="support-stat support-stat--skeleton"></div>
+        <div class="support-stat support-stat--skeleton"></div>
+      </div>
+    } @else if (supportStatsError()) {
+      <div class="panel p-3 text-center text-secondary">{{ 'home.supportStatsError' | translate }}</div>
+    } @else if (supportStats().length === 0) {
+      <div class="panel p-3 text-center text-secondary">{{ 'home.supportStatsEmpty' | translate }}</div>
+    } @else {
+      <div class="home-support__grid" role="list">
+        @for (item of supportStats(); track item.code) {
+          <article [class]="'support-stat support-stat--' + supportTypeTone(item.code)" role="listitem">
+            <span class="support-stat__icon" aria-hidden="true">
+              <span class="material-symbols-outlined">{{ supportTypeIcon(item.code) }}</span>
+            </span>
+            <span class="support-stat__count">{{ item.count }}</span>
+            <span class="support-stat__label">{{ supportTypeLabel(item) }}</span>
+          </article>
+        }
+      </div>
+    }
+  </section>
+
   <section class="home-replies accordion" id="homeRepliesAccordion" aria-labelledby="home-replies-title">
     <div class="accordion-item">
       <h2 class="accordion-header" id="home-replies-title">

@@ -144,3 +144,13 @@ export interface PublicHomepageReply {
   reportMessage?: string;
   responseMessage?: string;
 }
+
+/** Nombre de supports par type de support (GET /api/public/statistics/supports-by-type). */
+export interface SupportTypeCount {
+  supportTypeId?: number;
+  code: string;
+  label: string;
+  labelAr?: string;
+  labelEn?: string;
+  count: number;
+}

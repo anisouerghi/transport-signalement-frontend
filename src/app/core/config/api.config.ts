@@ -15,6 +15,7 @@ export type PublicApiConfig = {
     reponses: string;
     auth: string;
     status: string;
+    statistics: string;
   };
 };
 
@@ -30,6 +31,7 @@ function buildApiConfig(): PublicApiConfig {
       reponses: api('/api/public/reponses'),
       auth: api('/api/public/auth'),
       status: api('/api/public/status'),
+      statistics: api('/api/public/statistics'),
     },
   };
 }

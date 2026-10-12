@@ -3,7 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { LanguageService } from '../../../core/services/language.service';
-import { PublicHomepageReply, ReportType } from '../models/report.model';
+import { PublicHomepageReply, ReportType, SupportTypeCount } from '../models/report.model';
 import { ReportService } from '../services/report.service';
 import { ReportTypeService } from '../services/report-type.service';
 
@@ -37,6 +37,20 @@ interface EmergencyView {
 
 const EMERGENCY_CODES = new Set(['URGENCE', 'URGENCY', 'EMERGENCY', 'URGENT']);
 
+/** Icônes et couleurs des types de support pour la section statistiques. */
+const SUPPORT_VISUAL: Record<string, { icon: string; tone: string }> = {
+  NO_SUPPORT: { icon: 'report', tone: 'gray' },
+  BUS: { icon: 'directions_bus', tone: 'blue' },
+  METRO: { icon: 'subway', tone: 'green' },
+  STATION: { icon: 'location_on', tone: 'gold' },
+  LIGHT_RAIL: { icon: 'tram', tone: 'green' },
+  TRAM: { icon: 'tram', tone: 'green' },
+  TGM: { icon: 'tram', tone: 'green' },
+  TRAIN: { icon: 'train', tone: 'gold' },
+  FERRY: { icon: 'directions_boat', tone: 'blue' },
+  BOAT: { icon: 'directions_boat', tone: 'blue' },
+};
+
 @Component({
   selector: 'app-home-page',
   standalone: true,
@@ -59,6 +73,10 @@ export class HomePage implements OnInit, OnDestroy {
   readonly naturesLoading = signal(true);
   readonly naturesError = signal(false);
 
+  readonly supportStats = signal<SupportTypeCount[]>([]);
+  readonly supportStatsLoading = signal(true);
+  readonly supportStatsError = signal(false);
+
   readonly loading = signal(true);
   readonly error = signal(false);
   readonly replies = signal<PublicHomepageReply[]>([]);
@@ -77,9 +95,11 @@ export class HomePage implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadNatures();
+    this.loadSupportStats();
     this.load(0);
     this.langSub = this.language.langChanged$.subscribe(() => {
       this.loadNatures();
+      this.loadSupportStats();
       this.load(this.page());
     });
   }
@@ -120,6 +140,45 @@ export class HomePage implements OnInit, OnDestroy {
     }
     this.referenceError.set(false);
     void this.router.navigate(['/reference', reference]);
+  }
+
+  /** Répartition des supports par type de support (statistiques publiques). */
+  loadSupportStats(): void {
+    this.supportStatsLoading.set(true);
+    this.supportStatsError.set(false);
+    this.reportService.getSupportsByType().subscribe({
+      next: (data) => {
+        this.supportStats.set(data);
+        this.supportStatsLoading.set(false);
+      },
+      error: () => {
+        this.supportStats.set([]);
+        this.supportStatsError.set(true);
+        this.supportStatsLoading.set(false);
+      },
+    });
+  }
+
+  /** Icône Material Symbols associée au type de support. */
+  supportTypeIcon(code?: string | null): string {
+    return SUPPORT_VISUAL[(code ?? '').trim().toUpperCase()]?.icon ?? 'commute';
+  }
+
+  /** Couleur d'accent associée au type de support. */
+  supportTypeTone(code?: string | null): string {
+    return SUPPORT_VISUAL[(code ?? '').trim().toUpperCase()]?.tone ?? 'blue';
+  }
+
+  /** Libellé localisé du type de support selon la langue active. */
+  supportTypeLabel(item: SupportTypeCount): string {
+    const lang = this.language.currentLang();
+    if (lang.startsWith('ar') && item.labelAr) {
+      return item.labelAr;
+    }
+    if (lang.startsWith('en') && item.labelEn) {
+      return item.labelEn;
+    }
+    return item.label || item.labelAr || item.labelEn || item.code;
   }
 
   load(page: number): void {
