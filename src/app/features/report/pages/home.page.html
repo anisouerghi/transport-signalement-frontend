@@ -40,10 +40,11 @@
           type="search"
           dir="ltr"
           autocomplete="off"
+          [attr.placeholder]="'home.referencePlaceholder' | translate"
           [attr.aria-invalid]="referenceError()"
           (input)="referenceError.set(false)"
         />
-        <!-- <span class="material-symbols-outlined home-reference__tag" aria-hidden="true">tag</span> -->
+        <span class="material-symbols-outlined home-reference__tag" aria-hidden="true">tag</span>
       </div>
       <button class="home-reference__submit" type="submit">
         <span>{{ 'home.referenceSearch' | translate }}</span>
