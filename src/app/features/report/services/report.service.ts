@@ -64,6 +64,16 @@ export class ReportService {
       .pipe(map((res) => res.data));
   }
 
+  /** Commentaire du propriétaire connecté sur son signalement encore ouvert. */
+  addComment(uuid: string, message: string): Observable<PublicReplyView> {
+    return this.http
+      .post<ApiResponse<PublicReplyView>>(
+        `${API_CONFIG.public.followUp}/${encodeURIComponent(uuid)}/commentaires`,
+        { message },
+      )
+      .pipe(map((res) => res.data));
+  }
+
   /** Avis unique sur un signalement clôturé, via le lien de suivi. */
   submitSatisfaction(
     uuid: string,

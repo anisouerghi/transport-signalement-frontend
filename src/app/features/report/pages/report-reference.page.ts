@@ -3,13 +3,14 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ReportConversationComponent } from '../components/report-conversation.component';
+import { ReportSatisfactionComponent } from '../components/report-satisfaction.component';
 import { PublicReportTracking } from '../models/report.model';
 import { ReportService } from '../services/report.service';
 
 @Component({
   selector: 'app-report-reference-page',
   standalone: true,
-  imports: [RouterLink, TranslatePipe, ReportConversationComponent],
+  imports: [RouterLink, TranslatePipe, ReportConversationComponent, ReportSatisfactionComponent],
   template: `
     <section class="ref-search mb-3">
       <label class="ref-search__label" for="reference-search-input">
@@ -55,6 +56,7 @@ import { ReportService } from '../services/report.service';
       </section>
     } @else if (report(); as r) {
       <app-report-conversation [report]="r" (reportChange)="onReport($event)" />
+      <app-report-satisfaction [report]="r" returnUrl="/accueil" (reportChange)="onReport($event)" />
     }
 
     <p class="text-center mt-3 mb-0">

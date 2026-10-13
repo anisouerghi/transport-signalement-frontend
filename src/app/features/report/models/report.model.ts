@@ -111,6 +111,8 @@ export interface PublicReportTracking {
   statusLabel?: string;
   /** Calculé par le serveur : une demande de complément est ouverte. */
   canPassengerReply?: boolean;
+  /** Propriétaire connecté : un commentaire est possible tant que le dossier est ouvert. */
+  canPassengerComment?: boolean;
   /** Avis déjà enregistré. Absent lorsque le suivi vient de la référence. */
   satisfaction?: PublicSatisfaction | null;
   /** Lien de suivi UUID : le voyageur peut encore envoyer un avis. */

@@ -426,6 +426,11 @@
     "replyRequired": "Write your reply.",
     "replyLogin": "Sign in to answer this request.",
     "replyLoginAction": "Sign in",
+    "commentTitle": "Your comment",
+    "commentAction": "Write a comment",
+    "commentPlaceholder": "Add a comment to your report",
+    "commentSend": "Send the comment",
+    "commentSent": "Your comment has been saved.",
     "closedTitle": "Report closed",
     "closedBody": "This report is closed. You can still read the messages, but you can no longer add a reply."
   },

@@ -415,6 +415,11 @@
     "replyRequired": "اكتب ردك.",
     "replyLogin": "سجّل الدخول للرد على هذا الطلب.",
     "replyLoginAction": "تسجيل الدخول",
+    "commentTitle": "تعليقك",
+    "commentAction": "كتابة تعليق",
+    "commentPlaceholder": "أضف تعليقاً على تبليغك",
+    "commentSend": "إرسال التعليق",
+    "commentSent": "تم حفظ تعليقك.",
     "closedTitle": "تبليغ مغلق",
     "closedBody": "هذا التبليغ مغلق. يمكنك الاطلاع على المراسلات السابقة، لكن لا يمكنك إضافة رد."
   },

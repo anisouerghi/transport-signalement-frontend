@@ -429,6 +429,11 @@
     "replyRequired": "Saisissez votre réponse.",
     "replyLogin": "Connectez-vous pour répondre à cette demande.",
     "replyLoginAction": "Se connecter",
+    "commentTitle": "Votre commentaire",
+    "commentAction": "Écrire un commentaire",
+    "commentPlaceholder": "Ajoutez un commentaire sur votre signalement",
+    "commentSend": "Envoyer le commentaire",
+    "commentSent": "Votre commentaire a été enregistré.",
     "closedTitle": "Signalement clôturé",
     "closedBody": "Ce signalement est clôturé. Vous pouvez consulter l'historique des échanges, mais vous ne pouvez plus ajouter de réponse."
   },
