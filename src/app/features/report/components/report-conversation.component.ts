@@ -108,26 +108,16 @@ interface TimelineGroup {
             }
           </div>
         </div>
-      } @else if (canComment() && !composerOpen()) {
-        <div class="dossier__action" role="status">
-          <span class="material-symbols-outlined" aria-hidden="true">chat</span>
-          <div>
-            <p class="dossier__action-title">{{ 'followUp.commentTitle' | translate }}</p>
-            <button type="button" class="dossier__btn" (click)="openComposer()">
-              {{ 'followUp.commentAction' | translate }}
-            </button>
-          </div>
-        </div>
       }
 
-      @if (composerOpen()) {
+      @if (waiting() && composerOpen()) {
         <form class="composer" (submit)="send($event)">
           <label for="complement-reply">{{ 'followUp.you' | translate }}</label>
           <textarea
             id="complement-reply"
             rows="4"
             maxlength="2000"
-            [attr.placeholder]="(waiting() ? 'followUp.replyPlaceholder' : 'followUp.commentPlaceholder') | translate"
+            [attr.placeholder]="'followUp.replyPlaceholder' | translate"
             [value]="draft()"
             (input)="onDraft($event)"
           ></textarea>
@@ -146,7 +136,7 @@ interface TimelineGroup {
               @if (sending()) {
                 <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
               }
-              {{ (waiting() ? 'followUp.replySend' : 'followUp.commentSend') | translate }}
+              {{ 'followUp.replySend' | translate }}
             </button>
           </div>
         </form>
@@ -577,10 +567,6 @@ export class ReportConversationComponent {
     return !!this.report?.canPassengerReply && !this.closed();
   }
 
-  canComment(): boolean {
-    return !!this.report?.canPassengerComment && this.auth.isAuthenticated() && !this.closed() && !this.waiting();
-  }
-
   statusIcon(): string {
     if (this.closed()) {
       return 'check_circle';
@@ -692,30 +678,29 @@ export class ReportConversationComponent {
     if (!uuid || this.sending()) {
       return;
     }
+    if (!this.waiting()) {
+      return;
+    }
     this.sending.set(true);
-    const request = this.waiting()
-      ? this.reportService.replyToComplement(uuid, text)
-      : this.reportService.addComment(uuid, text);
-    const asComplement = this.waiting();
-    request.subscribe({
+    this.reportService.replyToComplement(uuid, text).subscribe({
       next: () => {
         const current = this.report;
         this.reportChange.emit({
           ...current,
-          canPassengerReply: asComplement ? false : current.canPassengerReply,
+          canPassengerReply: false,
           replies: [
             ...(current.replies ?? []),
             {
               message: text,
               replyDate: new Date().toISOString(),
-              replyType: asComplement ? REPLY_TYPE.complementResponse : REPLY_TYPE.response,
+              replyType: REPLY_TYPE.complementResponse,
               authorType: REPLY_AUTHOR.passenger,
             },
           ],
         });
         this.closeComposer();
         this.sending.set(false);
-        this.notifications.success(this.translate.instant(asComplement ? 'followUp.replySent' : 'followUp.commentSent'));
+        this.notifications.success(this.translate.instant('followUp.replySent'));
         this.reportService.getFollowUp(uuid).subscribe({
           next: (fresh) => this.reportChange.emit(fresh),
         });
