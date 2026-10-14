@@ -8,6 +8,7 @@ import { NotificationService } from '../../../core/services/notification.service
 import { PassengerOtpPendingResponse } from '../../../core/models/auth.model';
 import { GoogleSignInButtonComponent } from '../components/google-sign-in-button.component';
 import { OtpInputComponent } from '../components/otp-input.component';
+import { PasswordInputComponent } from '../components/password-input.component';
 import { TurnstileWidgetComponent } from '../components/turnstile-widget.component';
 
 type LoginStep = 'credentials' | 'otp';
@@ -22,6 +23,7 @@ type LoginStep = 'credentials' | 'otp';
     TranslatePipe,
     GoogleSignInButtonComponent,
     OtpInputComponent,
+    PasswordInputComponent,
     TurnstileWidgetComponent,
   ],
   templateUrl: './passenger-login.page.html',

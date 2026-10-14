@@ -36,6 +36,7 @@ const NATURE_TONE: Record<string, string> = {
   THANKS: 'green',
   OTHER: 'gray',
   ASSAULT: 'red',
+  URGENCE: 'red',
 };
 
 @Component({
@@ -193,36 +194,6 @@ const NATURE_TONE: Record<string, string> = {
     :host-context(html[dir='rtl']) .nature-card__go {
       transform: rotate(180deg);
     }
-    .nature-card--urgence {
-      min-height: 3.75rem;
-      margin-bottom: 0.85rem;
-      padding: 0.75rem 1rem;
-      gap: 0.75rem;
-      background: #fff8f7;
-      border-color: #ffdad6;
-    }
-    .nature-card--urgence .nature-card__check {
-      margin-inline-start: 0;
-    }
-    .nature-card--urgence .nature-card__icon {
-      background: #ba1a1a;
-      color: #fff;
-      border-radius: 999px;
-    }
-    .nature-card--urgence .nature-card__name {
-      color: #93000a;
-    }
-    .nature-card--urgence .nature-card__go {
-      color: #93000a;
-    }
-    .nature-card--urgence.is-selected {
-      border: 2.5px solid #ba1a1a;
-      box-shadow: 0 0 0 4px rgba(186, 26, 26, 0.16), 0 6px 16px rgba(19, 28, 40, 0.14);
-      background: #fff5f4;
-    }
-    .nature-card--urgence.is-selected .nature-card__check {
-      background: #ba1a1a;
-    }
     .nature-card__icon {
       display: flex;
       align-items: center;
@@ -231,10 +202,6 @@ const NATURE_TONE: Record<string, string> = {
       height: 2.25rem;
       border-radius: 0.65rem;
       flex-shrink: 0;
-    }
-    .nature-card--urgence .nature-card__icon {
-      width: 2.75rem;
-      height: 2.75rem;
     }
     .material-symbols-outlined {
       font-family: 'Material Symbols Outlined';
@@ -253,9 +220,6 @@ const NATURE_TONE: Record<string, string> = {
     }
     .nature-card__icon .material-symbols-outlined {
       font-size: 1.25rem;
-    }
-    .nature-card--urgence .nature-card__icon .material-symbols-outlined {
-      font-size: 1.5rem;
     }
     .nature-card--blue .nature-card__icon { background: rgba(11, 82, 168, 0.1); color: #0b52a8; }
     .nature-card--red .nature-card__icon { background: #ffdad6; color: #93000a; }
@@ -277,6 +241,13 @@ const NATURE_TONE: Record<string, string> = {
     }
     .nature-card.is-invalid {
       border-color: #dc3545;
+    }
+    .nature-card.nature-card--readonly {
+      cursor: default;
+    }
+    .nature-card.nature-card--readonly:hover {
+      border-color: #003b7f;
+      box-shadow: 0 0 0 4px rgba(0, 59, 127, 0.18), 0 6px 16px rgba(19, 28, 40, 0.14);
     }
   `]
 })
@@ -449,9 +420,13 @@ export class ReportCreatePage implements OnInit, OnDestroy {
     return `/signalement/anonyme?${params.toString()}`;
   }
 
-  selectedNatureLabel(): string {
+  selectedNature(): ReportType | null {
     const id = this.form.controls.reportTypeId.value;
-    return this.reportTypes().find((type) => String(type.reportTypeId) === id)?.label ?? '';
+    return this.reportTypes().find((type) => String(type.reportTypeId) === id) ?? null;
+  }
+
+  selectedNatureLabel(): string {
+    return this.selectedNature()?.label ?? '';
   }
 
   reviewContactLines(): string[] {

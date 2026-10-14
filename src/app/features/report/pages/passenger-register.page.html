@@ -71,18 +71,35 @@
       }
     </div>
 
-    <div class="mb-4">
+    <div class="mb-3">
       <label class="form-label fw-semibold" for="reg-password">{{ 'auth.passwordRequiredLabel' | translate }}</label>
-      <input
-        id="reg-password"
-        type="password"
-        class="form-control"
+      <app-password-input
+        inputId="reg-password"
         formControlName="password"
         autocomplete="new-password"
-        [class.is-invalid]="form.controls.password.touched && form.controls.password.invalid"
+        [invalid]="form.controls.password.touched && form.controls.password.invalid"
       />
       @if (form.controls.password.touched && form.controls.password.invalid) {
         <div class="invalid-feedback">{{ 'auth.passwordMin' | translate }}</div>
+      }
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label fw-semibold" for="reg-password-confirm">{{ 'auth.confirmPasswordLabel' | translate }}</label>
+      <app-password-input
+        inputId="reg-password-confirm"
+        formControlName="confirmPassword"
+        autocomplete="new-password"
+        [invalid]="confirmPasswordInvalid()"
+      />
+      @if (confirmPasswordInvalid()) {
+        <div class="invalid-feedback">
+          @if (form.controls.confirmPassword.invalid) {
+            {{ 'auth.confirmPasswordRequired' | translate }}
+          } @else {
+            {{ 'auth.passwordMismatch' | translate }}
+          }
+        </div>
       }
     </div>
 

@@ -30,11 +30,6 @@ interface NatureCardView {
   description: string;
 }
 
-interface EmergencyView {
-  code: string;
-  icon: string;
-}
-
 const EMERGENCY_CODES = new Set(['URGENCE', 'URGENCY', 'EMERGENCY', 'URGENT']);
 
 /** Icônes et couleurs des types de support pour la section statistiques. */
@@ -69,7 +64,6 @@ export class HomePage implements OnInit, OnDestroy {
 
   readonly referenceError = signal(false);
   readonly natureCards = signal<NatureCardView[]>([]);
-  readonly emergency = signal<EmergencyView | null>(null);
   readonly naturesLoading = signal(true);
   readonly naturesError = signal(false);
 
@@ -125,7 +119,6 @@ export class HomePage implements OnInit, OnDestroy {
           return;
         }
         this.natureCards.set([]);
-        this.emergency.set(null);
         this.naturesError.set(true);
         this.naturesLoading.set(false);
       },
@@ -293,30 +286,15 @@ export class HomePage implements OnInit, OnDestroy {
 
   private applyNatures(types: ReportType[]): void {
     const usable = types.filter((type) => !!type.code?.trim());
-    const emergencyType = this.findEmergency(usable);
-    const cards = emergencyType
-      ? usable.filter((type) => type.code.toUpperCase() !== emergencyType.code.toUpperCase())
-      : usable;
-    this.emergency.set(emergencyType ? this.toEmergency(emergencyType) : null);
+    // Le type urgence est affiché dans le header, jamais dans la grille des natures.
+    const cards = usable.filter((type) => !this.isEmergencyType(type));
     this.natureCards.set(this.toNatureCards(cards));
-  }
-
-  /** Le type urgence est identifié par son code, pas par sa priorité. */
-  private findEmergency(types: ReportType[]): ReportType | null {
-    return types.find((type) => this.isEmergencyType(type)) ?? null;
   }
 
   private isEmergencyType(type: ReportType): boolean {
     return [type.code, type.category, type.type].some(
       (value) => !!value && EMERGENCY_CODES.has(value.trim().toUpperCase()),
     );
-  }
-
-  private toEmergency(type: ReportType): EmergencyView {
-    return {
-      code: type.code.toUpperCase(),
-      icon: type.icon?.trim() || 'crisis_alert',
-    };
   }
 
   private toNatureCards(types: ReportType[]): NatureCardView[] {

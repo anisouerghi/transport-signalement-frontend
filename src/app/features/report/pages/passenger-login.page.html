@@ -32,9 +32,9 @@
 
     <div class="mb-4">
       <label class="form-label fw-semibold" for="login-password">{{ 'common.password' | translate }}</label>
-      <input id="login-password" type="password" class="form-control form-control-lg" formControlName="password"
-        autocomplete="current-password"
-        [class.is-invalid]="form.controls.password.touched && form.controls.password.invalid" />
+      <app-password-input inputId="login-password" formControlName="password" autocomplete="current-password"
+        [large]="true"
+        [invalid]="form.controls.password.touched && form.controls.password.invalid" />
       @if (form.controls.password.touched && form.controls.password.invalid) {
       <div class="invalid-feedback">{{ 'auth.passwordRequired' | translate }}</div>
       }

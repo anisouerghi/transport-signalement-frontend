@@ -20,84 +20,79 @@
           <div class="step__icon">
             @if (step() !== 'form') { <i class="bi bi-check-lg"></i> } @else { 1 }
           </div>
-          <div class="step__label">Formulaire</div>
+          <div class="step__label">{{ 'report.stepForm' | translate }}</div>
         </div>
         <div class="step-line" [class.completed]="step() !== 'form'"></div>
         <div class="step" [class.completed]="step() === 'choice'" [class.active]="step() === 'review'">
           <div class="step__icon">
             @if (step() === 'choice') { <i class="bi bi-check-lg"></i> } @else { 2 }
           </div>
-          <div class="step__label">Récapitulatif</div>
+          <div class="step__label">{{ 'report.stepReview' | translate }}</div>
         </div>
         <div class="step-line" [class.completed]="step() === 'choice'"></div>
         <div class="step" [class.active]="step() === 'choice'">
           <div class="step__icon">3</div>
-          <div class="step__label">{{ auth.isAuthenticated() ? 'Succès' : 'anonyme/avec suivi' }}</div>
+          <div class="step__label">{{ 'report.stepMethod' | translate }}</div>
         </div>
       } @else {
         <div class="step completed">
           <div class="step__icon"><i class="bi bi-check-lg"></i></div>
-          <div class="step__label">Type</div>
+          <div class="step__label">{{ 'report.stepType' | translate }}</div>
         </div>
         <div class="step-line completed"></div>
         <div class="step active">
           <div class="step__icon">2</div>
-          <div class="step__label">Détails</div>
+          <div class="step__label">{{ 'report.stepDetails' | translate }}</div>
         </div>
         <div class="step-line"></div>
         <div class="step">
           <div class="step__icon">3</div>
-          <div class="step__label">Succès</div>
+          <div class="step__label">{{ 'report.stepSuccess' | translate }}</div>
         </div>
       }
     </div>
   </div>
 
   <div [hidden]="depositFlow() && step() !== 'form'">
-  <section class="mb-3">
+  <!-- <section class="mb-3">
     <h1 class="h3 mb-1 mt-2">{{ 'report.title' | translate }}</h1>
-    <p class="text-secondary mb-0">{{ 'report.subtitle' | translate }}</p>
-  </section>
+  </section> -->
 
   @if (support(); as currentSupport) {
     <app-support-summary [support]="currentSupport" />
   }
 
   <form class="panel p-3 p-md-4" [formGroup]="form" (ngSubmit)="onFormSubmit()" novalidate>
-    <fieldset
-      class="mb-3 border-0 p-0 m-0"
-      role="radiogroup"
-      [attr.aria-label]="'report.typeLabel' | translate"
-      [attr.aria-invalid]="controlInvalid('reportTypeId') ? true : null"
-    >
-      @for (type of reportTypes(); track type.reportTypeId) {
-        @if (isUrgence(type)) {
-          <button
-            type="button"
-            class="nature-card nature-card--urgence"
-            role="radio"
-            [attr.aria-checked]="isNatureSelected(type)"
-            [class.is-selected]="isNatureSelected(type)"
-            [class.is-invalid]="controlInvalid('reportTypeId')"
-            [disabled]="submitting()"
-            (click)="selectNature(type)"
-          >
-            <span class="nature-card__icon" aria-hidden="true">
-              <span class="material-symbols-outlined">{{ type.icon }}</span>
-            </span>
-            <span class="nature-card__text">
-              <span class="nature-card__name">{{ type.label }}</span>
-            </span>
-            <span class="nature-card__trail">
-              <span class="material-symbols-outlined nature-card__go" aria-hidden="true">arrow_forward</span>
-            </span>
-          </button>
-        }
-      }
-      <p class="form-label fw-semibold mb-2">{{ 'report.typeLabel' | translate }}</p>
-      <div class="nature-grid">
-        @for (type of reportTypes(); track type.reportTypeId) {
-          @if (!isUrgence(type)) {
+    @if (selectedNature(); as nature) {
+      <div class="mb-3">
+        <p class="form-label fw-semibold mb-2">{{ 'report.typeLabel' | translate }}</p>
+        <div
+          class="nature-card nature-card--readonly is-selected"
+          [class.nature-card--blue]="natureTone(nature) === 'blue'"
+          [class.nature-card--red]="natureTone(nature) === 'red'"
+          [class.nature-card--gold]="natureTone(nature) === 'gold'"
+          [class.nature-card--green]="natureTone(nature) === 'green'"
+          [class.nature-card--gray]="natureTone(nature) === 'gray'"
+        >
+          <span class="nature-card__icon" aria-hidden="true">
+            <span class="material-symbols-outlined">{{ nature.icon }}</span>
+          </span>
+          <span class="nature-card__text">
+            <span class="nature-card__name">{{ nature.label }}</span>
+          </span>
+          <span class="nature-card__check" aria-hidden="true"><i class="bi bi-check-lg"></i></span>
+        </div>
+      </div>
+    } @else {
+      <fieldset
+        class="mb-3 border-0 p-0 m-0"
+        role="radiogroup"
+        [attr.aria-label]="'report.typeLabel' | translate"
+        [attr.aria-invalid]="controlInvalid('reportTypeId') ? true : null"
+      >
+        <p class="form-label fw-semibold mb-2">{{ 'report.typeLabel' | translate }}</p>
+        <div class="nature-grid">
+          @for (type of reportTypes(); track type.reportTypeId) {
             <button
               type="button"
               class="nature-card"
@@ -119,12 +114,12 @@
               <span class="nature-card__name">{{ type.label }}</span>
             </button>
           }
+        </div>
+        @if (controlInvalid('reportTypeId')) {
+          <div class="invalid-feedback d-block">{{ 'report.typeRequired' | translate }}</div>
         }
-      </div>
-      @if (controlInvalid('reportTypeId')) {
-        <div class="invalid-feedback d-block">{{ 'report.typeRequired' | translate }}</div>
-      }
       </fieldset>
+    }
 
     <div class="mb-3">
       <label class="form-label fw-semibold" for="description">{{ 'report.descriptionLabel' | translate }}</label>
@@ -185,7 +180,7 @@
           <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
           {{ 'report.submitting' | translate }}
         } @else if (depositFlow()) {
-          {{ 'report.reviewContinue' | translate }}
+          {{ 'report.formConfirm' | translate }}
         } @else {
           {{ 'summary.next' | translate }}
         }
@@ -196,7 +191,18 @@
 
   @if (depositFlow() && step() === 'review') {
     <section class="panel p-3 p-md-4">
-      <h1 class="h4 mb-3">{{ 'report.reviewTitle' | translate }}</h1>
+      <div class="d-flex align-items-center justify-content-between gap-3 mb-3">
+        <h1 class="h4 mb-0">{{ 'report.reviewTitle' | translate }}</h1>
+        <button
+          type="button"
+          class="btn btn-outline-secondary btn-sm"
+          [attr.aria-label]="'report.reviewEdit' | translate"
+          [title]="'report.reviewEdit' | translate"
+          (click)="editReport()"
+        >
+          <i class="bi bi-pencil-square" aria-hidden="true"></i>
+        </button>
+      </div>
       <dl class="review-list mb-4">
         <dt>{{ 'report.typeLabel' | translate }}</dt>
         <dd>{{ selectedNatureLabel() }}</dd>
@@ -227,12 +233,9 @@
           }
         </dd>
       </dl>
-      <div class="report-actions">
-        <button type="button" class="btn btn-transtu-outline report-back" (click)="editReport()">
-          {{ 'report.reviewEdit' | translate }}
-        </button>
-        <button type="button" class="btn btn-transtu" (click)="continueToChoice()">
-          {{ 'report.reviewContinue' | translate }}
+      <div class="d-flex justify-content-center">
+        <button type="button" class="btn btn-transtu review-confirm" (click)="continueToChoice()">
+          {{ 'report.reviewSubmit' | translate }}
         </button>
       </div>
     </section>
@@ -319,9 +322,18 @@
     --bs-btn-hover-border-color: var(--transtu-green);
   }
 
+  .review-confirm {
+    min-height: 3rem;
+    min-width: 12rem;
+  }
+
   @media (max-width: 420px) {
     .report-actions .btn {
       min-height: 2.85rem;
+    }
+    .review-confirm {
+      min-width: 0;
+      width: 100%;
     }
   }
 

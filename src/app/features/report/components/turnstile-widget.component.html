@@ -5,7 +5,6 @@
   [attr.aria-label]="visible ? ('turnstile.label' | translate) : null"
 >
   @if (visible) {
-    <p class="small text-secondary mb-2">{{ 'turnstile.hint' | translate }}</p>
   }
   <div #container class="turnstile-host" [class.turnstile-host--disabled]="disabled"></div>
   @if (visible && error) {

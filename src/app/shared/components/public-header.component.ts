@@ -1,8 +1,13 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from '../../core/services/auth.service';
 import { AppLanguage, LanguageService } from '../../core/services/language.service';
+import { ReportType } from '../../features/report/models/report.model';
+import { ReportTypeService } from '../../features/report/services/report-type.service';
+
+/** Le type urgence est identifié par son code, jamais par sa priorité. */
+const EMERGENCY_CODES = new Set(['URGENCE', 'URGENCY', 'EMERGENCY', 'URGENT']);
 
 @Component({
   selector: 'app-public-header',
@@ -21,6 +26,16 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
           />
         </a>
         <div class="public-header__tools">
+          @if (emergency(); as alert) {
+            <a
+              class="header-emergency-mobile d-md-none"
+              [routerLink]="['/signalement/anonyme']"
+              [queryParams]="{ nature: alert.code }"
+              [attr.aria-label]="'home.emergencyTitle' | translate"
+            >
+              <span class="material-symbols-outlined" aria-hidden="true">{{ alert.icon }}</span>
+            </a>
+          }
           <div class="lang-switch" role="group" [attr.aria-label]="'header.language' | translate">
             @for (opt of language.options; track opt.code) {
               @if ($index > 0) {
@@ -81,6 +96,18 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
       <nav class="public-header__links d-none d-md-flex" [attr.aria-label]="'common.navMain' | translate">
         @for (item of navItems; track item.path) {
           <a [routerLink]="item.path" routerLinkActive="is-active">{{ item.key | translate }}</a>
+        }
+        @if (emergency(); as alert) {
+          <a
+            class="header-emergency"
+            [routerLink]="['/signalement/anonyme']"
+            [queryParams]="{ nature: alert.code }"
+          >
+            <span class="header-emergency__icon" aria-hidden="true">
+              <span class="material-symbols-outlined">{{ alert.icon }}</span>
+            </span>
+            <span class="header-emergency__title">{{ 'home.emergencyTitle' | translate }}</span>
+          </a>
         }
       </nav>
       <div class="brand-ribbon" aria-hidden="true">
@@ -168,7 +195,9 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
         width: min(720px, 100%);
         margin: 0 auto;
         padding: 0 1rem 0.6rem;
-        gap: 1.1rem;
+        gap: 0.5rem 1.1rem;
+        flex-wrap: wrap;
+        align-items: center;
         justify-content: flex-start;
       }
       .public-header__links a {
@@ -184,6 +213,82 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
       .public-header__links a.is-active {
         color: #003b7f;
         border-bottom-color: #003b7f;
+      }
+      .public-header__links a.header-emergency {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        margin-inline-start: auto;
+        padding: 0.2rem 0.75rem 0.2rem 0.2rem;
+        border: 0;
+        border-radius: 999px;
+        background: #ffdad6;
+        color: #93000a;
+        font-size: 0.8rem;
+        font-weight: 700;
+        white-space: nowrap;
+        box-shadow: 0 1px 2px rgba(19, 28, 40, 0.06);
+        transition: background 0.15s ease;
+      }
+      .public-header__links a.header-emergency:hover {
+        background: #ffc9c4;
+        border-bottom-color: transparent;
+        color: #93000a;
+      }
+      .header-emergency__icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.75rem;
+        height: 1.75rem;
+        border-radius: 999px;
+        background: #ba1a1a;
+        color: #fff;
+        flex-shrink: 0;
+      }
+      .header-emergency__icon .material-symbols-outlined {
+        font-family: 'Material Symbols Outlined';
+        font-size: 1.05rem;
+        font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+        animation: header-emergency-pulse 1.5s ease-in-out infinite;
+      }
+      @keyframes header-emergency-pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.45;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .header-emergency__icon .material-symbols-outlined {
+          animation: none;
+        }
+      }
+      .header-emergency-mobile {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 999px;
+        background: #ba1a1a;
+        color: #fff;
+        text-decoration: none;
+        flex-shrink: 0;
+        box-shadow: 0 0 0 2px rgba(186, 26, 26, 0.18);
+      }
+      .header-emergency-mobile .material-symbols-outlined {
+        font-family: 'Material Symbols Outlined';
+        font-size: 1.35rem;
+        font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+        animation: header-emergency-pulse 1.5s ease-in-out infinite;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .header-emergency-mobile .material-symbols-outlined {
+          animation: none;
+        }
       }
       .lang-switch {
         display: inline-flex;
@@ -419,17 +524,19 @@ import { AppLanguage, LanguageService } from '../../core/services/language.servi
     `,
   ],
 })
-export class PublicHeaderComponent {
+export class PublicHeaderComponent implements OnInit {
   readonly auth = inject(AuthService);
   readonly language = inject(LanguageService);
   readonly router = inject(Router);
+  private readonly reportTypeService = inject(ReportTypeService);
   readonly userMenuOpen = signal(false);
+  readonly emergency = signal<{ code: string; icon: string } | null>(null);
 
   readonly navItems = [
     { path: '/accueil', key: 'nav.home', icon: 'home' },
-    { path: '/signalement', key: 'nav.report', icon: 'campaign' },
     { path: '/mes-signalements', key: 'nav.myReports', icon: 'assignment' },
     { path: '/scan', key: 'nav.scan', icon: 'qr_code_scanner' },
+    { path: '/contactez-nous', key: 'nav.contact', icon: 'call' },
   ];
 
   readonly bottomNavItems = [
@@ -439,6 +546,28 @@ export class PublicHeaderComponent {
     { path: '/scan', key: 'nav.scan', icon: 'qr_code_scanner', fab: false },
     { path: '/profil', key: 'nav.profile', icon: 'person', fab: false },
   ];
+
+  ngOnInit(): void {
+    this.reportTypeService.getActive().subscribe({
+      next: (types) => this.emergency.set(this.findEmergency(types)),
+      error: () => this.emergency.set(null),
+    });
+  }
+
+  private findEmergency(types: ReportType[]): { code: string; icon: string } | null {
+    const match = types.find((type) =>
+      [type.code, type.category, type.type].some(
+        (value) => !!value && EMERGENCY_CODES.has(value.trim().toUpperCase()),
+      ),
+    );
+    if (!match?.code?.trim()) {
+      return null;
+    }
+    return {
+      code: match.code.trim().toUpperCase(),
+      icon: match.icon?.trim() || 'crisis_alert',
+    };
+  }
 
   displayName(): string {
     const user = this.auth.currentUser();

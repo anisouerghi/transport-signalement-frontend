@@ -3,11 +3,12 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
+import { PasswordInputComponent } from '../components/password-input.component';
 
 @Component({
   selector: 'app-profile-page',
   standalone: true,
-  imports: [ReactiveFormsModule, TranslatePipe],
+  imports: [ReactiveFormsModule, TranslatePipe, PasswordInputComponent],
   template: `
     <section class="panel p-4">
       <div class="d-flex align-items-center justify-content-between gap-3 mb-4">
@@ -71,18 +72,18 @@ import { NotificationService } from '../../../core/services/notification.service
             <div id="password-fields" class="password-fields mb-3">
               <div class="mb-3">
                 <label class="form-label fw-semibold" for="profile-current-password">{{ 'profile.currentPassword' | translate }}</label>
-                <input id="profile-current-password" type="password" class="form-control"
+                <app-password-input inputId="profile-current-password"
                   formControlName="currentPassword" autocomplete="current-password"
-                  [class.is-invalid]="form.controls.currentPassword.touched && form.controls.currentPassword.invalid" />
+                  [invalid]="form.controls.currentPassword.touched && form.controls.currentPassword.invalid" />
                 @if (form.controls.currentPassword.touched && form.controls.currentPassword.invalid) {
                   <div class="invalid-feedback">{{ 'profile.passwordRequired' | translate }}</div>
                 }
               </div>
               <div>
                 <label class="form-label fw-semibold" for="profile-password">{{ 'profile.newPassword' | translate }}</label>
-                <input id="profile-password" type="password" class="form-control"
+                <app-password-input inputId="profile-password"
                   formControlName="password" autocomplete="new-password"
-                  [class.is-invalid]="form.controls.password.touched && form.controls.password.invalid" />
+                  [invalid]="form.controls.password.touched && form.controls.password.invalid" />
                 @if (form.controls.password.touched && form.controls.password.invalid) {
                   <div class="invalid-feedback">{{ 'profile.passwordMin' | translate }}</div>
                 }

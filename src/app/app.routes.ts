@@ -35,6 +35,11 @@ export const routes: Routes = [
       import('./features/report/pages/scan.page').then((m) => m.ScanPage),
   },
   {
+    path: 'contactez-nous',
+    loadComponent: () =>
+      import('./features/report/pages/contact.page').then((m) => m.ContactPage),
+  },
+  {
     path: 'report/:uuid',
     loadComponent: () =>
       import('./features/report/pages/report-welcome.page').then((m) => m.ReportWelcomePage),

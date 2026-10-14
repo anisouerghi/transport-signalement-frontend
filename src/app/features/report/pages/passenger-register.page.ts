@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ConfigService } from '../../../core/config/config.service';
@@ -7,6 +7,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { PassengerOtpPendingResponse } from '../../../core/models/auth.model';
 import { OtpInputComponent } from '../components/otp-input.component';
+import { PasswordInputComponent } from '../components/password-input.component';
 import { TurnstileWidgetComponent } from '../components/turnstile-widget.component';
 import { tryGetOptionalGps } from '../../../core/utils/optional-gps';
 import { from, switchMap } from 'rxjs';
@@ -22,6 +23,7 @@ type RegisterStep = 'credentials' | 'otp';
     RouterLinkActive,
     TranslatePipe,
     OtpInputComponent,
+    PasswordInputComponent,
     TurnstileWidgetComponent,
   ],
   templateUrl: './passenger-register.page.html',
@@ -47,12 +49,16 @@ export class PassengerRegisterPage implements OnInit, OnDestroy {
 
   private resendTimer: ReturnType<typeof setInterval> | null = null;
 
-  readonly form = this.fb.nonNullable.group({
-    name: ['', Validators.maxLength(150)],
-    email: ['', [Validators.required, Validators.email]],
-    phoneNumber: ['', [Validators.maxLength(30), Validators.pattern(/^[+0-9\s().-]{0,30}$/)]],
-    password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(100)]],
-  });
+  readonly form = this.fb.nonNullable.group(
+    {
+      name: ['', Validators.maxLength(150)],
+      email: ['', [Validators.required, Validators.email]],
+      phoneNumber: ['', [Validators.maxLength(30), Validators.pattern(/^[+0-9\s().-]{0,30}$/)]],
+      password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(100)]],
+      confirmPassword: ['', [Validators.required]],
+    },
+    { validators: this.passwordsMatchValidator },
+  );
 
   readonly otpForm = this.fb.nonNullable.group({
     otp: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
@@ -75,6 +81,20 @@ export class PassengerRegisterPage implements OnInit, OnDestroy {
 
   turnstileBlocksSubmit(): boolean {
     return this.config.cloudflareEnabled && !!this.config.cloudflareSiteKey && !this.turnstileToken();
+  }
+
+  confirmPasswordInvalid(): boolean {
+    const control = this.form.controls.confirmPassword;
+    if (!control.touched) {
+      return false;
+    }
+    return control.invalid || this.form.hasError('passwordMismatch');
+  }
+
+  private passwordsMatchValidator(group: AbstractControl): ValidationErrors | null {
+    const password = group.get('password')?.value;
+    const confirm = group.get('confirmPassword')?.value;
+    return password === confirm ? null : { passwordMismatch: true };
   }
 
   submit(): void {

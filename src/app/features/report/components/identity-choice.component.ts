@@ -22,7 +22,6 @@ import { AuthService } from '../../../core/services/auth.service';
       </div>
     } @else {
       <section class="identity-choice panel p-4">
-        <h2 class="h5 mb-3">{{ 'identity.title' | translate }}</h2>
         <div class="d-grid gap-2">
           <button type="button" class="choice-card" (click)="anonymousContinue.emit()">
             <span class="choice-card__icon" aria-hidden="true"><i class="bi bi-incognito"></i></span>

@@ -1,25 +1,4 @@
 <section class="home-page">
-  @if (emergency(); as alert) {
-    <a
-      class="home-emergency"
-      [routerLink]="['/signalement/anonyme']"
-      [queryParams]="{ nature: alert.code }"
-    >
-      <span class="home-emergency__main">
-        <span class="home-emergency__icon" aria-hidden="true">
-            <span class="material-symbols-outlined">{{ alert.icon }}</span>
-        </span>
-        <span class="home-emergency__text">
-          <span class="home-emergency__title">{{ 'home.emergencyTitle' | translate }}</span>
-          <span class="home-emergency__hint">{{ 'home.emergencyCall' | translate }}</span>
-        </span>
-      </span>
-      <span class="home-emergency__go" aria-hidden="true">
-        <span class="material-symbols-outlined">arrow_forward_ios</span>
-      </span>
-    </a>
-  }
-
   <section class="home-voice">
     <h1 class="home-voice__title">{{ 'home.voiceTitle' | translate }}</h1>
     <p class="home-voice__text">{{ 'home.voiceText' | translate }}</p>
