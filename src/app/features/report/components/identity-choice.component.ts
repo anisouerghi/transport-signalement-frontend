@@ -37,6 +37,13 @@ import { AuthService } from '../../../core/services/auth.service';
               <span class="small text-secondary">{{ 'identity.authHint' | translate }}</span>
             </span>
           </button>
+          <button type="button" class="choice-card" (click)="submitWithoutTracking.emit()">
+            <span class="choice-card__icon" aria-hidden="true"><i class="bi bi-send"></i></span>
+            <span>
+              <strong class="d-block">{{ 'identity.noTracking' | translate }}</strong>
+              <span class="small text-secondary">{{ 'identity.noTrackingHint' | translate }}</span>
+            </span>
+          </button>
         </div>
       </section>
     }
@@ -89,6 +96,7 @@ export class IdentityChoiceComponent {
   @Output() continue = new EventEmitter<void>();
   @Output() anonymousContinue = new EventEmitter<void>();
   @Output() authRequest = new EventEmitter<void>();
+  @Output() submitWithoutTracking = new EventEmitter<void>();
 
   goAuth(): void {
     if (this.alwaysShowChoices && this.auth.isAuthenticated()) {

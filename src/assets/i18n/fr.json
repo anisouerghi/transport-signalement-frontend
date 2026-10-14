@@ -174,10 +174,12 @@
   },
   "identity": {
     "title": "Vous souhaitez déposer un signalement",
-    "anonymous": "Réclamation anonyme",
-    "anonymousHint": "Sans créer de compte. L'inscription n'est jamais obligatoire.",
-    "auth": "Réclamation avec suivi",
+    "anonymous": "Réclamation avec suivi par code",
+    "anonymousHint": "Sans créer de compte. Vous recevrez un code pour suivre votre réclamation.",
+    "auth": "Réclamation avec suivi (compte exigé)",
     "authHint": "Retrouvez vos signalements et les réponses de l'équipe.",
+    "noTracking": "Sans suivi",
+    "noTrackingHint": "Votre réclamation sera envoyée sans possibilité de suivi.",
     "greeting": "Bonjour",
     "connectedHint": "Votre compte sera associé à ce signalement.",
     "continue": "Continuer"

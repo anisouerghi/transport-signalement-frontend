@@ -174,10 +174,12 @@
   },
   "identity": {
     "title": "You want to submit a report",
-    "anonymous": "Continue anonymously",
-    "anonymousHint": "No account needed. Registration is never required.",
-    "auth": "Sign up / Sign in",
+    "anonymous": "Report with tracking by code",
+    "anonymousHint": "No account needed. You will receive a code to track your report.",
+    "auth": "Report with tracking (account required)",
     "authHint": "Find your reports and team replies.",
+    "noTracking": "Without tracking",
+    "noTrackingHint": "Your report will be sent with no tracking option.",
     "greeting": "Hello",
     "connectedHint": "This report will be linked to your account.",
     "continue": "Continue"

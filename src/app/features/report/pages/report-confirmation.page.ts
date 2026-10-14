@@ -37,6 +37,12 @@ import { NotificationService } from '../../../core/services/notification.service
         <p class="text-secondary mb-4">{{ 'confirmation.emptyBody' | translate }}</p>
         <a routerLink="/accueil" class="btn btn-transtu">{{ 'common.backHome' | translate }}</a>
       </section>
+    } @else if (state()!.withoutTracking) {
+      <section class="panel page-state">
+        <div class="icon-wrap success"><i class="bi bi-check2-circle" aria-hidden="true"></i></div>
+        <h1 class="h3">{{ 'confirmation.title' | translate }}</h1>
+        <a routerLink="/accueil" class="btn btn-transtu mt-4">{{ 'common.backHome' | translate }}</a>
+      </section>
     } @else {
       <section class="panel page-state">
         <div class="icon-wrap success"><i class="bi bi-check2-circle" aria-hidden="true"></i></div>
@@ -213,6 +219,7 @@ export class ReportConfirmationPage implements OnInit {
         email: fromHistory.email,
         supportUuid: fromHistory.supportUuid,
         withTracking: fromHistory.withTracking,
+        withoutTracking: fromHistory.withoutTracking,
       });
     }
   }

@@ -93,6 +93,8 @@ export interface ConfirmationState {
   email?: string;
   supportUuid?: string;
   withTracking?: boolean;
+  /** Réclamation envoyée « sans suivi » : n'affiche que le message de succès. */
+  withoutTracking?: boolean;
 }
 
 /** Suivi public sécurisé (API /api/public/suivi/{uuid}). */

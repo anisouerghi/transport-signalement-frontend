@@ -443,7 +443,12 @@ export class ReportCreatePage implements OnInit, OnDestroy {
     return names;
   }
 
-  submit(): void {
+  /** Bouton « sans suivi » : enregistre la réclamation sans suivi (message simple). */
+  submitWithoutTracking(): void {
+    this.submit(false);
+  }
+
+  submit(withTracking = true): void {
     if (this.submitting()) {
       return;
     }
@@ -481,12 +486,15 @@ export class ReportCreatePage implements OnInit, OnDestroy {
       next: (report) => {
         this.submitting.set(false);
         this.drafts.clear();
-        this.notifications.success(this.translate.instant('report.success'));
+        if (withTracking) {
+          this.notifications.success(this.translate.instant('report.success'));
+        }
         void this.router.navigate(['/confirmation'], {
           state: {
             reference: report.reference,
             email: payload.passenger.email,
             supportUuid: this.supportUuid() || undefined,
+            withoutTracking: !withTracking,
           },
         });
       },
