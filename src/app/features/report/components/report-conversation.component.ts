@@ -59,11 +59,6 @@ interface TimelineGroup {
               }
             </p>
           }
-          @if (lastUpdate()) {
-            <p class="dossier__updated">
-              {{ 'followUp.lastUpdate' | translate }} · {{ lastUpdate() }}
-            </p>
-          }
           @if (report.creationDate) {
             <p class="dossier__updated">
               {{ 'followUp.reportedOn' | translate }} · {{ stamp(report.creationDate) }}
@@ -615,17 +610,6 @@ export class ReportConversationComponent {
       parts.push(this.translate.instant('followUp.durationMinute', { count: minutes }));
     }
     return parts.join(' ');
-  }
-
-  lastUpdate(): string {
-    const dates = [this.report?.creationDate, ...(this.report?.replies ?? []).map((reply) => reply.replyDate)]
-      .filter((value): value is string => !!value)
-      .map((value) => new Date(value).getTime())
-      .filter((value) => !Number.isNaN(value));
-    if (dates.length === 0) {
-      return '';
-    }
-    return this.formatStamp(new Date(Math.max(...dates)));
   }
 
   groups(): TimelineGroup[] {
