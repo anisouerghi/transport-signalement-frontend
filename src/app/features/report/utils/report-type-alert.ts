@@ -18,11 +18,6 @@ export const ALERT_ICONS: Record<string, string> = {
   HARCELEMENT: 'front_hand',
 };
 
-/** Clé i18n du libellé de l'action d'alerte dans l'en-tête. */
-export const ALERT_TITLE_KEYS: Record<string, string> = {
-  HARCELEMENT: 'home.harassmentTitle',
-};
-
 export function normalizeTypeCode(code?: string | null): string {
   return (code ?? '').trim().toUpperCase();
 }
@@ -37,9 +32,4 @@ export function isAlertType(type: Pick<ReportType, 'code' | 'category' | 'type'>
 /** Icône à afficher : celle dédiée au type d'alerte, sinon celle fournie par l'API. */
 export function alertIcon(code: string | null | undefined, apiIcon?: string | null): string {
   return ALERT_ICONS[normalizeTypeCode(code)] ?? (apiIcon?.trim() || 'crisis_alert');
-}
-
-/** Clé i18n du titre de l'action d'alerte (urgence par défaut). */
-export function alertTitleKey(code: string | null | undefined): string {
-  return ALERT_TITLE_KEYS[normalizeTypeCode(code)] ?? 'home.emergencyTitle';
 }

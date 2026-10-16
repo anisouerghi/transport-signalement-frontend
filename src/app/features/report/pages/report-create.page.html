@@ -92,7 +92,7 @@
       >
         <p class="form-label fw-semibold mb-2">{{ 'report.typeLabel' | translate }}</p>
         <div class="nature-grid">
-          @for (type of reportTypes(); track type.reportTypeId) {
+          @for (type of visibleNatures(); track type.reportTypeId) {
             <button
               type="button"
               class="nature-card"

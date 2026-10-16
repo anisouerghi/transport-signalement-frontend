@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnDestroy, OnInit, ViewChild, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -287,6 +287,13 @@ export class ReportCreatePage implements OnInit, OnDestroy {
   /** Parcours /signalement : récapitulatif puis choix, sans POST avant. */
   readonly depositFlow = signal(false);
   readonly step = signal<'form' | 'review' | 'choice'>('form');
+  /** Arrivée via le bouton « Urgence » de l'en-tête : ne proposer que les types d'alerte. */
+  readonly alertOnly = signal(false);
+
+  /** Natures proposées : les 2 alertes en mode « urgence », sinon toute la liste. */
+  readonly visibleNatures = computed(() =>
+    this.alertOnly() ? this.reportTypes().filter((type) => isAlertType(type)) : this.reportTypes(),
+  );
 
   readonly form = this.fb.nonNullable.group({
     reportTypeId: ['', Validators.required],
@@ -303,6 +310,8 @@ export class ReportCreatePage implements OnInit, OnDestroy {
     // /signalement/anonyme (avec ou sans nature) : saisie → récap → choix, jamais de POST avant.
     // Le segment « anonyme » n'est pas un mode définitif. Le QR (/report/:uuid) conserve son flux.
     this.depositFlow.set(!uuid || this.route.snapshot.queryParamMap.get('parcours') === 'depot');
+    // Bouton « Urgence » de l'en-tête : grille limitée aux types d'alerte.
+    this.alertOnly.set(this.route.snapshot.queryParamMap.get('alertes') === '1');
 
     if (!uuid) {
       this.anonymousMode.set(true);

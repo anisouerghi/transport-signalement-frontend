@@ -3,15 +3,8 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from '../../core/services/auth.service';
 import { AppLanguage, LanguageService } from '../../core/services/language.service';
-import { ReportType } from '../../features/report/models/report.model';
 import { ReportTypeService } from '../../features/report/services/report-type.service';
-import { alertIcon, alertTitleKey, isAlertType, normalizeTypeCode } from '../../features/report/utils/report-type-alert';
-
-interface AlertAction {
-  code: string;
-  icon: string;
-  titleKey: string;
-}
+import { isAlertType } from '../../features/report/utils/report-type-alert';
 
 @Component({
   selector: 'app-public-header',
@@ -30,14 +23,14 @@ interface AlertAction {
           />
         </a>
         <div class="public-header__tools">
-          @for (alert of alerts(); track alert.code) {
+          @if (showAlert()) {
             <a
               class="header-emergency-mobile d-md-none"
               [routerLink]="['/signalement/anonyme']"
-              [queryParams]="{ nature: alert.code }"
-              [attr.aria-label]="alert.titleKey | translate"
+              [queryParams]="{ alertes: 1 }"
+              [attr.aria-label]="'home.emergencyTitle' | translate"
             >
-              <span class="material-symbols-outlined" aria-hidden="true">{{ alert.icon }}</span>
+              <span class="material-symbols-outlined" aria-hidden="true">crisis_alert</span>
             </a>
           }
           <div class="lang-switch" role="group" [attr.aria-label]="'header.language' | translate">
@@ -101,16 +94,16 @@ interface AlertAction {
         @for (item of navItems; track item.path) {
           <a [routerLink]="item.path" routerLinkActive="is-active">{{ item.key | translate }}</a>
         }
-        @for (alert of alerts(); track alert.code) {
+        @if (showAlert()) {
           <a
             class="header-emergency"
             [routerLink]="['/signalement/anonyme']"
-            [queryParams]="{ nature: alert.code }"
+            [queryParams]="{ alertes: 1 }"
           >
             <span class="header-emergency__icon" aria-hidden="true">
-              <span class="material-symbols-outlined">{{ alert.icon }}</span>
+              <span class="material-symbols-outlined">crisis_alert</span>
             </span>
-            <span class="header-emergency__title">{{ alert.titleKey | translate }}</span>
+            <span class="header-emergency__title">{{ 'home.emergencyTitle' | translate }}</span>
           </a>
         }
       </nav>
@@ -534,7 +527,8 @@ export class PublicHeaderComponent implements OnInit {
   readonly router = inject(Router);
   private readonly reportTypeService = inject(ReportTypeService);
   readonly userMenuOpen = signal(false);
-  readonly alerts = signal<AlertAction[]>([]);
+  /** Un seul bouton d'alerte générique (urgence / harcèlement) sur « Urgence ». */
+  readonly showAlert = signal(false);
 
   readonly navItems = [
     { path: '/accueil', key: 'nav.home', icon: 'home' },
@@ -553,20 +547,9 @@ export class PublicHeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.reportTypeService.getActive().subscribe({
-      next: (types) => this.alerts.set(this.findAlerts(types)),
-      error: () => this.alerts.set([]),
+      next: (types) => this.showAlert.set(types.some((type) => !!type.code?.trim() && isAlertType(type))),
+      error: () => this.showAlert.set(false),
     });
-  }
-
-  /** Alertes affichées dans l'en-tête (urgence, harcèlement…), ordonnées par priorité. */
-  private findAlerts(types: ReportType[]): AlertAction[] {
-    return types
-      .filter((type) => !!type.code?.trim() && isAlertType(type))
-      .sort((a, b) => (a.priority ?? Number.MAX_SAFE_INTEGER) - (b.priority ?? Number.MAX_SAFE_INTEGER))
-      .map((type) => {
-        const code = normalizeTypeCode(type.code);
-        return { code, icon: alertIcon(code, type.icon), titleKey: alertTitleKey(code) };
-      });
   }
 
   displayName(): string {
