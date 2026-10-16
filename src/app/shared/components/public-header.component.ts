@@ -5,9 +5,13 @@ import { AuthService } from '../../core/services/auth.service';
 import { AppLanguage, LanguageService } from '../../core/services/language.service';
 import { ReportType } from '../../features/report/models/report.model';
 import { ReportTypeService } from '../../features/report/services/report-type.service';
+import { alertIcon, alertTitleKey, isAlertType, normalizeTypeCode } from '../../features/report/utils/report-type-alert';
 
-/** Le type urgence est identifié par son code, jamais par sa priorité. */
-const EMERGENCY_CODES = new Set(['URGENCE', 'URGENCY', 'EMERGENCY', 'URGENT']);
+interface AlertAction {
+  code: string;
+  icon: string;
+  titleKey: string;
+}
 
 @Component({
   selector: 'app-public-header',
@@ -26,12 +30,12 @@ const EMERGENCY_CODES = new Set(['URGENCE', 'URGENCY', 'EMERGENCY', 'URGENT']);
           />
         </a>
         <div class="public-header__tools">
-          @if (emergency(); as alert) {
+          @for (alert of alerts(); track alert.code) {
             <a
               class="header-emergency-mobile d-md-none"
               [routerLink]="['/signalement/anonyme']"
               [queryParams]="{ nature: alert.code }"
-              [attr.aria-label]="'home.emergencyTitle' | translate"
+              [attr.aria-label]="alert.titleKey | translate"
             >
               <span class="material-symbols-outlined" aria-hidden="true">{{ alert.icon }}</span>
             </a>
@@ -97,7 +101,7 @@ const EMERGENCY_CODES = new Set(['URGENCE', 'URGENCY', 'EMERGENCY', 'URGENT']);
         @for (item of navItems; track item.path) {
           <a [routerLink]="item.path" routerLinkActive="is-active">{{ item.key | translate }}</a>
         }
-        @if (emergency(); as alert) {
+        @for (alert of alerts(); track alert.code) {
           <a
             class="header-emergency"
             [routerLink]="['/signalement/anonyme']"
@@ -106,7 +110,7 @@ const EMERGENCY_CODES = new Set(['URGENCE', 'URGENCY', 'EMERGENCY', 'URGENT']);
             <span class="header-emergency__icon" aria-hidden="true">
               <span class="material-symbols-outlined">{{ alert.icon }}</span>
             </span>
-            <span class="header-emergency__title">{{ 'home.emergencyTitle' | translate }}</span>
+            <span class="header-emergency__title">{{ alert.titleKey | translate }}</span>
           </a>
         }
       </nav>
@@ -530,7 +534,7 @@ export class PublicHeaderComponent implements OnInit {
   readonly router = inject(Router);
   private readonly reportTypeService = inject(ReportTypeService);
   readonly userMenuOpen = signal(false);
-  readonly emergency = signal<{ code: string; icon: string } | null>(null);
+  readonly alerts = signal<AlertAction[]>([]);
 
   readonly navItems = [
     { path: '/accueil', key: 'nav.home', icon: 'home' },
@@ -549,24 +553,20 @@ export class PublicHeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.reportTypeService.getActive().subscribe({
-      next: (types) => this.emergency.set(this.findEmergency(types)),
-      error: () => this.emergency.set(null),
+      next: (types) => this.alerts.set(this.findAlerts(types)),
+      error: () => this.alerts.set([]),
     });
   }
 
-  private findEmergency(types: ReportType[]): { code: string; icon: string } | null {
-    const match = types.find((type) =>
-      [type.code, type.category, type.type].some(
-        (value) => !!value && EMERGENCY_CODES.has(value.trim().toUpperCase()),
-      ),
-    );
-    if (!match?.code?.trim()) {
-      return null;
-    }
-    return {
-      code: match.code.trim().toUpperCase(),
-      icon: match.icon?.trim() || 'crisis_alert',
-    };
+  /** Alertes affichées dans l'en-tête (urgence, harcèlement…), ordonnées par priorité. */
+  private findAlerts(types: ReportType[]): AlertAction[] {
+    return types
+      .filter((type) => !!type.code?.trim() && isAlertType(type))
+      .sort((a, b) => (a.priority ?? Number.MAX_SAFE_INTEGER) - (b.priority ?? Number.MAX_SAFE_INTEGER))
+      .map((type) => {
+        const code = normalizeTypeCode(type.code);
+        return { code, icon: alertIcon(code, type.icon), titleKey: alertTitleKey(code) };
+      });
   }
 
   displayName(): string {

@@ -115,6 +115,7 @@
     "natureTitle": "What would you like to tell us today?",
     "natureSubtitle": "Direct service 24/7",
     "emergencyTitle": "Emergency or immediate danger?",
+    "harassmentTitle": "Sexual harassment",
     "naturesError": "Report types are temporarily unavailable.",
     "naturesEmpty": "No report type is available right now.",
     "natures": {

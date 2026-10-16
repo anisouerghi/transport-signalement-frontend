@@ -75,7 +75,7 @@
           [class.nature-card--gray]="natureTone(nature) === 'gray'"
         >
           <span class="nature-card__icon" aria-hidden="true">
-            <span class="material-symbols-outlined">{{ nature.icon }}</span>
+            <span class="material-symbols-outlined">{{ natureIcon(nature) }}</span>
           </span>
           <span class="nature-card__text">
             <span class="nature-card__name">{{ nature.label }}</span>
@@ -109,7 +109,7 @@
               (click)="selectNature(type)"
             >
               <span class="nature-card__icon" aria-hidden="true">
-                <span class="material-symbols-outlined">{{ type.icon }}</span>
+                <span class="material-symbols-outlined">{{ natureIcon(type) }}</span>
               </span>
               <span class="nature-card__name">{{ type.label }}</span>
             </button>

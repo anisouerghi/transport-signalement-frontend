@@ -24,6 +24,7 @@ import { ReportDraftService } from '../services/report-draft.service';
 import { ReportService } from '../services/report.service';
 import { ReportTypeService } from '../services/report-type.service';
 import { SupportService } from '../services/support.service';
+import { alertIcon, isAlertType } from '../utils/report-type-alert';
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -37,6 +38,7 @@ const NATURE_TONE: Record<string, string> = {
   OTHER: 'gray',
   ASSAULT: 'red',
   URGENCE: 'red',
+  HARCELEMENT: 'red',
 };
 
 @Component({
@@ -329,8 +331,14 @@ export class ReportCreatePage implements OnInit, OnDestroy {
     this.form.controls.reportTypeId.markAsTouched();
   }
 
-  isUrgence(type: ReportType): boolean {
-    return type.code?.trim().toUpperCase() === 'URGENCE';
+  /** Types d'alerte (urgence, harcèlement) : mis en tête de la grille. */
+  isAlertNature(type: ReportType): boolean {
+    return isAlertType(type);
+  }
+
+  /** Icône affichée pour une nature (icône dédiée pour les types d'alerte). */
+  natureIcon(type: ReportType): string {
+    return alertIcon(type.code, type.icon);
   }
 
   natureTone(type: ReportType): string {
@@ -680,8 +688,8 @@ export class ReportCreatePage implements OnInit, OnDestroy {
 
   private orderNatures(types: ReportType[]): ReportType[] {
     return [...types].sort((a, b) => {
-      const aUrgent = this.isUrgence(a);
-      const bUrgent = this.isUrgence(b);
+      const aUrgent = this.isAlertNature(a);
+      const bUrgent = this.isAlertNature(b);
       if (aUrgent !== bUrgent) {
         return aUrgent ? -1 : 1;
       }

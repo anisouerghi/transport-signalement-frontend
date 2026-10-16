@@ -6,6 +6,7 @@ import { LanguageService } from '../../../core/services/language.service';
 import { PublicHomepageReply, ReportType, SupportTypeCount } from '../models/report.model';
 import { ReportService } from '../services/report.service';
 import { ReportTypeService } from '../services/report-type.service';
+import { isAlertType } from '../utils/report-type-alert';
 
 const PAGE_SIZE = 4;
 const EXCERPT_LENGTH = 110;
@@ -29,8 +30,6 @@ interface NatureCardView {
   label: string;
   description: string;
 }
-
-const EMERGENCY_CODES = new Set(['URGENCE', 'URGENCY', 'EMERGENCY', 'URGENT']);
 
 /** Icônes et couleurs des types de support pour la section statistiques. */
 const SUPPORT_VISUAL: Record<string, { icon: string; tone: string }> = {
@@ -286,15 +285,9 @@ export class HomePage implements OnInit, OnDestroy {
 
   private applyNatures(types: ReportType[]): void {
     const usable = types.filter((type) => !!type.code?.trim());
-    // Le type urgence est affiché dans le header, jamais dans la grille des natures.
-    const cards = usable.filter((type) => !this.isEmergencyType(type));
+    // Les types d'alerte (urgence, harcèlement) sont affichés dans l'en-tête, jamais dans la grille.
+    const cards = usable.filter((type) => !isAlertType(type));
     this.natureCards.set(this.toNatureCards(cards));
-  }
-
-  private isEmergencyType(type: ReportType): boolean {
-    return [type.code, type.category, type.type].some(
-      (value) => !!value && EMERGENCY_CODES.has(value.trim().toUpperCase()),
-    );
   }
 
   private toNatureCards(types: ReportType[]): NatureCardView[] {
