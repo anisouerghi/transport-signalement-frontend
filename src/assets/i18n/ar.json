@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "brand": "TRANSTU",
     "brandAria": "الإعلام — الصفحة الرئيسية",
@@ -60,8 +60,17 @@
     "profile": "الملف الشخصي",
     "notifications": "الإشعارات",
     "language": "اللغة",
-    "notificationsEmpty": "ستتوفر إعدادات الإشعارات قريبًا.",
-    "languageEmpty": "ستتوفر إعدادات اللغة قريبًا."
+    "languageTitle": "اختر لغة",
+    "notificationsTitle": "تفضيلات الإشعارات",
+    "channelPlatform": "المنصة",
+    "channelEmail": "البريد الإلكتروني",
+    "channelSms": "الرسائل القصيرة",
+    "channelWhatsapp": "واتساب",
+    "loading": "جارٍ التحميل…",
+    "saving": "جارٍ الحفظ…",
+    "saved": "تم حفظ التفضيلات",
+    "loadError": "تعذر تحميل التفضيلات",
+    "saveError": "فشل حفظ التفضيلات"
   },
   "profile": {
     "title": "ملفي الشخصي",

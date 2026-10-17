@@ -196,22 +196,40 @@ export class AuthService {
             throw new Error('Passenger session is missing');
           }
 
+          const language = normalizeUiLanguage(
+            updated.language ?? request.language ?? current.language,
+          );
           const session: PassengerSession = {
             ...current,
             name: updated.name ?? request.name ?? current.name,
-            email: updated.email ?? request.email,
+            email: updated.email ?? request.email ?? current.email,
             phoneNumber: updated.phoneNumber ?? request.phoneNumber ?? current.phoneNumber,
-            language: updated.language ?? request.language ?? current.language,
+            language,
             notifications: updated.notifications ?? request.notifications ?? current.notifications,
           };
           localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
           this.sessionSignal.set(session);
-          if (request.language) {
-            void this.language.setLanguage(request.language as 'fr' | 'ar' | 'en');
+          if (language === 'fr' || language === 'ar' || language === 'en') {
+            void this.language.setLanguage(language);
           }
           return session;
         }),
       );
+  }
+
+  /** Met à jour langue / notifications dans la session locale après sauvegarde API. */
+  patchSessionPreferences(language?: string | null, notifications?: number[] | null): void {
+    const current = this.sessionSignal();
+    if (!current) {
+      return;
+    }
+    const session: PassengerSession = {
+      ...current,
+      language: normalizeUiLanguage(language ?? current.language),
+      notifications: notifications ?? current.notifications,
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+    this.sessionSignal.set(session);
   }
 
 
@@ -384,13 +402,16 @@ export class AuthService {
 
 
   private clearSession(): void {
-
     localStorage.removeItem(STORAGE_KEY);
-
     this.sessionSignal.set(null);
-
   }
-
 }
 
+function normalizeUiLanguage(value?: string | null): string | undefined {
+  if (!value) {
+    return undefined;
+  }
+  const lower = value.trim().toLowerCase();
+  return lower === 'fr' || lower === 'ar' || lower === 'en' ? lower : value;
+}
 

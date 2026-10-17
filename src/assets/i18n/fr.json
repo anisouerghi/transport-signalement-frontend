@@ -60,8 +60,17 @@
     "profile": "Profil",
     "notifications": "Notifications",
     "language": "Langue",
-    "notificationsEmpty": "Les paramètres de notifications seront disponibles prochainement.",
-    "languageEmpty": "Les paramètres de langue seront disponibles prochainement."
+    "languageTitle": "Sélectionnez une langue",
+    "notificationsTitle": "Préférences de notification",
+    "channelPlatform": "Plateforme",
+    "channelEmail": "Email",
+    "channelSms": "SMS",
+    "channelWhatsapp": "WhatsApp",
+    "loading": "Chargement…",
+    "saving": "Enregistrement…",
+    "saved": "Préférences enregistrées",
+    "loadError": "Impossible de charger les préférences",
+    "saveError": "Échec de l'enregistrement des préférences"
   },
   "profile": {
     "title": "Mon profil",

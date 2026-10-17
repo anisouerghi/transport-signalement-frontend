@@ -60,8 +60,17 @@
     "profile": "Profile",
     "notifications": "Notifications",
     "language": "Language",
-    "notificationsEmpty": "Notification settings will be available soon.",
-    "languageEmpty": "Language settings will be available soon."
+    "languageTitle": "Select a language",
+    "notificationsTitle": "Notification preferences",
+    "channelPlatform": "Platform",
+    "channelEmail": "Email",
+    "channelSms": "SMS",
+    "channelWhatsapp": "WhatsApp",
+    "loading": "Loading…",
+    "saving": "Saving…",
+    "saved": "Preferences saved",
+    "loadError": "Unable to load preferences",
+    "saveError": "Failed to save preferences"
   },
   "profile": {
     "title": "My profile",

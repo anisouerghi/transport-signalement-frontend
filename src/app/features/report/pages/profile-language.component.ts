@@ -1,60 +1,89 @@
-import { Component, inject } from '@angular/core';
-import { LanguageService } from '../../../core/services/language.service';
-import { AuthService } from '../../../core/services/auth.service';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { AppLanguage, LanguageService } from '../../../core/services/language.service';
+import { PassengerPreferenceService } from '../../../core/services/passenger-preference.service';
+import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
   selector: 'app-profile-language',
   standalone: true,
-  imports: [],
+  imports: [TranslatePipe],
   template: `
     <section class="panel p-4">
-      <h2 class="h4 mb-3">Sélectionnez une langue</h2>
-      <div class="d-flex flex-column gap-2">
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="lang-ar"
-            [checked]="language.currentLang() === 'ar'"
-            (change)="choose('ar')" />
-          <label class="form-check-label" for="lang-ar">
-            <span class="flag" aria-hidden="true">🇹🇳</span> AR
-          </label>
+      <h2 class="h4 mb-3">{{ 'accountSettings.languageTitle' | translate }}</h2>
+      @if (loading()) {
+        <p class="text-body-secondary mb-0">{{ 'accountSettings.loading' | translate }}</p>
+      } @else {
+        <div class="d-flex flex-column gap-2" role="radiogroup" [attr.aria-label]="'accountSettings.language' | translate">
+          @for (opt of language.options; track opt.code) {
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="profile-lang"
+                [id]="'lang-' + opt.code"
+                [checked]="selected() === opt.code"
+                [disabled]="saving()"
+                (change)="choose(opt.code)"
+              />
+              <label class="form-check-label" [for]="'lang-' + opt.code">
+                {{ opt.label }}
+              </label>
+            </div>
+          }
         </div>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="lang-fr"
-            [checked]="language.currentLang() === 'fr'"
-            (change)="choose('fr')" />
-          <label class="form-check-label" for="lang-fr">
-            <span class="flag" aria-hidden="true">🇫🇷</span> FR
-          </label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="lang-en"
-            [checked]="language.currentLang() === 'en'"
-            (change)="choose('en')" />
-          <label class="form-check-label" for="lang-en">
-            <span class="flag" aria-hidden="true">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span> EN
-          </label>
-        </div>
-      </div>
+        @if (saving()) {
+          <p class="small text-body-secondary mt-2 mb-0">{{ 'accountSettings.saving' | translate }}</p>
+        }
+      }
     </section>
   `,
-  styles: [`
-    .flag {
-      font-size: 1.1rem;
-      line-height: 1;
-    }
-  `],
 })
-export class ProfileLanguageComponent {
+export class ProfileLanguageComponent implements OnInit {
   readonly language = inject(LanguageService);
-  private readonly auth = inject(AuthService);
+  private readonly preferences = inject(PassengerPreferenceService);
+  private readonly notifications = inject(NotificationService);
+  private readonly translate = inject(TranslateService);
 
-  async choose(lang: 'ar' | 'fr' | 'en'): Promise<void> {
-    await this.language.setLanguage(lang);
-    // Persisté sur le compte si l'utilisateur est connecté → langue par défaut à la prochaine connexion.
-    if (this.auth.isAuthenticated() && this.auth.currentUser()?.email) {
-      this.auth
-        .updateProfile({ email: this.auth.currentUser()!.email, language: lang })
-        .subscribe();
+  readonly selected = signal<AppLanguage>(this.language.currentLang());
+  readonly loading = signal(true);
+  readonly saving = signal(false);
+
+  ngOnInit(): void {
+    this.preferences.get().subscribe({
+      next: (prefs) => {
+        const lang = (prefs.language ?? 'FR').trim().toLowerCase();
+        if (lang === 'fr' || lang === 'ar' || lang === 'en') {
+          this.selected.set(lang);
+          void this.language.setLanguage(lang);
+        }
+        this.loading.set(false);
+      },
+      error: () => {
+        this.selected.set(this.language.currentLang());
+        this.loading.set(false);
+        this.notifications.error(this.translate.instant('accountSettings.loadError'));
+      },
+    });
+  }
+
+  choose(lang: AppLanguage): void {
+    if (this.saving() || this.selected() === lang) {
+      return;
     }
+    const previous = this.selected();
+    this.selected.set(lang);
+    this.saving.set(true);
+    this.preferences.update({ language: lang }).subscribe({
+      next: () => {
+        this.saving.set(false);
+        this.notifications.success(this.translate.instant('accountSettings.saved'));
+      },
+      error: () => {
+        this.selected.set(previous);
+        this.saving.set(false);
+        this.notifications.error(this.translate.instant('accountSettings.saveError'));
+      },
+    });
   }
 }

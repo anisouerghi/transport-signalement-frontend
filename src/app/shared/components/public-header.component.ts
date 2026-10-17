@@ -3,6 +3,7 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from '../../core/services/auth.service';
 import { AppLanguage, LanguageService } from '../../core/services/language.service';
+import { PassengerPreferenceService } from '../../core/services/passenger-preference.service';
 import { ReportTypeService } from '../../features/report/services/report-type.service';
 import { isAlertType } from '../../features/report/utils/report-type-alert';
 
@@ -525,6 +526,7 @@ export class PublicHeaderComponent implements OnInit {
   readonly auth = inject(AuthService);
   readonly language = inject(LanguageService);
   readonly router = inject(Router);
+  private readonly preferences = inject(PassengerPreferenceService);
   private readonly reportTypeService = inject(ReportTypeService);
   readonly userMenuOpen = signal(false);
   /** Un seul bouton d'alerte générique (urgence / harcèlement) sur « Urgence ». */
@@ -586,5 +588,12 @@ export class PublicHeaderComponent implements OnInit {
 
   onLang(code: AppLanguage): void {
     void this.language.setLanguage(code);
+    if (this.auth.isAuthenticated()) {
+      this.preferences.update({ language: code }).subscribe({
+        error: () => {
+          /* UI déjà mise à jour ; échec silencieux côté header */
+        },
+      });
+    }
   }
 }
