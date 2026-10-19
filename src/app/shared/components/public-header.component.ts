@@ -32,6 +32,7 @@ import { isAlertType } from '../../features/report/utils/report-type-alert';
               [attr.aria-label]="'home.emergencyTitle' | translate"
             >
               <span class="material-symbols-outlined" aria-hidden="true">crisis_alert</span>
+              <span class="header-emergency-mobile__label">{{ 'home.emergency' | translate }}</span>
             </a>
           }
           <div class="lang-switch" role="group" [attr.aria-label]="'header.language' | translate">
@@ -268,20 +269,29 @@ import { isAlertType } from '../../features/report/utils/report-type-alert';
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 2.5rem;
+        gap: 0.35rem;
+        width: auto;
         height: 2.5rem;
+        padding: 0 0.7rem;
         border-radius: 999px;
         background: #ba1a1a;
         color: #fff;
         text-decoration: none;
         flex-shrink: 0;
         box-shadow: 0 0 0 2px rgba(186, 26, 26, 0.18);
+        font-size: 0.78rem;
+        font-weight: 700;
+        white-space: nowrap;
       }
       .header-emergency-mobile .material-symbols-outlined {
         font-family: 'Material Symbols Outlined';
-        font-size: 1.35rem;
+        font-size: 1.2rem;
         font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
         animation: header-emergency-pulse 1.5s ease-in-out infinite;
+      }
+      .header-emergency-mobile__label {
+        font-weight: 700;
+        letter-spacing: 0.01em;
       }
       @media (prefers-reduced-motion: reduce) {
         .header-emergency-mobile .material-symbols-outlined {

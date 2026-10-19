@@ -358,6 +358,11 @@ export class ReportCreatePage implements OnInit, OnDestroy {
     return this.form.controls.reportTypeId.value === String(type.reportTypeId);
   }
 
+  /** En mode « alerte », les 2 choix restent affichés même après sélection. */
+  showNatureChoices(): boolean {
+    return this.alertOnly() || !this.selectedNature();
+  }
+
   onAttachmentsChange(files: File[]): void {
     this.selectedFiles.set(files);
   }

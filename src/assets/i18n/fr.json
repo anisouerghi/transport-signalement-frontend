@@ -123,6 +123,7 @@
     "referenceRequired": "Veuillez saisir une référence.",
     "natureTitle": "De quoi souhaitez-vous nous informer aujourd'hui ?",
     "natureSubtitle": "Service direct 24/7",
+    "emergency": "Urgence",
     "emergencyTitle": "Urgence ou danger immédiat ?",
     "harassmentTitle": "Harcèlement sexuel",
     "naturesError": "Les natures de signalement sont temporairement indisponibles.",

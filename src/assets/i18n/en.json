@@ -123,6 +123,7 @@
     "referenceRequired": "Please enter a reference.",
     "natureTitle": "What would you like to tell us today?",
     "natureSubtitle": "Direct service 24/7",
+    "emergency": "Emergency",
     "emergencyTitle": "Emergency or immediate danger?",
     "harassmentTitle": "Sexual harassment",
     "naturesError": "Report types are temporarily unavailable.",
