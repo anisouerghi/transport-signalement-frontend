@@ -267,6 +267,7 @@ export class ReportCreatePage implements OnInit, OnDestroy {
   private readonly language = inject(LanguageService);
   private readonly config = inject(ConfigService);
   private langSub?: Subscription;
+  private querySub?: Subscription;
 
   @ViewChild(TurnstileWidgetComponent) private turnstileWidget?: TurnstileWidgetComponent;
 
@@ -307,11 +308,17 @@ export class ReportCreatePage implements OnInit, OnDestroy {
     const uuid = this.route.snapshot.paramMap.get('uuid')?.trim() ?? '';
     this.supportUuid.set(uuid);
     this.fromDirect.set(this.route.snapshot.queryParamMap.get('source') === 'direct');
-    // /signalement/anonyme (avec ou sans nature) : saisie → récap → choix, jamais de POST avant.
-    // Le segment « anonyme » n'est pas un mode définitif. Le QR (/report/:uuid) conserve son flux.
-    this.depositFlow.set(!uuid || this.route.snapshot.queryParamMap.get('parcours') === 'depot');
+    // Tous les parcours (QR /report/:uuid/signaler, /signalement, /signalement/anonyme) suivent
+    // les mêmes étapes : saisie → récapitulatif → méthode de suivi, sans POST avant.
+    this.depositFlow.set(true);
     // Bouton « Urgence » de l'en-tête : grille limitée aux types d'alerte.
-    this.alertOnly.set(this.route.snapshot.queryParamMap.get('alertes') === '1');
+    this.applyAlertParam(this.route.snapshot.queryParamMap.get('alertes'));
+
+    // Le composant peut être réutilisé quand seul `alertes` change (même route) :
+    // on réagit donc aux variations des query params plutôt qu'au seul snapshot.
+    this.querySub = this.route.queryParamMap.subscribe((params) =>
+      this.applyAlertParam(params.get('alertes')),
+    );
 
     if (!uuid) {
       this.anonymousMode.set(true);
@@ -333,6 +340,7 @@ export class ReportCreatePage implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.langSub?.unsubscribe();
+    this.querySub?.unsubscribe();
   }
 
   selectNature(type: ReportType): void {
@@ -343,6 +351,28 @@ export class ReportCreatePage implements OnInit, OnDestroy {
   /** Types d'alerte (urgence, harcèlement) : mis en tête de la grille. */
   isAlertNature(type: ReportType): boolean {
     return isAlertType(type);
+  }
+
+  /**
+   * Applique le mode « alertes uniquement » depuis le query param `alertes`.
+   * Réagit aux changements de query params : si l'utilisateur est déjà sur le formulaire
+   * et clique sur le raccourci « Urgence », la grille se filtre sans recharger la page.
+   */
+  private applyAlertParam(value: string | null): void {
+    const alertOnly = value === '1';
+    if (alertOnly === this.alertOnly()) {
+      return;
+    }
+    this.alertOnly.set(alertOnly);
+    if (!alertOnly) {
+      return;
+    }
+    // Repasse sur le formulaire et retire une nature non-alerte devenue masquée.
+    const selected = this.selectedNature();
+    if (selected && !isAlertType(selected)) {
+      this.form.controls.reportTypeId.setValue('');
+    }
+    this.step.set('form');
   }
 
   /** Icône affichée pour une nature (icône dédiée pour les types d'alerte). */
@@ -356,11 +386,6 @@ export class ReportCreatePage implements OnInit, OnDestroy {
 
   isNatureSelected(type: ReportType): boolean {
     return this.form.controls.reportTypeId.value === String(type.reportTypeId);
-  }
-
-  /** En mode « alerte », les 2 choix restent affichés même après sélection. */
-  showNatureChoices(): boolean {
-    return this.alertOnly() || !this.selectedNature();
   }
 
   onAttachmentsChange(files: File[]): void {
