@@ -4,5 +4,5 @@
   "cloudflareEnabled": true,
   "cloudflareSiteKey": "1x00000000000000000000AA",
   "notificationsPollingEnabled": true,
-  "notificationsPollingIntervalMs": 30000
+  "notificationsPollingIntervalMs": 60000
 }

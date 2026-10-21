@@ -71,7 +71,7 @@ import { isAlertType } from '../../features/report/utils/report-type-alert';
                 }
               </button>
               @if (notifMenuOpen()) {
-                <div class="notif-menu__dropdown" role="menu">
+                <div class="notif-menu__dropdown d-none d-md-block" role="menu">
                   <div class="notif-menu__head">
                     <span>{{ 'header.notifications' | translate }}</span>
                     @if (inbox.hasUnread()) {
@@ -751,11 +751,22 @@ export class PublicHeaderComponent implements OnInit {
 
   toggleNotifMenu(): void {
     this.userMenuOpen.set(false);
+    if (this.isMobileLayout()) {
+      // Mobile : pas de menu déroulant, la cloche ouvre la page dédiée aux notifications.
+      this.notifMenuOpen.set(false);
+      void this.router.navigate(['/notifications']);
+      return;
+    }
     this.notifMenuOpen.update((open) => !open);
   }
 
   closeNotifMenu(): void {
     this.notifMenuOpen.set(false);
+  }
+
+  /** Le menu déroulant de la cloche n'a de sens qu'en desktop (≥ 768px). */
+  private isMobileLayout(): boolean {
+    return typeof window !== 'undefined' && window.matchMedia('(max-width: 767.98px)').matches;
   }
 
   markAllRead(): void {
