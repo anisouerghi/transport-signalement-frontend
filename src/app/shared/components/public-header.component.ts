@@ -1,7 +1,9 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { AuthService } from '../../core/services/auth.service';
+import { InboxNotificationService } from '../../core/services/inbox-notification.service';
 import { AppLanguage, LanguageService } from '../../core/services/language.service';
 import { PassengerPreferenceService } from '../../core/services/passenger-preference.service';
 import { ReportTypeService } from '../../features/report/services/report-type.service';
@@ -10,7 +12,7 @@ import { isAlertType } from '../../features/report/utils/report-type-alert';
 @Component({
   selector: 'app-public-header',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, TranslatePipe],
+  imports: [RouterLink, RouterLinkActive, TranslatePipe, DatePipe],
   template: `
     <header class="public-header">
       <div class="public-header__inner">
@@ -51,6 +53,54 @@ import { isAlertType } from '../../features/report/utils/report-type-alert';
               </button>
             }
           </div>
+          @if (auth.isAuthenticated()) {
+            <div class="notif-menu">
+              <button
+                type="button"
+                class="notif-menu__trigger"
+                [attr.aria-expanded]="notifMenuOpen()"
+                aria-haspopup="menu"
+                [attr.aria-label]="'header.notifications' | translate"
+                (click)="toggleNotifMenu()"
+              >
+                <span class="material-symbols-outlined" aria-hidden="true">notifications</span>
+                @if (inbox.hasUnread()) {
+                  <span class="notif-menu__badge" aria-hidden="true">
+                    {{ inbox.unreadCount() > 99 ? '99+' : inbox.unreadCount() }}
+                  </span>
+                }
+              </button>
+              @if (notifMenuOpen()) {
+                <div class="notif-menu__dropdown" role="menu">
+                  <div class="notif-menu__head">
+                    <span>{{ 'header.notifications' | translate }}</span>
+                    @if (inbox.hasUnread()) {
+                      <button type="button" class="notif-menu__mark" (click)="markAllRead()">
+                        {{ 'header.markAllRead' | translate }}
+                      </button>
+                    }
+                  </div>
+                  @if (inbox.items().length === 0) {
+                    <p class="notif-menu__empty">{{ 'header.notificationsEmpty' | translate }}</p>
+                  } @else {
+                    @for (item of inbox.items(); track item.id) {
+                      <button
+                        type="button"
+                        class="notif-menu__item"
+                        [class.notif-menu__item--unread]="!item.read"
+                        role="menuitem"
+                        (click)="openNotification(item.reportUuid, item.id)"
+                      >
+                        <span class="notif-menu__ref">{{ item.reportReference }}</span>
+                        <span class="notif-menu__msg">{{ item.message }}</span>
+                        <span class="notif-menu__date">{{ item.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+                      </button>
+                    }
+                  }
+                </div>
+              }
+            </div>
+          }
           <div class="user-menu">
             <button
               type="button"
@@ -413,6 +463,111 @@ import { isAlertType } from '../../features/report/utils/report-type-alert';
       .user-menu__dropdown button:hover {
         background: #f1f4f8;
       }
+      .notif-menu {
+        position: relative;
+      }
+      .notif-menu__trigger {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.35rem;
+        height: 2.35rem;
+        border: 1px solid #d5dae3;
+        border-radius: 999px;
+        background: #fff;
+        color: #003b7f;
+        cursor: pointer;
+      }
+      .notif-menu__trigger .material-symbols-outlined {
+        font-size: 1.25rem;
+      }
+      .notif-menu__badge {
+        position: absolute;
+        top: -0.15rem;
+        right: -0.15rem;
+        min-width: 1.1rem;
+        height: 1.1rem;
+        padding: 0 0.25rem;
+        border-radius: 999px;
+        background: #ba1a1a;
+        color: #fff;
+        font-size: 0.65rem;
+        font-weight: 700;
+        line-height: 1.1rem;
+        text-align: center;
+      }
+      .notif-menu__dropdown {
+        position: absolute;
+        top: calc(100% + 0.4rem);
+        right: 0;
+        z-index: 60;
+        width: min(22rem, calc(100vw - 1.5rem));
+        max-height: 22rem;
+        overflow: auto;
+        background: #fff;
+        border: 1px solid #d5dae3;
+        border-radius: 0.75rem;
+        box-shadow: 0 8px 24px rgba(19, 28, 40, 0.12);
+      }
+      .notif-menu__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        padding: 0.7rem 0.85rem;
+        border-bottom: 1px solid #e8ecf2;
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: #131c28;
+      }
+      .notif-menu__mark {
+        border: 0;
+        background: transparent;
+        color: #003b7f;
+        font-size: 0.75rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .notif-menu__empty {
+        margin: 0;
+        padding: 1rem 0.85rem;
+        color: #5a6575;
+        font-size: 0.85rem;
+      }
+      .notif-menu__item {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.2rem;
+        width: 100%;
+        padding: 0.7rem 0.85rem;
+        border: 0;
+        border-bottom: 1px solid #f0f3f7;
+        background: #fff;
+        text-align: start;
+        cursor: pointer;
+      }
+      .notif-menu__item--unread {
+        background: #f3f7fc;
+      }
+      .notif-menu__item:hover {
+        background: #eef3f9;
+      }
+      .notif-menu__ref {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #003b7f;
+      }
+      .notif-menu__msg {
+        font-size: 0.82rem;
+        color: #131c28;
+        line-height: 1.35;
+      }
+      .notif-menu__date {
+        font-size: 0.72rem;
+        color: #5a6575;
+      }
       .nav-user {
         font-size: 0.85rem;
         font-weight: 600;
@@ -536,9 +691,12 @@ export class PublicHeaderComponent implements OnInit {
   readonly auth = inject(AuthService);
   readonly language = inject(LanguageService);
   readonly router = inject(Router);
+  /** Injection = démarrage du polling auth-aware (service root). */
+  readonly inbox = inject(InboxNotificationService);
   private readonly preferences = inject(PassengerPreferenceService);
   private readonly reportTypeService = inject(ReportTypeService);
   readonly userMenuOpen = signal(false);
+  readonly notifMenuOpen = signal(false);
   /** Un seul bouton d'alerte générique (urgence / harcèlement) sur « Urgence ». */
   readonly showAlert = signal(false);
 
@@ -583,6 +741,7 @@ export class PublicHeaderComponent implements OnInit {
   }
 
   toggleUserMenu(): void {
+    this.notifMenuOpen.set(false);
     this.userMenuOpen.update((open) => !open);
   }
 
@@ -590,8 +749,28 @@ export class PublicHeaderComponent implements OnInit {
     this.userMenuOpen.set(false);
   }
 
+  toggleNotifMenu(): void {
+    this.userMenuOpen.set(false);
+    this.notifMenuOpen.update((open) => !open);
+  }
+
+  closeNotifMenu(): void {
+    this.notifMenuOpen.set(false);
+  }
+
+  markAllRead(): void {
+    this.inbox.markAllRead();
+  }
+
+  openNotification(reportUuid: string, notificationId: number): void {
+    this.inbox.markRead(notificationId);
+    this.closeNotifMenu();
+    void this.router.navigate(['/report-followup', reportUuid]);
+  }
+
   logout(): void {
     this.closeUserMenu();
+    this.closeNotifMenu();
     this.auth.logout();
     void this.router.navigate(['/accueil']);
   }

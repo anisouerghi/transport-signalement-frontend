@@ -14,6 +14,10 @@ export interface AppRuntimeConfig {
   /** Cloudflare Turnstile activé (site key publique uniquement — jamais la secret). */
   cloudflareEnabled?: boolean;
   cloudflareSiteKey?: string;
+  /** Polling cloche notifications (défaut true). N'affecte pas les e-mails. */
+  notificationsPollingEnabled?: boolean;
+  /** Intervalle polling ms (défaut 30000, minimum appliqué côté service : 5000). */
+  notificationsPollingIntervalMs?: number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -59,6 +63,14 @@ export class ConfigService {
       typeof value['cloudflareEnabled'] === 'boolean' ? value['cloudflareEnabled'] : true;
     const cloudflareSiteKey =
       typeof value['cloudflareSiteKey'] === 'string' ? value['cloudflareSiteKey'] : undefined;
+    const notificationsPollingEnabled =
+      typeof value['notificationsPollingEnabled'] === 'boolean'
+        ? value['notificationsPollingEnabled']
+        : true;
+    const notificationsPollingIntervalMs =
+      typeof value['notificationsPollingIntervalMs'] === 'number'
+        ? value['notificationsPollingIntervalMs']
+        : 30_000;
 
     return {
       apiBaseUrl: value['apiBaseUrl'],
@@ -66,6 +78,8 @@ export class ConfigService {
         typeof value['googleClientId'] === 'string' ? value['googleClientId'] : undefined,
       cloudflareEnabled,
       cloudflareSiteKey,
+      notificationsPollingEnabled,
+      notificationsPollingIntervalMs,
     };
   }
 
@@ -82,6 +96,16 @@ export class ConfigService {
   get cloudflareSiteKey(): string | undefined {
     const key = this.config.cloudflareSiteKey?.trim();
     return key ? key : undefined;
+  }
+
+  /** Polling cloche activé (défaut true). Ne désactive pas les e-mails. */
+  get notificationsPollingEnabled(): boolean {
+    return this.config.notificationsPollingEnabled !== false;
+  }
+
+  /** Intervalle polling cloche (ms), défaut 30000. */
+  get notificationsPollingIntervalMs(): number {
+    return this.config.notificationsPollingIntervalMs ?? 30_000;
   }
 }
 

@@ -50,7 +50,10 @@
     "account": "Compte utilisateur",
     "logout": "Déconnexion",
     "profile": "Profil",
-    "language": "Langue"
+    "language": "Langue",
+    "notifications": "Notifications",
+    "notificationsEmpty": "Aucune notification",
+    "markAllRead": "Tout marquer comme lu"
   },
   "footer": {
     "tagline": "Société des Transports de Tunis — Signalement voyageur"

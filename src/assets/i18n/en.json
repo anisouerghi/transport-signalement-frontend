@@ -50,7 +50,10 @@
     "account": "User account",
     "logout": "Sign out",
     "profile": "Profile",
-    "language": "Language"
+    "language": "Language",
+    "notifications": "Notifications",
+    "notificationsEmpty": "No notifications",
+    "markAllRead": "Mark all as read"
   },
   "footer": {
     "tagline": "Tunis Transport Company — Traveler reporting"

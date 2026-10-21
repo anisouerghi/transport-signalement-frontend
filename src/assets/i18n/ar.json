@@ -50,7 +50,10 @@
     "account": "حساب المستخدم",
     "logout": "تسجيل الخروج",
     "profile": "الملف الشخصي",
-    "language": "اللغة"
+    "language": "اللغة",
+    "notifications": "الإشعارات",
+    "notificationsEmpty": "لا توجد إشعارات",
+    "markAllRead": "تعليمعلّم الكل كمقروء"
   },
   "footer": {
     "tagline": "شركة نقل تونس — إعلام المسافر"
