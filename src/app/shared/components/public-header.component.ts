@@ -54,7 +54,7 @@ import { isAlertType } from '../../features/report/utils/report-type-alert';
             }
           </div>
           @if (auth.isAuthenticated()) {
-            <div class="notif-menu">
+            <div class="notif-menu d-none d-md-block">
               <button
                 type="button"
                 class="notif-menu__trigger"
@@ -180,7 +180,14 @@ import { isAlertType } from '../../features/report/utils/report-type-alert';
           </div>
         } @else {
           <a [routerLink]="item.path" routerLinkActive="is-active">
-            <span class="material-symbols-outlined" aria-hidden="true">{{ item.icon }}</span>
+            <span class="public-bottom-nav__icon-wrap">
+              <span class="material-symbols-outlined" aria-hidden="true">{{ item.icon }}</span>
+              @if (item.badge && inbox.hasUnread()) {
+                <span class="public-bottom-nav__badge" aria-hidden="true">
+                  {{ inbox.unreadCount() > 99 ? '99+' : inbox.unreadCount() }}
+                </span>
+              }
+            </span>
             <span class="public-bottom-nav__label">{{ item.key | translate }}</span>
           </a>
         }
@@ -653,6 +660,28 @@ import { isAlertType } from '../../features/report/utils/report-type-alert';
         white-space: nowrap;
         text-align: center;
       }
+      .public-bottom-nav__icon-wrap {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 0;
+      }
+      .public-bottom-nav__badge {
+        position: absolute;
+        top: -0.35rem;
+        inset-inline-end: -0.5rem;
+        min-width: 1rem;
+        height: 1rem;
+        padding: 0 0.2rem;
+        border-radius: 999px;
+        background: #ba1a1a;
+        color: #fff;
+        font-size: 0.6rem;
+        font-weight: 700;
+        line-height: 1rem;
+        text-align: center;
+      }
       .public-bottom-nav__fab-slot {
         display: flex;
         align-items: center;
@@ -708,11 +737,11 @@ export class PublicHeaderComponent implements OnInit {
   ];
 
   readonly bottomNavItems = [
-    { path: '/accueil', key: 'nav.home', icon: 'home', fab: false },
-    { path: '/mes-signalements', key: 'nav.myReports', icon: 'assignment', fab: false },
-    { path: '/signalement', key: 'nav.report', icon: 'add', fab: true },
-    { path: '/scan', key: 'nav.scan', icon: 'qr_code_scanner', fab: false },
-    { path: '/profil', key: 'nav.profile', icon: 'person', fab: false },
+    { path: '/accueil', key: 'nav.home', icon: 'home', fab: false, badge: false },
+    { path: '/mes-signalements', key: 'nav.myReports', icon: 'assignment', fab: false, badge: false },
+    { path: '/signalement', key: 'nav.report', icon: 'add', fab: true, badge: false },
+    { path: '/scan', key: 'nav.scan', icon: 'qr_code_scanner', fab: false, badge: false },
+    { path: '/notifications', key: 'header.notifications', icon: 'notifications', fab: false, badge: true },
   ];
 
   ngOnInit(): void {
