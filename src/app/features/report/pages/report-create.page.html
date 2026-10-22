@@ -145,13 +145,13 @@
     </div>
 
     <div class="report-actions">
-      <a class="btn btn-transtu-outline report-back" [routerLink]="backLink()">
+      <a class="btn btn-transtu-outline report-back btn-compact" [routerLink]="backLink()">
         <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>
         {{ 'common.back' | translate }}
       </a>
       <button
         type="submit"
-        class="btn btn-transtu"
+        class="btn btn-transtu btn-compact"
         [disabled]="submitting() || turnstileBlocksSubmit()"
       >
         @if (submitting()) {
@@ -212,7 +212,7 @@
         </dd>
       </dl>
       <div class="d-flex justify-content-center">
-        <button type="button" class="btn btn-transtu review-confirm" (click)="continueToChoice()">
+        <button type="button" class="btn btn-transtu review-confirm btn-compact" (click)="continueToChoice()">
           {{ 'report.reviewSubmit' | translate }}
         </button>
       </div>
@@ -289,7 +289,7 @@
 
   .report-actions .btn {
     flex: 1;
-    min-height: 3rem;
+    min-height: 2.5rem;
   }
 
   .report-actions .report-back {
@@ -302,13 +302,13 @@
   }
 
   .review-confirm {
-    min-height: 3rem;
-    min-width: 12rem;
+    min-height: 2.5rem;
+    min-width: 10rem;
   }
 
   @media (max-width: 420px) {
     .report-actions .btn {
-      min-height: 2.85rem;
+      min-height: 2.5rem;
     }
     .review-confirm {
       min-width: 0;

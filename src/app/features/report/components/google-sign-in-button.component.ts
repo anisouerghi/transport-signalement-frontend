@@ -9,7 +9,7 @@ import { AuthService } from '../../../core/services/auth.service';
   template: `
     <button
       type="button"
-      class="btn btn-google btn-lg w-100 d-flex align-items-center justify-content-center gap-2"
+      class="btn btn-google btn-compact btn-compact--narrow w-100 d-flex align-items-center justify-content-center gap-2"
       [disabled]="disabled()"
       (click)="signIn()"
     >

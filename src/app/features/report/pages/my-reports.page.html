@@ -7,13 +7,13 @@
   <section class="panel p-4">
     <p class="mb-4">{{ 'myReports.anonymousHint' | translate }}</p>
     <div class="d-grid gap-2">
-      <a routerLink="/inscription" [queryParams]="{ returnUrl: authReturnUrl() }" class="btn btn-transtu btn-lg">
+      <a routerLink="/inscription" [queryParams]="{ returnUrl: authReturnUrl() }" class="btn btn-transtu btn-compact btn-compact--narrow">
         {{ 'welcome.createAccount' | translate }}
       </a>
-      <a routerLink="/connexion" [queryParams]="{ returnUrl: authReturnUrl() }" class="btn btn-transtu-outline btn-lg">
+      <a routerLink="/connexion" [queryParams]="{ returnUrl: authReturnUrl() }" class="btn btn-transtu-outline btn-compact btn-compact--narrow">
         {{ 'welcome.signIn' | translate }}
       </a>
-      <a routerLink="/signalement" class="btn btn-link">{{ 'home.cta' | translate }}</a>
+      <a routerLink="/signalement" class="btn btn-link btn-compact btn-compact--narrow">{{ 'home.cta' | translate }}</a>
     </div>
   </section>
 } @else {
@@ -21,17 +21,14 @@
     <div class="mine-filters d-flex flex-column flex-lg-row gap-2 align-items-lg-end">
       <div class="mine-filters__field flex-grow-1">
         <label class="form-label fw-semibold" for="mine-reference">{{ 'myReports.searchLabel' | translate }}</label>
-        <div class="input-group">
-          <span class="input-group-text" aria-hidden="true"><i class="bi bi-search"></i></span>
-          <input
-            id="mine-reference"
-            type="search"
-            class="form-control form-control-lg"
-            formControlName="reference"
-            [attr.placeholder]="'myReports.searchPlaceholder' | translate"
-            autocomplete="off"
-          />
-        </div>
+        <input
+          id="mine-reference"
+          type="search"
+          class="form-control form-control-lg"
+          formControlName="reference"
+          [attr.placeholder]="'myReports.searchPlaceholder' | translate"
+          autocomplete="off"
+        />
       </div>
       <div class="mine-filters__field">
         <label class="form-label fw-semibold" for="mine-status">{{ 'myReports.statusFilter' | translate }}</label>
@@ -49,7 +46,7 @@
       <div class="mine-filters__actions">
         <button
           type="submit"
-          class="btn btn-transtu"
+          class="btn btn-transtu-outline"
           [attr.aria-label]="'myReports.search' | translate"
           [attr.title]="'myReports.search' | translate"
         >
@@ -98,8 +95,17 @@
     <div class="d-grid gap-3">
       @for (item of pageItems(); track item.uuid) {
         <article class="report-card panel p-3 p-md-4">
-          <div class="fw-bold fs-5 mb-1" style="color: var(--transtu-blue-deep); word-break: break-word">
-            {{ item.reference }}
+          @if (item.reportTypeLabel) {
+            <div class="report-card__type">
+              <span class="material-symbols-outlined" aria-hidden="true">{{ typeIcon(item) }}</span>
+              <span>{{ item.reportTypeLabel }}</span>
+            </div>
+          }
+          <div class="report-card__head">
+            <a class="report-card__reference" [routerLink]="['/report-followup', item.uuid]">
+              {{ item.reference }}
+            </a>
+            <span class="support-chip">{{ item.statusLabel || ('common.dash' | translate) }}</span>
           </div>
           @if (supportLine(item)) {
             <p class="mb-1">{{ supportLine(item) }}</p>
@@ -107,13 +113,9 @@
           <p class="small text-secondary mb-2">
             {{ item.creationDate | date: 'dd/MM/yyyy HH:mm' }}
           </p>
-          <p class="mb-3">
-            {{ 'common.status' | translate }} :
-            <span class="support-chip">{{ item.statusLabel || ('common.dash' | translate) }}</span>
-          </p>
-          <a class="btn btn-transtu w-100" [routerLink]="['/report-followup', item.uuid]">
-            {{ 'myReports.consult' | translate }}
-          </a>
+          @if (item.description) {
+            <p class="report-card__description mb-0">{{ excerpt(item.description) }}</p>
+          }
         </article>
       }
     </div>

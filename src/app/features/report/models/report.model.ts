@@ -141,10 +141,15 @@ export interface PublicReportListItem {
   uuid: string;
   reference: string;
   creationDate?: string;
+  description?: string;
   supportLabel?: string;
   supportTypeLabel?: string;
   statusCode?: string;
   statusLabel?: string;
+  /** Type de réclamation (code technique, libellé localisé, icône Material Symbols). */
+  reportTypeCode?: string;
+  reportTypeLabel?: string;
+  reportTypeIcon?: string;
 }
 
 /** Réponse publiée sur l'accueil (aucune donnée personnelle). */

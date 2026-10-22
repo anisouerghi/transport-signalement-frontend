@@ -35,13 +35,13 @@ import { NotificationService } from '../../../core/services/notification.service
         <div class="icon-wrap info"><i class="bi bi-info-circle" aria-hidden="true"></i></div>
         <h1 class="h4">{{ 'confirmation.emptyTitle' | translate }}</h1>
         <p class="text-secondary mb-4">{{ 'confirmation.emptyBody' | translate }}</p>
-        <a routerLink="/accueil" class="btn btn-transtu">{{ 'common.backHome' | translate }}</a>
+        <a routerLink="/accueil" class="btn btn-transtu btn-compact btn-compact--narrow">{{ 'common.backHome' | translate }}</a>
       </section>
     } @else if (state()!.withoutTracking) {
       <section class="panel page-state">
         <div class="icon-wrap success"><i class="bi bi-check2-circle" aria-hidden="true"></i></div>
         <h1 class="h3">{{ 'confirmation.title' | translate }}</h1>
-        <a routerLink="/accueil" class="btn btn-transtu mt-4">{{ 'common.backHome' | translate }}</a>
+        <a routerLink="/accueil" class="btn btn-transtu btn-compact btn-compact--narrow mt-4">{{ 'common.backHome' | translate }}</a>
       </section>
     } @else {
       <section class="panel page-state">
@@ -81,14 +81,14 @@ import { NotificationService } from '../../../core/services/notification.service
 
         <div class="d-grid gap-2 col-md-10 mx-auto">
           @if (state()!.withTracking && state()!.uuid) {
-            <a class="btn btn-transtu" [routerLink]="['/report-followup', state()!.uuid]">
+            <a class="btn btn-transtu btn-compact btn-compact--narrow" [routerLink]="['/report-followup', state()!.uuid]">
               {{ 'confirmation.trackCta' | translate }}
             </a>
           }
           @if (auth.isAuthenticated()) {
-            <a class="btn btn-transtu" routerLink="/mes-signalements">{{ 'nav.myReports' | translate }}</a>
+            <a class="btn btn-transtu btn-compact btn-compact--narrow" routerLink="/mes-signalements">{{ 'nav.myReports' | translate }}</a>
           }
-          <a class="btn confirmation-home-button" routerLink="/accueil">
+          <a class="btn confirmation-home-button btn-compact btn-compact--narrow" routerLink="/accueil">
             {{ 'common.backHome' | translate }}
           </a>
         </div>

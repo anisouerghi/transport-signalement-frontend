@@ -209,6 +209,24 @@ h5,
   padding: 0.75rem 1.25rem;
 }
 
+/* Boutons compacts (formulaires, actions). */
+.btn-compact {
+  min-height: 2.5rem;
+  padding: 0.4rem 1rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
+}
+
+/* Variante centrée, plus étroite que la pleine largeur. */
+.btn-compact--narrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 18rem;
+  margin-inline: auto;
+}
+
 .panel {
   background: #ffffff;
   border: 0;
@@ -229,11 +247,13 @@ h5,
 .report-card {
   display: block;
   transition: box-shadow 0.15s ease, border-color 0.15s ease;
+  border-color: rgba(11, 82, 168, 0.4);
+  box-shadow: 0 4px 12px rgba(19, 28, 40, 0.1);
 }
 
 .report-card:hover {
-  border-color: rgba(11, 82, 168, 0.4);
-  box-shadow: 0 4px 12px rgba(19, 28, 40, 0.1);
+  border-color: rgba(#12e435, 0.55);
+  box-shadow: 0 12px 24px rgba(13, 106, 228, 0.1);
 }
 
 /* -------------------------------------------------------------------------- */

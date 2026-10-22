@@ -9,6 +9,7 @@ import { LanguageService } from '../../../core/services/language.service';
 import { PublicReportListItem, StatusInfo } from '../models/report.model';
 import { ReportService } from '../services/report.service';
 import { StatusService } from '../services/status.service';
+import { ALERT_ICONS, normalizeTypeCode } from '../utils/report-type-alert';
 
 const PAGE_SIZE = 5;
 
@@ -24,8 +25,15 @@ const PAGE_SIZE = 5;
         gap: 0.5rem;
       }
       .mine-filters__actions .btn {
-        min-height: 2.75rem;
+        --bs-btn-border-color: var(--transtu-border, #c2c6d4);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 3rem;
+        min-height: 3rem;
         min-width: 2.75rem;
+        padding-top: 0;
+        padding-bottom: 0;
       }
       @media (max-width: 991.98px) {
         .mine-filters__field,
@@ -35,6 +43,46 @@ const PAGE_SIZE = 5;
         .mine-filters__actions .btn {
           flex: 1;
         }
+      }
+      .report-card__type {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        margin-bottom: 0.5rem;
+        color: var(--transtu-muted, #5b6b7c);
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+      .report-card__type .material-symbols-outlined {
+        font-size: 1.1rem;
+      }
+      .report-card__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        margin-bottom: 0.25rem;
+      }
+      .report-card__head .support-chip {
+        flex-shrink: 0;
+      }
+      .report-card__reference {
+        display: inline-block;
+        min-width: 0;
+        margin-bottom: 0;
+        color: var(--transtu-blue-deep, #073b78);
+        font-size: 1.05rem;
+        font-weight: 700;
+        text-decoration: none;
+        word-break: break-word;
+      }
+      .report-card__reference:hover {
+        text-decoration: underline;
+      }
+      .report-card__description {
+        color: var(--transtu-muted, #5b6b7c);
+        font-size: 0.9rem;
+        line-height: 1.45;
       }
     `,
   ],
@@ -183,6 +231,17 @@ export class MyReportsPage implements OnInit, OnDestroy {
       return;
     }
     this.page.set(p);
+  }
+
+  /** Icône Material Symbols du type de réclamation (icône dédiée aux alertes). */
+  typeIcon(item: PublicReportListItem): string {
+    return ALERT_ICONS[normalizeTypeCode(item.reportTypeCode)] ?? (item.reportTypeIcon?.trim() || 'report');
+  }
+
+  /** Extrait les 40 premiers caractères de la description, suivis de « ... ». */
+  excerpt(text?: string, max = 40): string {
+    const value = (text ?? '').trim();
+    return value.length > max ? `${value.slice(0, max)}...` : value;
   }
 
   supportLine(item: PublicReportListItem): string {

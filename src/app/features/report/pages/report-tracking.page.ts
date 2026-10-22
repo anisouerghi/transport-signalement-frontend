@@ -95,7 +95,7 @@ export class ReportTrackingPage implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
       const code = params.get('uuid')?.trim() ?? '';
-      this.trackingCode.set(code);
+      this.trackingCode.set('');
       this.invalidLink.set(false);
       if (!code) {
         this.invalidLink.set(true);
